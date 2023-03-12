@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 export default function Home() {
   return (
     <div>
-       my Ticket application home
+       my Ticket application home 
     </div>
   )
 }
