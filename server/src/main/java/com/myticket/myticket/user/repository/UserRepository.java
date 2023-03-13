@@ -1,10 +1,12 @@
 package com.myticket.myticket.user.repository;
 
-import org.springframework.stereotype.Repository;
+
+import org.springframework.data.repository.CrudRepository;
 
 import com.myticket.myticket.vo.User;
+import java.util.*;
 
-@Repository
-public interface UserRepository {
-    void save(User user);
+public interface UserRepository extends CrudRepository<User, Long> {
+
+    User findById(String id);
 }

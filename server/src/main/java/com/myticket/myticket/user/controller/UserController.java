@@ -1,5 +1,6 @@
 package com.myticket.myticket.user.controller;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,18 +10,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
+import com.myticket.myticket.user.service.UserService;
+import com.myticket.myticket.user.Enum.UserEnumType;
 import com.myticket.myticket.user.dto.CreateUserDto;
+import com.myticket.myticket.user.dto.ReadUserDto;
+
+import lombok.AllArgsConstructor;
 
 @EnableWebMvc
 @RestController
-@RequestMapping("api/user")
+@RequestMapping(value = "api/user")
+@AllArgsConstructor
 public class UserController {
 
-    @PostMapping("/create")
-    public ResponseEntity<String> singup(@RequestBody CreateUserDto createUserDto) {
-        System.out.println("createUserDto : " + createUserDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    private UserService userService;
+
+    @PostMapping(value="/create", produces = "application/json; charset=utf8")
+    public ResponseEntity<String> signUp(@RequestBody CreateUserDto createUserDto) {
+
+        CreateUserDto createdUser = userService.addUser(createUserDto);
+        if(createdUser == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.SIGN_UP_ALREADY_EXIST_USER.getMessage());
+        }
+        return ResponseEntity.ok().body(UserEnumType.SIGN_UP_SUCCESS.getMessage());
+    }
+
+    @GetMapping(value="/login", produces = "application/json; charset=utf8")
+    public ResponseEntity<ReadUserDto> signIn(@RequestBody ReadUserDto readUserDto) {
+        ReadUserDto user = userService.findUserById(readUserDto);
+        if(user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.LOGIN_FAIL.getMessage());
+        }
+        return ResponseEntity.ok().body(user);
     }
 }
