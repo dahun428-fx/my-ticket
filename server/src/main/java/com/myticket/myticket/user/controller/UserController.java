@@ -3,6 +3,7 @@ package com.myticket.myticket.user.controller;
 import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,11 +26,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
+    private final PasswordEncoder encoder;
 
     @PostMapping(value="/create", produces = "application/json; charset=utf8")
     public ResponseEntity<String> signUp(@RequestBody CreateUserDto createUserDto) {
-
+        //encode password
+        createUserDto.setPassword(encoder.encode(createUserDto.getPassword()));
         CreateUserDto createdUser = userService.addUser(createUserDto);
         if(createdUser == null) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.SIGN_UP_ALREADY_EXIST_USER.getMessage());

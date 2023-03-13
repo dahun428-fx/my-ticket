@@ -5,10 +5,8 @@ import com.myticket.myticket.user.Enum.UserRoleType;
 import lombok.Data;
 
 @Data
-public class CreateUserDto {
-    private Long no;
+public class AuthUserDto {
     private String id;
-    private String name;
     private String password;
     private UserRoleType roleType;
 }

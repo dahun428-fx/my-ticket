@@ -2,6 +2,8 @@ package com.myticket.myticket.user.service;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +25,6 @@ import java.util.*;
 public class UserService implements UserDetailsService {
     
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder encoder;
 
     public User loadUserByUsername(String userid) throws UsernameNotFoundException {
 
@@ -31,6 +32,8 @@ public class UserService implements UserDetailsService {
         if(findUser == null) {
             throw new UsernameNotFoundException(UserEnumType.LOGIN_FAIL.getMessage());
         }
+        findUser.setAuthorities(List.of(new SimpleGrantedAuthority(findUser.getRoleType().name())));
+        System.out.println("user : "+ findUser);
         return findUser;
      }
 
@@ -41,8 +44,6 @@ public class UserService implements UserDetailsService {
         }
         User user = new User();
         BeanUtils.copyProperties(createUserDto, user);
-        //encode by bcrypt
-        user.setPassword(encoder.encode(createUserDto.getPassword()));
 
         userRepository.save(user);
         return createUserDto;
@@ -56,6 +57,9 @@ public class UserService implements UserDetailsService {
         BeanUtils.copyProperties(findUser, readUserDto);
         return readUserDto;
     }
+
+    
+
 
     
 }
