@@ -15,19 +15,19 @@ import com.myticket.myticket.user.service.UserService;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-@Configuration
-@EnableWebSecurity
+// @Configuration
+// @EnableWebSecurity
+//disable ==> jwt token use
 public class SpringSecurityConfig {
 
     private final UserService userService;
-    // private final BCryptPasswordEncoder passwordEncoder;
 
-    @Bean
+    // @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+    // @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .formLogin()
