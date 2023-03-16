@@ -9,4 +9,5 @@ import java.util.*;
 public interface UserRepository extends CrudRepository<User, Long> {
 
     User findById(String id);
+    User findByRefreshToken(String refreshToken);
 }

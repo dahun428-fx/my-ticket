@@ -66,6 +66,7 @@ public class SpringSecurityConfigWithJwt {
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/user/signup").permitAll()
                 .antMatchers("/api/v1/auth/authenticate").permitAll()//allow no need jwt
+                .antMatchers("/api/v1/auth/refresh").permitAll()//allow no need jwt
                 .anyRequest()
                 .authenticated()//나머지 jwt 인증 필요
                 .and()

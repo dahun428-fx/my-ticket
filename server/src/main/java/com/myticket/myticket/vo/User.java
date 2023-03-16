@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @Transient//escape Jpa
     Collection<GrantedAuthority> authorities;
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     public void setAuthorities(Collection<GrantedAuthority> authorities) {
         this.authorities = authorities;
     }
@@ -69,5 +72,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
     }
 }

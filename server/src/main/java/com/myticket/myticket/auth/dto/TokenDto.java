@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class AuthUser {
+public class TokenDto {
     private String accessToken;
+    private String refreshToken;
 }

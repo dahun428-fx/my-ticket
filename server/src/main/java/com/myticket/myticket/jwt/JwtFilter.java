@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +15,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.myticket.myticket.jwt.Enum.JwtEnum;
+
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 //실질적으로 액세스토큰을 검증하는 역할을 수행하는 GenericFilterBean을 상속받아 JwtFilter
-public class JwtFilter extends GenericFilterBean {
+//GenericFilterBean => OncePerRequestFilter
+public class JwtFilter extends OncePerRequestFilter {
     
     protected final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
@@ -27,23 +33,29 @@ public class JwtFilter extends GenericFilterBean {
 
     private JwtTokenProvider jwtTokenProvider;
 
+    
+
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
                 HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
-        
-        if(StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
+         
+        JwtEnum jwtEnum = jwtTokenProvider.validateToken(jwt);
+        if(jwtEnum == JwtEnum.ACCESS) {
             // 토큰에서 유저네임, 권한을 뽑아 스프링 시큐리티 유저를 만들어 Authentication 반환
             Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
             // 해당 스프링 시큐리티 유저를 시큐리티 건텍스트에 저장, 즉 디비를 거치지 않음
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            
+            logger.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+        } else if (jwtEnum == JwtEnum.EXPIRED) {
+            logger.info("만료된 토큰 입니다. accessToken 재발급이 필요합니다.");
 
-            logger.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
         } else {
-            logger.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+            logger.info("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         }
 
         chain.doFilter(request, response);
@@ -57,4 +69,5 @@ public class JwtFilter extends GenericFilterBean {
         }
         return null;
     }
+ 
 }

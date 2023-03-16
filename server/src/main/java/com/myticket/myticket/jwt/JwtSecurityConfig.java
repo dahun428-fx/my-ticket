@@ -5,6 +5,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.myticket.myticket.jwt.Enum.JwtExceptionFilter;
+
 import lombok.AllArgsConstructor;
 
 /*
@@ -20,5 +22,7 @@ public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurity
     public void configure(HttpSecurity http) {
         JwtFilter customFilter = new JwtFilter(jwtTokenProvider);
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
+        // JwtExceptionFilter exceptionFilter = new JwtExceptionFilter();
+        // http.addFilterBefore(exceptionFilter, JwtFilter.class);
     }
 }
