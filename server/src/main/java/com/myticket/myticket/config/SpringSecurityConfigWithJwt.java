@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,28 +24,35 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)// @PreAuthorize 어노테이션 사용을 위해 선언
+@EnableGlobalMethodSecurity(prePostEnabled = true) // @PreAuthorize 어노테이션 사용을 위해 선언
 public class SpringSecurityConfigWithJwt {
-    
+
     private final JwtTokenProvider tokenProvider;
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint entryPoint;
     private final JwtAccessDeniedHandler accessDeniedHandler;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    //filter 제외 item
-    public void configure(WebSecurity web) {
-        web.ignoring()
-            .antMatchers("/error", "/favicon.ico");
+    // filter 제외 item
+    // public void configure(WebSecurity web) {
+    // web.ignoring()
+    // .antMatchers("/error", "/favicon.ico");
+    // }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> {
+            web.ignoring()
+                    .antMatchers("/error", "/favicon.ico");
+        };
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http
+        http
                 .formLogin()
                 .disable()
                 .httpBasic()
@@ -52,25 +60,25 @@ public class SpringSecurityConfigWithJwt {
                 .csrf()
                 .disable()
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                //custom error handler injection
+                // custom error handler injection
                 .exceptionHandling()
                 .authenticationEntryPoint(entryPoint)
                 .accessDeniedHandler(accessDeniedHandler)
-                //not use session
+                // not use session
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                //api url
+                // api url
                 .and()
                 .authorizeHttpRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/user/signup").permitAll()
-                .antMatchers("/api/v1/auth/authenticate").permitAll()//allow no need jwt
-                .antMatchers("/api/v1/auth/refresh").permitAll()//allow no need jwt
+                .antMatchers("/api/v1/auth/authenticate").permitAll()// allow no need jwt
+                .antMatchers("/api/v1/auth/refresh").permitAll()// allow no need jwt
                 .anyRequest()
-                .authenticated()//나머지 jwt 인증 필요
+                .authenticated()// 나머지 jwt 인증 필요
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));//JwtSecurityConfig access
+                .apply(new JwtSecurityConfig(tokenProvider));// JwtSecurityConfig access
         return http.build();
-    } 
+    }
 }

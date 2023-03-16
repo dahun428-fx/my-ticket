@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import com.myticket.myticket.user.repository.UserRepository;
@@ -22,7 +23,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Service
 public class AuthService {
-    
+
     private final PasswordEncoder encoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -32,50 +33,56 @@ public class AuthService {
     public TokenDto authenticate(String id, String password) {
 
         User findUser = userRepository.findById(id);
-        if(findUser == null) {
+        if (findUser == null) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.LOGIN_FAIL.getMessage());
         }
-        if(!encoder.matches(password, findUser.getPassword())) {
+        if (!encoder.matches(password, findUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.LOGIN_FAIL.getMessage());
         }
-        // 받아온 유저네임과 패스워드를 이용해 UsernamePasswordAuthenticationToken 객체 생성
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
-
-        // authenticationToken 객체를 통해 Authentication 객체 생성
-        // 이 과정에서 CustomUserDetailsService 에서 우리가 재정의한 loadUserByUsername 메서드 호출
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        // 그 객체를 시큐리티 컨텍스트에 저장
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication = this.createAuthentication(id, password);
         // 인증 정보를 기준으로 jwt access 토큰 생성
         String accessToken = jwtTokenProvider.createToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
-        //update refresh token
+        // update refresh token
         findUser.updateRefreshToken(refreshToken);
 
-        return new TokenDto(accessToken, refreshToken); 
+        return new TokenDto(accessToken, refreshToken);
     }
 
-    public TokenDto reGenerateRefreshToken(String refreshToken) {
+    @Transactional
+    public TokenDto reGenerateAccessToken(String refreshToken) {
 
-        JwtEnum jwtEnum = jwtTokenProvider.validateRefreshToken(refreshToken);
-        if(jwtEnum == JwtEnum.ACCESS) {
+        if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken)) {
             User findUser = userRepository.findByRefreshToken(refreshToken);
-            Authentication authentication = jwtTokenProvider.getAuthenticationByRefresh(refreshToken);
-
-            if(findUser == null || !findUser.getId().equals(authentication.getName())) {
+            if (findUser == null) {
                 throw new UsernameNotFoundException(UserEnumType.USER_NOT_FOUND.getMessage());
             }
+            System.out.println("before");
+            // Authentication authentication = this.createAuthentication(findUser.getId(),
+            // findUser.getPassword());
+            Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
+            System.out.println("autentication refreshtoken");
             String accessToken = jwtTokenProvider.createToken(authentication);
-            System.out.println("findUser : "+ findUser);
-            System.out.println("authentication : "+ authentication);
+            System.out.println("findUser : " + findUser);
+            System.out.println("authentication : " + authentication);
             return new TokenDto(accessToken, refreshToken);
-        } else if (jwtEnum == JwtEnum.EXPIRED) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.USER_RE_LOGIN.getMessage());
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, UserEnumType.LOGIN_FAIL.getMessage());
         }
     }
 
+    private Authentication createAuthentication(String id, String password) {
+        // 받아온 유저네임과 패스워드를 이용해 UsernamePasswordAuthenticationToken 객체 생성
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
+        System.out.println("before setauten user token");
+        // authenticationToken 객체를 통해 Authentication 객체 생성
+        // 이 과정에서 CustomUserDetailsService 에서 우리가 재정의한 loadUserByUsername 메서드 호출
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        System.out.println("before setauten");
+        // 그 객체를 시큐리티 컨텍스트에 저장
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return authentication;
+    }
 }

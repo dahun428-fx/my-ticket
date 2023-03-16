@@ -16,13 +16,13 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-    
+
     private JwtTokenProvider jwtTokenProvider;
 
     public void configure(HttpSecurity http) {
         JwtFilter customFilter = new JwtFilter(jwtTokenProvider);
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
-        // JwtExceptionFilter exceptionFilter = new JwtExceptionFilter();
-        // http.addFilterBefore(exceptionFilter, JwtFilter.class);
+        JwtExceptionFilter exceptionFilter = new JwtExceptionFilter();
+        http.addFilterBefore(exceptionFilter, JwtFilter.class);
     }
 }
