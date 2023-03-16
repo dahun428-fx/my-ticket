@@ -20,9 +20,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-            logger.info("available jwtfileter");
         } catch (JwtException e) {
-            logger.info("not available jwtfileter");
             if (e.getMessage().equals(JwtEnum.EXPIRED.getStatus())) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, JwtEnum.EXPIRED.getStatus());
             } else {
@@ -31,13 +29,4 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         }
     }
 
-    // public void setErrorResponse(HttpStatus status, HttpServletResponse res,
-    // Throwable ex) throws IOException {
-    // res.setStatus(status.value());
-    // res.setContentType("application/json; charset=UTF-8");
-
-    // JwtExceptionRespo jwtExceptionResponse = new
-    // JwtExceptionResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-    // res.getWriter().write(jwtExceptionResponse.convertToJson());
-    // }
 }

@@ -53,23 +53,37 @@ public class AuthService {
     @Transactional
     public TokenDto reGenerateAccessToken(String refreshToken) {
 
-        if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken)) {
-            User findUser = userRepository.findByRefreshToken(refreshToken);
-            if (findUser == null) {
-                throw new UsernameNotFoundException(UserEnumType.USER_NOT_FOUND.getMessage());
+        try {
+            if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken)) {
+                User findUser = userRepository.findByRefreshToken(refreshToken);
+                if (findUser == null) {
+                    throw new UsernameNotFoundException(UserEnumType.USER_NOT_FOUND.getMessage());
+                }
+                Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
+                String accessToken = jwtTokenProvider.createToken(authentication);
+                return new TokenDto(accessToken, refreshToken);
             }
-            System.out.println("before");
-            // Authentication authentication = this.createAuthentication(findUser.getId(),
-            // findUser.getPassword());
-            Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
-            System.out.println("autentication refreshtoken");
-            String accessToken = jwtTokenProvider.createToken(authentication);
-            System.out.println("findUser : " + findUser);
-            System.out.println("authentication : " + authentication);
-            return new TokenDto(accessToken, refreshToken);
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, UserEnumType.LOGIN_FAIL.getMessage());
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, JwtEnum.EXPIRED.getStatus());
         }
+        // if (StringUtils.hasText(refreshToken) &&
+        // jwtTokenProvider.validateToken(refreshToken)) {
+        // User findUser = userRepository.findByRefreshToken(refreshToken);
+        // if (findUser == null) {
+        // throw new
+        // UsernameNotFoundException(UserEnumType.USER_NOT_FOUND.getMessage());
+        // }
+        // Authentication authentication =
+        // jwtTokenProvider.getAuthentication(refreshToken);
+        // String accessToken = jwtTokenProvider.createToken(authentication);
+        // return new TokenDto(accessToken, refreshToken);
+        // } else {
+        // throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+        // UserEnumType.LOGIN_FAIL.getMessage());
+        // }
+
+        return null;
     }
 
     private Authentication createAuthentication(String id, String password) {

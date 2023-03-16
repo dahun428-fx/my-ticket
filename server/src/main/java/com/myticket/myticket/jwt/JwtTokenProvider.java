@@ -59,8 +59,8 @@ public class JwtTokenProvider {
 
         // this.tokenValidityInMilliseconds = accessTokenValidityInSeconds * 1000;
         this.tokenValidityInMilliseconds = accessTokenValidityInSeconds * 1000;
-        // this.refreshTokenValidityMilliseconds = 1000L * 60 * 60 * 24 * 7;// 7 days
-        this.refreshTokenValidityMilliseconds = 1000L * 10;// 7 days
+        this.refreshTokenValidityMilliseconds = 1000L * 60 * 60 * 24 * 7;// 7 days
+        // this.refreshTokenValidityMilliseconds = 1000L * 10;// 7 days
         // secret key --> base64
         byte[] keyBytes = secretKey.getBytes();
         this.key = Keys.hmacShaKeyFor(keyBytes);
@@ -126,7 +126,7 @@ public class JwtTokenProvider {
 
     // token valid check
     public boolean validateToken(String token) {
-        logger.info("토큰 검증 :: access token, {}", token);
+        logger.info("토큰 검증 :: {}", token);
         try {
             Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
             logger.info("유효한 JWT 서명 입니다. {}", claims);

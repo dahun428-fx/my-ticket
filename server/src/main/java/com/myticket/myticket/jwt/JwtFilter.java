@@ -20,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.myticket.myticket.jwt.Enum.JwtEnum;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -30,6 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String REFRESH_HEADER = "RefreshToken";
 
     private JwtTokenProvider jwtTokenProvider;
 
@@ -41,14 +43,31 @@ public class JwtFilter extends OncePerRequestFilter {
         String accessToken = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
 
-        // JwtEnum jwtEnum = jwtTokenProvider.validateToken(jwt);
-        if (StringUtils.hasText(accessToken) && jwtTokenProvider.validateToken(accessToken)) {
+        // try {
+        // if (StringUtils.hasText(accessToken) &&
+        // jwtTokenProvider.validateToken(accessToken)) {
+        // // 토큰에서 유저네임, 권한을 뽑아 스프링 시큐리티 유저를 만들어 Authentication 반환
+        // Authentication authentication =
+        // jwtTokenProvider.getAuthentication(accessToken);
+        // // 해당 스프링 시큐리티 유저를 시큐리티 건텍스트에 저장, 즉 디비를 거치지 않음
+        // SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // logger.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}",
+        // authentication.getName(), requestURI);
+
+        // }
+        // } catch (JwtException e) {
+        // logger.info("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+        // }
+        if (StringUtils.hasText(accessToken) &&
+                jwtTokenProvider.validateToken(accessToken)) {
             // 토큰에서 유저네임, 권한을 뽑아 스프링 시큐리티 유저를 만들어 Authentication 반환
             Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
             // 해당 스프링 시큐리티 유저를 시큐리티 건텍스트에 저장, 즉 디비를 거치지 않음
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            logger.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+            logger.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}",
+                    authentication.getName(), requestURI);
 
         } else {
             logger.info("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);

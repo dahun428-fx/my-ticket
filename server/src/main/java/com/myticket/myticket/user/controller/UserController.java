@@ -1,5 +1,7 @@
 package com.myticket.myticket.user.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,20 +34,22 @@ public class UserController {
     }
 
     // @GetMapping(value="/login", produces = "application/json; charset=utf8")
-    // public ResponseEntity<ReadUserDto> signIn(@RequestBody ReadUserDto readUserDto) {
-    //     ReadUserDto user = userService.findUserById(readUserDto);
-    //     if(user == null) {
-    //         throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.LOGIN_FAIL.getMessage());
-    //     }
-    //     return ResponseEntity.ok().body(user);
+    // public ResponseEntity<ReadUserDto> signIn(@RequestBody ReadUserDto
+    // readUserDto) {
+    // ReadUserDto user = userService.findUserById(readUserDto);
+    // if(user == null) {
+    // throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
+    // UserEnumType.LOGIN_FAIL.getMessage());
     // }
-    //auth check
+    // return ResponseEntity.ok().body(user);
+    // }
+    // auth check
     @GetMapping(value = "/getUser", produces = "application/json; charset=utf8")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<ReadUserDto> getUser(@AuthenticationPrincipal User user){
+    public ResponseEntity<ReadUserDto> getUser(@AuthenticationPrincipal User user, HttpServletRequest req) {
         // ReadUserDto findUser = new ReadUserDto();
-        System.out.println("auth user : "+user);
-        //  userService.loadUserByUsername(user.getUsername());
+        System.out.println("auth user : " + user);
+        // userService.loadUserByUsername(user.getUsername());
         // BeanUtils.copyProperties(user, findUser);
 
         // findUser = userService.findUserById(findUser);
