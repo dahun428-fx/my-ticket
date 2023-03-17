@@ -12,17 +12,15 @@ public class JwtConfig {
 
     @Value("${jwt.token.key}")
     private String accessTokenSecretKey;
-    private Long accessTokenValidityInSeconds = 8L;// 30분
+    @Value("${jwt.access_token.milli_sec_time}")
+    private Long tokenValidityInMilliseconds;
+    @Value("${jwt.refresh_token.milli_sec_time}")
+    private Long refreshTokenValidityMilliseconds;
     @Value("${jwt.token.name}")
     private String accessTokenName;
-    @Value("${jwt.refresh_token.name}")
-    private String refreshTokenName;
-    @Value("${jwt.refresh_token.key}")
-    private String refreshSecretKey;
 
     @Bean(name = "JwtTokenProvider")
     public JwtTokenProvider jwtTokenProvider() {
-        return new JwtTokenProvider(accessTokenName, accessTokenSecretKey, accessTokenValidityInSeconds,
-                refreshTokenName, refreshSecretKey);
+        return new JwtTokenProvider(accessTokenName, accessTokenSecretKey, tokenValidityInMilliseconds, refreshTokenValidityMilliseconds);
     }
 }

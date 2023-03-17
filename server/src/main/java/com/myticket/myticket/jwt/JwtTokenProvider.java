@@ -39,29 +39,18 @@ public class JwtTokenProvider {
     protected final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     protected final String secretKey;
-    protected String tokenName;
-    protected final String refreshSecrectKey;
-    protected final String refreshTokenName;
+    protected final String tokenName;
 
     protected final Long tokenValidityInMilliseconds;
     protected final Long refreshTokenValidityMilliseconds;
     protected Key key;
-    protected Key refreshKey;
 
-    public JwtTokenProvider(String tokenName, String secretKey, long accessTokenValidityInSeconds,
-            String refreshTokenName, String refreshSecretKey) {
+    public JwtTokenProvider(String tokenName, String secretKey, long tokenValidityInMilliseconds, long refreshTokenValidityMilliseconds) {
 
         this.tokenName = tokenName;
         this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-
-        this.refreshTokenName = refreshTokenName;
-        this.refreshSecrectKey = refreshSecretKey;
-
-        // this.tokenValidityInMilliseconds = accessTokenValidityInSeconds * 1000;
-        this.tokenValidityInMilliseconds = accessTokenValidityInSeconds * 1000;
-        this.refreshTokenValidityMilliseconds = 1000L * 60 * 60 * 24 * 7;// 7 days
-        // this.refreshTokenValidityMilliseconds = 1000L * 10;// 7 days
-        // secret key --> base64
+        this.tokenValidityInMilliseconds = tokenValidityInMilliseconds;
+        this.refreshTokenValidityMilliseconds = refreshTokenValidityMilliseconds;
         byte[] keyBytes = secretKey.getBytes();
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
