@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -72,7 +71,7 @@ public class SpringSecurityConfigWithJwt {
                 .and()
                 .authorizeHttpRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/api/user/signup").permitAll()
+                .antMatchers("/api/v1/user/signup").permitAll()
                 .antMatchers("/api/v1/auth/authenticate").permitAll()// allow no need jwt
                 .antMatchers("/api/v1/auth/refresh").permitAll()// allow no need jwt
                 .anyRequest()

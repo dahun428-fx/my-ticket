@@ -20,30 +20,18 @@ import lombok.AllArgsConstructor;
 
 @EnableWebMvc
 @RestController
-@RequestMapping(value = "api/user")
+@RequestMapping(value = "api/v1/user")
 @AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    // @PostMapping(value="/signup", produces = "application/json; charset=utf8")
     @PostMapping("/signup")
     public ResponseEntity<CreateUserDto> signUp(@RequestBody CreateUserDto createUserDto) {
         CreateUserDto createdUser = userService.addUser(createUserDto);
         return ResponseEntity.ok().body(createdUser);
     }
-
-    // @GetMapping(value="/login", produces = "application/json; charset=utf8")
-    // public ResponseEntity<ReadUserDto> signIn(@RequestBody ReadUserDto
-    // readUserDto) {
-    // ReadUserDto user = userService.findUserById(readUserDto);
-    // if(user == null) {
-    // throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
-    // UserEnumType.LOGIN_FAIL.getMessage());
-    // }
-    // return ResponseEntity.ok().body(user);
-    // }
-    // auth check
+    
     @GetMapping(value = "/getUser", produces = "application/json; charset=utf8")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<ReadUserDto> getUser(@AuthenticationPrincipal User user, HttpServletRequest req) {

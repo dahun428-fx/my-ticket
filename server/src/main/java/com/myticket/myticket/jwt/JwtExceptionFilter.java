@@ -1,4 +1,4 @@
-package com.myticket.myticket.jwt.Enum;
+package com.myticket.myticket.jwt;
 
 import java.io.IOException;
 
@@ -10,6 +10,8 @@ import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.myticket.myticket.jwt.Enum.JwtEnum;
 
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
