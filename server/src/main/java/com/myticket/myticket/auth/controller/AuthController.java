@@ -34,7 +34,7 @@ public class AuthController {
     // login
     @PostMapping(value = "/authenticate")
     public ResponseEntity<TokenDto> signIn(@RequestBody LoginUserDto loginUserDto) {
-
+        System.out.println("login attach user : "+loginUserDto);
         TokenDto tokenDto = authService.authenticate(loginUserDto.getId(), loginUserDto.getPassword());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenDto.getAccessToken());
