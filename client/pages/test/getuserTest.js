@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { getUser } from '../../api/user';
+import useAuth from '../../Hoc/useAuth';
+import withAuth from '../../Hoc/withAuth';
 
 function my(props) {
     
@@ -17,11 +19,13 @@ function my(props) {
     }
 
     return (
-        <div>
+        <>
+            <div>
             getUser
             <button onClick={()=> onClickHandler()}>btn</button>
-        </div>
+            </div>
+        </>
     );
 }
 
-export default my;
+export default withAuth(my);

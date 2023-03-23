@@ -34,19 +34,19 @@ public class AuthController {
     // login
     @PostMapping(value = "/authenticate")
     public ResponseEntity<TokenDto> signIn(@RequestBody LoginUserDto loginUserDto) {
-        System.out.println("login attach user : "+loginUserDto);
+        System.out.println("login attach user : " + loginUserDto);
         TokenDto tokenDto = authService.authenticate(loginUserDto.getId(), loginUserDto.getPassword());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenDto.getAccessToken());
         httpHeaders.add(JwtFilter.REFRESH_HEADER, tokenDto.getRefreshToken());
-
+        System.out.println("session 발급 : " + tokenDto);
         return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
     }
 
     // refresh
     @PostMapping(value = "/refresh")
     public ResponseEntity<TokenDto> refreshToken(@RequestHeader(JwtFilter.REFRESH_HEADER) String refreshToken) {
-        System.out.println("refresh token : " +refreshToken);
+        System.out.println("refresh token : " + refreshToken);
         TokenDto tokenDto = authService.reGenerateAccessToken(refreshToken);
 
         HttpHeaders httpHeaders = new HttpHeaders();

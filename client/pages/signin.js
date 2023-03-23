@@ -4,8 +4,9 @@ import Button from '../Component/Common/Button'
 import { userLogin } from '../api/user';
 import Cookies from 'js-cookie';
 import { signIn } from 'next-auth/react';
+import WithAuth from '../Hoc/withAuth';
 
-export default function login() {
+ function login() {
   
   const [userid, setUserid] = useState("");
   const [userpw, setUserpw] = useState("");
@@ -53,3 +54,5 @@ export default function login() {
     </>
   )
 }
+
+export default WithAuth(login);

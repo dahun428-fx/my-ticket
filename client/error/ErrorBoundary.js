@@ -1,8 +1,9 @@
 import { Router } from "next/router";
-import { isInstanceOfApiError } from "../middleware/isInstanceOfApiError";
+import { AuthError, isInstanceOfApiError } from "../middleware/isInstanceOfApiError";
 import React from 'react';
 import NotFoundPage from "../pages/error/404";
 import ErrorPage from "../pages/error/error";
+import { signOut } from "next-auth/react";
 
 /*
 error boundary 사용시 component 에서 catch 를 사용하면 안된다. 해당 componenet 에서 error 처리가 완료되어버림.
@@ -57,7 +58,7 @@ export default class ErrorBoundary extends React.Component {
             if(notFound) {
                 return <NotFoundPage />
             }
-            if(redirectUrl) {
+            if(redirectUrl && !(error instanceof AuthError)) {
                 window.location.href = redirectUrl;
                 return;
             }

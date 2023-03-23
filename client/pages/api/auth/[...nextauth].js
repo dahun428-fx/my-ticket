@@ -8,19 +8,23 @@ import Cookies from "js-cookie";
 async function refreshAccessToken(tokenObject) {
     try {
         
-        const tokenResponse = await axios.post(REFRESH_TOKEN, {},
+        const tokenResponse = await axios.post(`${process.env.NEXTAUTH_URL}/${REFRESH_TOKEN}`, {},
             {
                 headers : {
+                    // 'Authorization': `Bearer ${tokenObject.accessToken}`,
                     'RefreshToken':tokenObject.refreshToken,
                 }
             }
         );
-        return {
+        console.log('tokenResponse', tokenResponse);
+        return {    
             accessToken : tokenResponse.data.accessToken,
             refreshToken : tokenResponse.data.refreshToken,
+            accessTokenExpiry : tokenResponse.data.accessTokenExpiry,
         }
 
     } catch (error) {
+        console.log('RefreshAccessTokenErrorRefreshAccessTokenErrorRefreshAccessTokenError')
         return {
             ...tokenObject,
             error:"RefreshAccessTokenError",
@@ -36,10 +40,10 @@ const providers = [
                 const user = await axios.post(`${process.env.NEXTAUTH_URL}/${USER_LOGIN}`, {
                     id, password
                 });
+                console.log('get session from next auth ,', user.data)
                 const {accessToken, refreshToken} = user.data;
 
-                if(accessToken) {
-
+                if(accessToken && refreshToken) {
                     return user;
                 }
                 return null;
@@ -59,16 +63,19 @@ const callbacks = {
         }
         //accessTokenExpiry 
         const shouldRefreshTime = Math.round(token.accessTokenExpiry - Date.now());
+        console.log('expire ', token.accessTokenExpiry, shouldRefreshTime);
 
         if(shouldRefreshTime>0) {
             return Promise.resolve(token);
         }
         
         token = refreshAccessToken(token);
+        console.log('refresh access token excute', token)
         return Promise.resolve(token);
     },
     session: async({session, token}) => {
         session.accessToken = token.accessToken;
+        session.refreshToken = token.refreshToken;
         session.accessTokenExpiry = token.accessTokenExpiry;
         session.error = token.error;
         return Promise.resolve(session);
@@ -84,5 +91,8 @@ export const option = {
     providers, callbacks, pages, secret : process.env.NEXTAUTH_SECRET
 }
 
-const Auth = (req, res) => NextAuth(req, res, option);
+const Auth = (req, res) => {
+    
+    return NextAuth(req, res, option)
+};
 export default Auth;
