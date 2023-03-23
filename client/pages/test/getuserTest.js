@@ -13,9 +13,7 @@ function my(props) {
     const onClickHandler = () => {
         getUser().then(res => {
             console.log('getUser res : ', res);
-        }).catch(err => {
-            console.log('getUser err : ', err);
-        })
+        });
     }
 
     return (

@@ -1,11 +1,14 @@
 import '../styles/globals.css'
 import Layout from '../Layout/layout';
+import ErrorBoundary from '../error/ErrorBoundary'; 
 
 function MyApp({ Component, pageProps }) {
   return (
-  <Layout>
-    <Component {...pageProps} />
-  </Layout>
+    <Layout>
+        <ErrorBoundary>
+        <Component {...pageProps} />
+        </ErrorBoundary>
+      </Layout>
   );
 }
 

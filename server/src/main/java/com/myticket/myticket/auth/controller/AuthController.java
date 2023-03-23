@@ -46,7 +46,7 @@ public class AuthController {
     // refresh
     @PostMapping(value = "/refresh")
     public ResponseEntity<TokenDto> refreshToken(@RequestHeader(JwtFilter.REFRESH_HEADER) String refreshToken) {
-
+        System.out.println("refresh token : " +refreshToken);
         TokenDto tokenDto = authService.reGenerateAccessToken(refreshToken);
 
         HttpHeaders httpHeaders = new HttpHeaders();

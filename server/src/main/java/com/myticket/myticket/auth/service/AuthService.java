@@ -34,10 +34,10 @@ public class AuthService {
 
         User findUser = userRepository.findById(id);
         if (findUser == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.LOGIN_FAIL.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL.getMessage());
         }
         if (!encoder.matches(password, findUser.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.LOGIN_FAIL.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL.getMessage());
         }
         Authentication authentication = this.createAuthentication(id, password);
         // 인증 정보를 기준으로 jwt access 토큰 생성
@@ -67,21 +67,6 @@ public class AuthService {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, JwtEnum.EXPIRED.getStatus());
         }
-        // if (StringUtils.hasText(refreshToken) &&
-        // jwtTokenProvider.validateToken(refreshToken)) {
-        // User findUser = userRepository.findByRefreshToken(refreshToken);
-        // if (findUser == null) {
-        // throw new
-        // UsernameNotFoundException(UserEnumType.USER_NOT_FOUND.getMessage());
-        // }
-        // Authentication authentication =
-        // jwtTokenProvider.getAuthentication(refreshToken);
-        // String accessToken = jwtTokenProvider.createToken(authentication);
-        // return new TokenDto(accessToken, refreshToken);
-        // } else {
-        // throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-        // UserEnumType.LOGIN_FAIL.getMessage());
-        // }
 
         return null;
     }

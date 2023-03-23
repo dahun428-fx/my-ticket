@@ -35,7 +35,7 @@ public class UserService implements UserDetailsService {
     public CreateUserDto addUser(CreateUserDto createUserDto){
         User findUser = userRepository.findById(createUserDto.getId());
         if(findUser != null) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.SIGN_UP_ALREADY_EXIST_USER.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, UserEnumType.SIGN_UP_ALREADY_EXIST_USER.getMessage());
         }
         createUserDto.setRoleType(UserRoleType.ROLE_USER);
         createUserDto.setPassword(encoder.encode(createUserDto.getPassword()));
@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService {
 
         User findUser = userRepository.findById(userid);
         if(findUser == null) {
-            throw new UsernameNotFoundException(UserEnumType.LOGIN_FAIL.getMessage());
+            throw new UsernameNotFoundException(UserEnumType.LOGIN_FAIL.getMessage());//401
         }
         findUser.setAuthorities(List.of(new SimpleGrantedAuthority(findUser.getRoleType().name())));
         logger.info("Spring Security loadUserByUserName : {}", findUser);

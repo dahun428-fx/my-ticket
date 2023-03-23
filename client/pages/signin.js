@@ -18,17 +18,10 @@ export default function login() {
     console.log(form);
 
     userLogin(form).then(res=>{
-        console.log('userLogin res : ', res);
         const {accessToken, refreshToken} = res.data;
         Cookies.set('access_token', accessToken);
         Cookies.set('refresh_token', refreshToken);
-        // localStorage.setItem('access_token', accessToken);
-        // localStorage.setItem('refresh_token', refreshToken);
         alert('login success');
-    }).catch(err => {
-      console.log('userLogin err : ', err);
-      const {message} = err.response.data;
-      alert(message);
     });
     return () =>{};
   }

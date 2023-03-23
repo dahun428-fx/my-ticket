@@ -2,6 +2,7 @@ package com.myticket.myticket.user.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,14 +36,14 @@ public class UserController {
     @GetMapping(value = "/getUser", produces = "application/json; charset=utf8")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<ReadUserDto> getUser(@AuthenticationPrincipal User user, HttpServletRequest req) {
-        // ReadUserDto findUser = new ReadUserDto();
+        ReadUserDto findUser = new ReadUserDto();
         System.out.println("auth user : " + user);
         // userService.loadUserByUsername(user.getUsername());
         // BeanUtils.copyProperties(user, findUser);
 
         // findUser = userService.findUserById(findUser);
-
-        return ResponseEntity.ok().body(null);
+        findUser.setId(user.getUsername());
+        return ResponseEntity.ok().body(findUser);
     }
 
 }
