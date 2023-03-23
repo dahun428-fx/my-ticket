@@ -12,4 +12,5 @@ import lombok.ToString;
 public class TokenDto {
     private String accessToken;
     private String refreshToken;
+    private Long accessTokenExpiry;
 }

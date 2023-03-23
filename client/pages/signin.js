@@ -3,6 +3,7 @@ import Input from '../Component/Form/Input'
 import Button from '../Component/Common/Button'
 import { userLogin } from '../api/user';
 import Cookies from 'js-cookie';
+import { signIn } from 'next-auth/react';
 
 export default function login() {
   
@@ -17,12 +18,16 @@ export default function login() {
 
     console.log(form);
 
-    userLogin(form).then(res=>{
-        const {accessToken, refreshToken} = res.data;
-        Cookies.set('access_token', accessToken);
-        Cookies.set('refresh_token', refreshToken);
-        alert('login success');
-    });
+    // userLogin(form).then(res=>{
+    //     const {accessToken, refreshToken} = res.data;
+    //     Cookies.set('access_token', accessToken);
+    //     Cookies.set('refresh_token', refreshToken);
+    //     alert('login success');
+    // });
+    signIn('credentials', {
+      id:userid, password:userpw, redirect: true, 
+      // callbackUrl:'/test/loginSuccess'
+    })
     return () =>{};
   }
 

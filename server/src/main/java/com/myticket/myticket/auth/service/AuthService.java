@@ -42,12 +42,13 @@ public class AuthService {
         Authentication authentication = this.createAuthentication(id, password);
         // 인증 정보를 기준으로 jwt access 토큰 생성
         String accessToken = jwtTokenProvider.createToken(authentication);
+        Long accessTokenExpiry = jwtTokenProvider.getAccessTokenExpiry();
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
         // update refresh token
         findUser.updateRefreshToken(refreshToken);
 
-        return new TokenDto(accessToken, refreshToken);
+        return new TokenDto(accessToken, refreshToken, accessTokenExpiry);
     }
 
     @Transactional
@@ -60,8 +61,9 @@ public class AuthService {
                     throw new UsernameNotFoundException(UserEnumType.USER_NOT_FOUND.getMessage());
                 }
                 Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
+                Long accessTokenExpiry = jwtTokenProvider.getAccessTokenExpiry();
                 String accessToken = jwtTokenProvider.createToken(authentication);
-                return new TokenDto(accessToken, refreshToken);
+                return new TokenDto(accessToken, refreshToken, accessTokenExpiry);
             }
 
         } catch (Exception e) {

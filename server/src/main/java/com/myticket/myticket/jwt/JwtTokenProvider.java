@@ -43,6 +43,7 @@ public class JwtTokenProvider {
 
     protected final Long tokenValidityInMilliseconds;
     protected final Long refreshTokenValidityMilliseconds;
+    protected final Long accessTokenExpiry;
     protected Key key;
 
     public JwtTokenProvider(String tokenName, String secretKey, long tokenValidityInMilliseconds, long refreshTokenValidityMilliseconds) {
@@ -51,8 +52,13 @@ public class JwtTokenProvider {
         this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
         this.tokenValidityInMilliseconds = tokenValidityInMilliseconds;
         this.refreshTokenValidityMilliseconds = refreshTokenValidityMilliseconds;
+        this.accessTokenExpiry = (new Date()).getTime() + tokenValidityInMilliseconds;
         byte[] keyBytes = secretKey.getBytes();
         this.key = Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public Long getAccessTokenExpiry(){
+        return this.accessTokenExpiry;
     }
 
     // create jwt token
@@ -64,9 +70,10 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
         // payload setting
         // now : start time
-        long now = (new Date()).getTime();
+        // long now = (new Date()).getTime();
         // validity : expired time
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+        Date validity = new Date(this.accessTokenExpiry);
+        // Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
