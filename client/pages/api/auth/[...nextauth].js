@@ -3,20 +3,15 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
 import { USER_LOGIN } from "../../../api/url/enum/user.api.url";
 import NextAuth from "next-auth/next";
-import Cookies from "js-cookie";
+import { PAGE_LOGIN } from "../../../api/url/enum/user.page.url";
+import { userLogin } from "../../../api/user";
+import { getNewToken } from "../../../api/auth";
 
 async function refreshAccessToken(tokenObject) {
     try {
         
-        const tokenResponse = await axios.post(`${process.env.NEXTAUTH_URL}/${REFRESH_TOKEN}`, {},
-            {
-                headers : {
-                    // 'Authorization': `Bearer ${tokenObject.accessToken}`,
-                    'RefreshToken':tokenObject.refreshToken,
-                }
-            }
-        );
-        console.log('tokenResponse', tokenResponse);
+        const tokenResponse = await getNewToken(tokenObject.refreshToken);
+
         return {    
             accessToken : tokenResponse.data.accessToken,
             refreshToken : tokenResponse.data.refreshToken,
@@ -24,7 +19,6 @@ async function refreshAccessToken(tokenObject) {
         }
 
     } catch (error) {
-        console.log('RefreshAccessTokenErrorRefreshAccessTokenErrorRefreshAccessTokenError')
         return {
             ...tokenObject,
             error:"RefreshAccessTokenError",
@@ -37,10 +31,8 @@ const providers = [
         name:'Credentials',
         authorize: async({id, password}) => {
             try {
-                const user = await axios.post(`${process.env.NEXTAUTH_URL}/${USER_LOGIN}`, {
-                    id, password
-                });
-                console.log('get session from next auth ,', user.data)
+
+                const user = await userLogin({userid:id, userpw:password});
                 const {accessToken, refreshToken} = user.data;
 
                 if(accessToken && refreshToken) {
@@ -48,7 +40,7 @@ const providers = [
                 }
                 return null;
             } catch (error) {
-                console.log('authr, err : ', error)    
+                Promise.reject(error);
             }
         }
     })
@@ -63,14 +55,12 @@ const callbacks = {
         }
         //accessTokenExpiry 
         const shouldRefreshTime = Math.round(token.accessTokenExpiry - Date.now());
-        console.log('expire ', token.accessTokenExpiry, shouldRefreshTime);
 
         if(shouldRefreshTime>0) {
             return Promise.resolve(token);
         }
         
         token = refreshAccessToken(token);
-        console.log('refresh access token excute', token)
         return Promise.resolve(token);
     },
     session: async({session, token}) => {
@@ -83,8 +73,8 @@ const callbacks = {
 }
 
 const pages = {
-    signIn : '/signin',
-    signOut : '/test/loginSuccess',
+    signIn : PAGE_LOGIN,
+    // signOut : '/test/loginSuccess',
 }
 
 export const option = {

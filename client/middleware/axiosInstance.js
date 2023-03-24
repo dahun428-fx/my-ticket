@@ -13,7 +13,6 @@ axiosClient.defaults.headers = {
 
 axiosClient.interceptors.request.use(async(config) => {
     const session = await getSession();
-    console.log('inter ceptor se', session);
     if(session) {
         const { accessToken, refreshToken } = session;
             config.headers['Authorization'] = `Bearer ${accessToken}`;

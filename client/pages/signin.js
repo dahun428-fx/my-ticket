@@ -13,11 +13,11 @@ import WithAuth from '../Hoc/withAuth';
     
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    let form = {
-      userid, userpw
-    }
+    // let form = {
+    //   userid, userpw
+    // }
 
-    console.log(form);
+    // console.log(form);
 
     // userLogin(form).then(res=>{
     //     const {accessToken, refreshToken} = res.data;
@@ -27,7 +27,7 @@ import WithAuth from '../Hoc/withAuth';
     // });
     signIn('credentials', {
       id:userid, password:userpw, redirect: true, 
-      // callbackUrl:'/test/loginSuccess'
+      callbackUrl:'/test/loginSuccess'
     })
     return () =>{};
   }

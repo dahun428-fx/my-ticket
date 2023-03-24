@@ -1,3 +1,4 @@
+import WithAuth from "../../Hoc/withAuth";
 
 function loginSuccess(props) {
     return (
@@ -7,4 +8,4 @@ function loginSuccess(props) {
     );
 }
 
-export default loginSuccess;
+export default WithAuth(loginSuccess);
