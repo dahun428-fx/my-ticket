@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myticket.myticket.auth.dto.TokenDto;
 import com.myticket.myticket.auth.dto.LoginUserDto;
+import com.myticket.myticket.auth.dto.OAuthUserDto;
 import com.myticket.myticket.auth.service.AuthService;
 import com.myticket.myticket.jwt.JwtFilter;
 
@@ -53,5 +54,17 @@ public class AuthController {
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenDto.getAccessToken());
 
         return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/oauth")
+    public ResponseEntity<TokenDto> oauth(@RequestBody OAuthUserDto userDto){
+
+        TokenDto tokenDto = authService.oAuthExcute(userDto);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenDto.getAccessToken());
+        httpHeaders.add(JwtFilter.REFRESH_HEADER, tokenDto.getRefreshToken());
+        System.out.println("o auth session 발급 : " + tokenDto);
+
+        return new ResponseEntity<>(tokenDto,httpHeaders, HttpStatus.OK);
     }
 }

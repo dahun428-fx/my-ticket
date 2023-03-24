@@ -43,6 +43,11 @@ import WithAuth from '../Hoc/withAuth';
         setUserpw(val);
     } 
   }
+  const signinWithGoogle = (e) => {
+    console.log('signinWithGoogle');
+    signIn('google')
+    // signIn('googleCustomProvider')
+  }
   return (
     <>
       <div>login</div>
@@ -51,6 +56,8 @@ import WithAuth from '../Hoc/withAuth';
           <Input name="userpw" type="password" placeholder="" title={`userpw`} onChange={onChangeInputHandler} value={userpw}/>
           <Button type="submit" title="submit" />
       </form>
+      <Button type="button" title="signin with google" onClick={signinWithGoogle}/>
+      {/* <a href='http://localhost:4001/oauth2/authorization/google'>sign with google</a> */}
     </>
   )
 }

@@ -13,6 +13,9 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.myticket.myticket.auth.handler.OAuth2AuthenticationFailureHandler;
+import com.myticket.myticket.auth.handler.OAuth2AuthenticationSuccessHandler;
+import com.myticket.myticket.auth.service.CustomOAuth2UserService;
 import com.myticket.myticket.jwt.JwtAccessDeniedHandler;
 import com.myticket.myticket.jwt.JwtAuthenticationEntryPoint;
 import com.myticket.myticket.jwt.JwtSecurityConfig;
@@ -30,6 +33,7 @@ public class SpringSecurityConfigWithJwt {
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint entryPoint;
     private final JwtAccessDeniedHandler accessDeniedHandler;
+    // private final CustomOAuth2UserService auth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -67,6 +71,15 @@ public class SpringSecurityConfigWithJwt {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                // oauth
+                // .and()
+                // .oauth2Login()
+                // .userInfoEndpoint()
+                // .userService(auth2UserService)
+                // .and()
+                // .successHandler(new OAuth2AuthenticationSuccessHandler())
+                // .failureHandler(new OAuth2AuthenticationFailureHandler())
+                // .and()
                 // api url
                 .and()
                 .authorizeHttpRequests()
@@ -75,6 +88,7 @@ public class SpringSecurityConfigWithJwt {
                 .antMatchers("/api/v1/user/signup").permitAll()
                 .antMatchers("/api/v1/auth/authenticate").permitAll()// allow no need jwt
                 .antMatchers("/api/v1/auth/refresh").permitAll()// allow no need jwt
+                .antMatchers("/api/v1/auth/oauth").permitAll()// allow no need jwt
                 .anyRequest()
                 .authenticated()// 나머지 jwt 인증 필요
                 .and()

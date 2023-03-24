@@ -9,6 +9,15 @@ export const userLogin = async (data) => {
     }
     return await axios.post(`${USER_LOGIN}`, request);
 }
+export const oAuthLogin = async(data) => {
+    const request = {
+        id: data.userid,
+        name : data.username,
+        googleId:data.googleId,
+    }
+    return await axios.post(`${'/api/user/oauth'}`, request);
+}
+
 export const getUser = async () => {
     return await axios.get(`${GET_USER}`);
 }

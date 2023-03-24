@@ -1,5 +1,7 @@
 package com.myticket.myticket.auth.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,11 +14,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import com.myticket.myticket.user.repository.UserRepository;
-
+import com.myticket.myticket.auth.dto.OAuthUserDto;
 import com.myticket.myticket.auth.dto.TokenDto;
 import com.myticket.myticket.jwt.JwtTokenProvider;
 import com.myticket.myticket.jwt.Enum.JwtEnum;
 import com.myticket.myticket.user.Enum.UserEnumType;
+import com.myticket.myticket.user.Enum.UserRoleType;
 import com.myticket.myticket.vo.User;
 import lombok.AllArgsConstructor;
 
@@ -24,10 +27,40 @@ import lombok.AllArgsConstructor;
 @Service
 public class AuthService {
 
+    protected final Logger logger = LoggerFactory.getLogger(AuthService.class);
+
     private final PasswordEncoder encoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final UserRepository userRepository;
+
+    @Transactional
+    public TokenDto oAuthExcute(OAuthUserDto userDto){
+
+        User findUser = userRepository.findById(userDto.getId());
+        if(findUser == null) {
+            logger.info("oAuthExcute, 회원가입이 필요한 유저입니다., {}", userDto.getId());
+            User user = new User();
+            user.setId(userDto.getId());
+            user.setName(userDto.getName());
+            user.setPassword(encoder.encode(userDto.getGoogleId()));
+            // user.setPassword(userDto.getGoogleId());
+            user.setRoleType(UserRoleType.ROLE_USER);
+            userRepository.save(user);
+            findUser = user;
+        }
+        System.out.println("findUser : "+ findUser);
+
+        Authentication authentication = this.createAuthentication(findUser.getId(), userDto.getGoogleId());
+        String accessToken = jwtTokenProvider.createToken(authentication);
+        Long accessTokenExpiry = jwtTokenProvider.getAccessTokenExpiry();
+        String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
+
+        findUser.updateRefreshToken(refreshToken);
+
+        return new TokenDto(accessToken, refreshToken, accessTokenExpiry);
+    }
+
 
     @Transactional
     public TokenDto authenticate(String id, String password) {
