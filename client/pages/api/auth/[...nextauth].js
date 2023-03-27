@@ -1,14 +1,13 @@
-import { REFRESH_TOKEN } from "../../../api/url/enum/auth.api.url"
 import CredentialsProvider from "next-auth/providers/credentials";
-// import * as GoogleCustomProvider from "next-auth/providers"
-// import Providers from "next-auth/providers/"
 import GoogleProvider from "next-auth/providers/google";
-import axios from "axios";
-import { USER_LOGIN } from "../../../api/url/enum/user.api.url";
+import GithubProvider from "next-auth/providers/github";
+
 import NextAuth from "next-auth/next";
 import { PAGE_LOGIN } from "../../../api/url/enum/user.page.url";
 import { oAuth2Login, userLogin } from "../../../api/user";
 import { getNewToken } from "../../../api/auth";
+import AllowProvider from '../../../configs/config.oAuth2.provider.controll';
+
 
 async function refreshAccessToken(tokenObject) {
     try {
@@ -57,15 +56,23 @@ const providers = [
         //       response_type: "code"
         //     }
         // }
+    }),
+    GithubProvider({
+        clientId:process.env.GITHUB_CLIENT_ID,
+        clientSecret:process.env.GITHUB_CLIENT_PW,
     })
+
 ]
+
 //https://dev.to/ifennamonanu/building-google-jwt-authentication-with-nextauth-5g78
 const callbacks = {
+
     signIn : async({user, account, profile, email, credentials}) =>{
         if(account) {
             const {provider} = account;
-            if(provider === 'google') {
+            if(AllowProvider(provider)) {
                 const {data} = await oAuth2Login({user, provider});
+                console.log('sign in : ', provider, ', user : ', user);
                 if(!data) {
                     return false;
                 }
@@ -74,10 +81,12 @@ const callbacks = {
                 account.refreshToken = refreshToken;
                 account.accessTokenExpiry = accessTokenExpiry;
                 return true;
+            } else if (provider === 'credentials') {
+                return true;
             }
             //user 검색 --> user 없을시에 회원가입 진행 ( db ) --> token 저장
         }
-        return true;
+        return false;
     },
     jwt : async ({token, user, account}) => {
 
@@ -88,8 +97,7 @@ const callbacks = {
                 token.accessToken = user.data.accessToken;
                 token.refreshToken = user.data.refreshToken;
                 token.accessTokenExpiry = user.data.accessTokenExpiry;
-            } else if (provider === 'google') {
-                
+            } else if (AllowProvider(provider)) {
                 token.accessToken = account.accessToken;
                 token.refreshToken = account.refreshToken;
                 token.accessTokenExpiry = account.accessTokenExpiry;
@@ -117,7 +125,7 @@ const callbacks = {
 
 const pages = {
     signIn : PAGE_LOGIN,
-    // signOut : '/test/loginSuccess',
+    signOut : '/test/signOutSuccess',
 }
 
 export const option = {

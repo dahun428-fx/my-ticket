@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.myticket.myticket.auth.Enum.ProviderType;
 import com.myticket.myticket.user.Enum.UserRoleType;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_no")

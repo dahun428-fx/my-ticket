@@ -5,6 +5,7 @@ import { userLogin } from '../api/user';
 import Cookies from 'js-cookie';
 import { signIn } from 'next-auth/react';
 import WithAuth from '../Hoc/withAuth';
+import getAllowProvider from '../configs/config.oAuth2.provider.controll';
 
  function login() {
   
@@ -13,18 +14,7 @@ import WithAuth from '../Hoc/withAuth';
     
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    // let form = {
-    //   userid, userpw
-    // }
 
-    // console.log(form);
-
-    // userLogin(form).then(res=>{
-    //     const {accessToken, refreshToken} = res.data;
-    //     Cookies.set('access_token', accessToken);
-    //     Cookies.set('refresh_token', refreshToken);
-    //     alert('login success');
-    // });
     signIn('credentials', {
       id:userid, password:userpw, redirect: true, 
       callbackUrl:'/test/loginSuccess'
@@ -46,8 +36,12 @@ import WithAuth from '../Hoc/withAuth';
   const signinWithGoogle = (e) => {
     console.log('signinWithGoogle');
     signIn('google')
-    // signIn('googleCustomProvider')
   }
+  const signinWithGithub = (e) => {
+    console.log('signingithub');
+    signIn('github');
+  }
+  
   return (
     <>
       <div>login</div>
@@ -56,7 +50,17 @@ import WithAuth from '../Hoc/withAuth';
           <Input name="userpw" type="password" placeholder="" title={`userpw`} onChange={onChangeInputHandler} value={userpw}/>
           <Button type="submit" title="submit" />
       </form>
-      <Button type="button" title="signin with google" onClick={signinWithGoogle}/>
+      {getAllowProvider('google') && 
+        <div>
+        <Button type="button" title="signin with google" onClick={signinWithGoogle}/>
+        </div>
+      }
+      {
+        getAllowProvider('github') &&
+      <div>
+      <Button type="button" title="signin with github" onClick={signinWithGithub}/>
+      </div>
+      }
       {/* <a href='http://localhost:4001/oauth2/authorization/google'>sign with google</a> */}
     </>
   )

@@ -2,6 +2,8 @@ package com.myticket.myticket.user.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +27,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserController {
 
+    protected final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     @PostMapping("/signup")
@@ -36,13 +39,10 @@ public class UserController {
     @GetMapping(value = "/getUser", produces = "application/json; charset=utf8")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<ReadUserDto> getUser(@AuthenticationPrincipal User user, HttpServletRequest req) {
+        logger.info("get User Controller , {}", user);
         ReadUserDto findUser = new ReadUserDto();
-        System.out.println("auth user : " + user);
-        // userService.loadUserByUsername(user.getUsername());
-        // BeanUtils.copyProperties(user, findUser);
-
-        // findUser = userService.findUserById(findUser);
         findUser.setId(user.getUsername());
+        
         return ResponseEntity.ok().body(findUser);
     }
 
