@@ -7,7 +7,7 @@ import axios from "axios";
 import { USER_LOGIN } from "../../../api/url/enum/user.api.url";
 import NextAuth from "next-auth/next";
 import { PAGE_LOGIN } from "../../../api/url/enum/user.page.url";
-import { oAuthLogin, userLogin } from "../../../api/user";
+import { oAuth2Login, userLogin } from "../../../api/user";
 import { getNewToken } from "../../../api/auth";
 
 async function refreshAccessToken(tokenObject) {
@@ -47,54 +47,29 @@ const providers = [
             }
         }
     }),
-    // Providers.GoogleCustomProvider({
-    //     name:'googleCustomProvider',
-    //     authorize: async() => {
-    //         console.log('googleCustomProvider', 'googleCustomProvider')
-    //     }
-    // })
-    // CredentialsProvider({
-    //     name:'googleCustomProvider',
-    //     authorize: async() => {
-    //         console.log('googleCustomProvider', 'googleCustomProvider')
-    //         try {
-    //             await axios.get(`${'http://localhost:4001'}/oauth2/authorization/google`)
-                
-    //         } catch (error) {
-    //             console.error(error);
-    //             Promise.reject(error);
-    //         }
-    //     }
-    // })
     GoogleProvider({
         clientId:process.env.GOOGLE_CLIENT_ID,
         clientSecret:process.env.GOOGLE_CLIENT_PW,
-        authorization: {
-            params: {
-              prompt: "consent",
-              access_type: "offline",
-              response_type: "code"
-            }
-        }
+        // authorization: {
+        //     params: {
+        //       prompt: "consent",
+        //       access_type: "offline",
+        //       response_type: "code"
+        //     }
+        // }
     })
 ]
 //https://dev.to/ifennamonanu/building-google-jwt-authentication-with-nextauth-5g78
 const callbacks = {
     signIn : async({user, account, profile, email, credentials}) =>{
-        // console.log('signin callback ', user, account, profile, email, credentials);
-        console.log('signin callback ', user, account);
         if(account) {
             const {provider} = account;
             if(provider === 'google') {
-                console.log('go to google provider')
-                const {email, name, id} = user;
-                const {data} = await oAuthLogin({userid:email, username:name, googleId:id});
-                // console.log('execute backend data ', data);
+                const {data} = await oAuth2Login({user, provider});
                 if(!data) {
                     return false;
                 }
                 const {accessToken, refreshToken, accessTokenExpiry } = data;
-                console.log('data ::::: ', accessToken, refreshToken, accessTokenExpiry);
                 account.accessToken = accessToken;
                 account.refreshToken = refreshToken;
                 account.accessTokenExpiry = accessTokenExpiry;
@@ -105,9 +80,6 @@ const callbacks = {
         return true;
     },
     jwt : async ({token, user, account}) => {
-
-        // let accessToken, refreshToken, accessTokenExpiry;
-        console.log('jwt : ', account, ', user : ', user);
 
         if(account) {
 
@@ -123,36 +95,7 @@ const callbacks = {
                 token.accessTokenExpiry = account.accessTokenExpiry;
             }
         }
-        // if(user) {
-        //     token.accessToken = user.data.accessToken;
-        //     token.refreshToken = user.data.refreshToken;
-        //     token.accessTokenExpiry = user.data.accessTokenExpiry;
-        // }
-        // if(user) {
-        //     accessToken = user.data.accessToken;
-        //     refreshToken = user.data.refreshToken;
-        //     accessTokenExpiry = user.data.accessTokenExpiry;
-        // }
-        // if(account || user) {
-            // const {provider} = account;
-            // if(provider === 'credentials') {
-                // // console.log('credential token')
-                // accessToken = user.data.accessToken;
-                // refreshToken = user.data.refreshToken;
-                // accessTokenExpiry = user.data.accessTokenExpiry;
-            // } 
-            // else if (provider === 'google') {
-            //     accessToken = account.access_token; 
-            //     refreshToken = account.refresh_token;
-            //     accessTokenExpiry = account.expires_at;
-            // }
-        // }
-        // token.accessToken = accessToken;
-        // token.refreshToken = refreshToken;
-        // token.accessTokenExpiry = accessTokenExpiry;
-        // console.log('jwt , ', user, token, account);
-        // console.log('jwt  account , ', token, user, account);
-        
+         
         //accessTokenExpiry 
         const shouldRefreshTime = Math.round(token.accessTokenExpiry - Date.now());
 

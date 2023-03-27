@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.myticket.myticket.auth.Enum.ProviderType;
 import com.myticket.myticket.user.Enum.UserEnumType;
 import com.myticket.myticket.user.Enum.UserRoleType;
 import com.myticket.myticket.user.dto.CreateUserDto;
@@ -42,6 +43,7 @@ public class UserService implements UserDetailsService {
 
         User user = new User();
         BeanUtils.copyProperties(createUserDto, user);
+        user.setProviderType(ProviderType.LOCAL);
         userRepository.save(user);
         createUserDto.setPassword("");
         return createUserDto;

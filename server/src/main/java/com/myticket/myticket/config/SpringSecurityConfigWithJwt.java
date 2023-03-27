@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.myticket.myticket.auth.handler.OAuth2AuthenticationFailureHandler;
 import com.myticket.myticket.auth.handler.OAuth2AuthenticationSuccessHandler;
-import com.myticket.myticket.auth.service.CustomOAuth2UserService;
 import com.myticket.myticket.jwt.JwtAccessDeniedHandler;
 import com.myticket.myticket.jwt.JwtAuthenticationEntryPoint;
 import com.myticket.myticket.jwt.JwtSecurityConfig;
@@ -71,15 +70,6 @@ public class SpringSecurityConfigWithJwt {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                // oauth
-                // .and()
-                // .oauth2Login()
-                // .userInfoEndpoint()
-                // .userService(auth2UserService)
-                // .and()
-                // .successHandler(new OAuth2AuthenticationSuccessHandler())
-                // .failureHandler(new OAuth2AuthenticationFailureHandler())
-                // .and()
                 // api url
                 .and()
                 .authorizeHttpRequests()

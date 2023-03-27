@@ -1,11 +1,14 @@
 package com.myticket.myticket.auth.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -14,7 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import com.myticket.myticket.user.repository.UserRepository;
-import com.myticket.myticket.auth.dto.OAuthUserDto;
+import com.myticket.myticket.auth.dto.OAuth2UserInfo;
 import com.myticket.myticket.auth.dto.TokenDto;
 import com.myticket.myticket.jwt.JwtTokenProvider;
 import com.myticket.myticket.jwt.Enum.JwtEnum;
@@ -35,23 +38,23 @@ public class AuthService {
     private final UserRepository userRepository;
 
     @Transactional
-    public TokenDto oAuthExcute(OAuthUserDto userDto){
+    public TokenDto oAuthExcute(OAuth2UserInfo oAuth2UserInfo){
 
-        User findUser = userRepository.findById(userDto.getId());
+        User findUser = userRepository.findById(oAuth2UserInfo.getEmail());
         if(findUser == null) {
-            logger.info("oAuthExcute, 회원가입이 필요한 유저입니다., {}", userDto.getId());
-            User user = new User();
-            user.setId(userDto.getId());
-            user.setName(userDto.getName());
-            user.setPassword(encoder.encode(userDto.getGoogleId()));
-            // user.setPassword(userDto.getGoogleId());
-            user.setRoleType(UserRoleType.ROLE_USER);
+            logger.info("oAuthExcute, 회원가입이 필요한 유저입니다., {}", oAuth2UserInfo.getId());
+            User user = User.builder()
+                            .id(oAuth2UserInfo.getEmail())
+                            .name(oAuth2UserInfo.getName())
+                            .password("")
+                            .roleType(UserRoleType.ROLE_USER)
+                            .providerType(oAuth2UserInfo.getProviderType())
+                            .build();
             userRepository.save(user);
             findUser = user;
         }
-        System.out.println("findUser : "+ findUser);
 
-        Authentication authentication = this.createAuthentication(findUser.getId(), userDto.getGoogleId());
+        Authentication authentication = this.createOAuth2Authentication(findUser);
         String accessToken = jwtTokenProvider.createToken(authentication);
         Long accessTokenExpiry = jwtTokenProvider.getAccessTokenExpiry();
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
@@ -109,14 +112,20 @@ public class AuthService {
     private Authentication createAuthentication(String id, String password) {
         // 받아온 유저네임과 패스워드를 이용해 UsernamePasswordAuthenticationToken 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
-        System.out.println("before setauten user token");
+        
         // authenticationToken 객체를 통해 Authentication 객체 생성
         // 이 과정에서 CustomUserDetailsService 에서 우리가 재정의한 loadUserByUsername 메서드 호출
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        System.out.println("before setauten");
         // 그 객체를 시큐리티 컨텍스트에 저장
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        return authentication;
+    }
+
+    //oAuth2
+    private Authentication createOAuth2Authentication(User user){
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), null, List.of(new SimpleGrantedAuthority(user.getRoleType().name())));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
 }
