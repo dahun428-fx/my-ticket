@@ -81,4 +81,4 @@ import { FACEBOOK_PROVIDER, GITHUB_PROVIDER, GOOGLE_PROVIDER, KAKAO_PROVIDER, NA
   )
 }
 
-export default WithAuth(login);
+export default login;

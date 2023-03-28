@@ -23,6 +23,9 @@ export default function Navbar() {
       <div>
         <Link href="/signup">Signup</Link>
       </div>
+      <div>
+        <Link href="/user/updateAuth">updateAuth</Link>
+      </div>
       {isAuthenticated && 
       <>
         <div>
