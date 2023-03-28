@@ -13,11 +13,13 @@ const errorBoundaryState = {
     error : null,
 }
 export default class ErrorBoundary extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = errorBoundaryState;   
     }
-    
+
+
     static getDerivedStateFromError(error) {
         console.error(error);
         return {error};
@@ -43,7 +45,7 @@ export default class ErrorBoundary extends React.Component {
     componentDidMount(){
         window.addEventListener('error', this.handleError)
         window.addEventListener('unhandledrejection', this.handleRejectedPromise)
-        Router.events.off('routeChangeStart', this.resetState)
+        Router.events.on('routeChangeStart', this.resetState)
     }
     componentWillUnmount() {
         window.removeEventListener('error', this.handleError)
@@ -54,15 +56,20 @@ export default class ErrorBoundary extends React.Component {
     render(){
         const {error} = this.state;
         if(isInstanceOfApiError(error)) {
-            const {redirectUrl, notFound} = error;
+            const {redirectUrl, notFound, message} = error;
             if(notFound) {
                 return <NotFoundPage />
             }
-            if(redirectUrl && !(error instanceof AuthError)) {
-                window.location.href = redirectUrl;
-                return;
-            }
-            return <ErrorPage />
+            // if(redirectUrl && !(error instanceof AuthError)) {
+            //     window.location.href = redirectUrl;
+            //     return;
+            // }
+            return (
+
+            <>
+                <ErrorPage errorMessage={message}/>
+            </>
+            ) 
         }
         return this.props.children;
     }

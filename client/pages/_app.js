@@ -9,13 +9,13 @@ function MyApp({ Component, pageProps }) {
   const [interval, setInterval] = useState(0);
 
   return (
-    <SessionProvider session={pageProps.session} refetchInterval={interval}>
-        <ErrorBoundary>
+          <SessionProvider session={pageProps.session} refetchInterval={interval}>
           <Layout>
-          <Component {...pageProps} />
+              <ErrorBoundary>
+                <Component {...pageProps} />
+              </ErrorBoundary>
           </Layout>
-        </ErrorBoundary>
-    </SessionProvider>
+          </SessionProvider>
   );
 }
 

@@ -42,25 +42,27 @@ public class AuthService {
 
     @Transactional
     public TokenDto oAuthExcute(OAuth2UserInfo oAuth2UserInfo){
+        String userid = this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getEmail());
 
-        User findUser = userRepository.findById(oAuth2UserInfo.getEmail());
+        User findUser = userRepository.findById(userid);
         if(findUser == null) {
-            logger.info("oAuthExcute, 회원가입이 필요한 유저입니다., {}", oAuth2UserInfo.getId());
+
+            logger.info("oAuthExcute, 회원가입이 필요한 유저입니다., {}", userid);
             User user = User.builder()
-                            .id(oAuth2UserInfo.getEmail())
-                            .name(oAuth2UserInfo.getName())
+                            .id(userid)
+                            .name(this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getName()))
                             .password("")
-                            .roleType(UserRoleType.ROLE_USER)
+                            .roleType(UserRoleType.ROLE_OAUTH2)
                             .build();
             userRepository.save(user);
             findUser = user;
         } 
-        AuthProvider foundAuthProvider = providerRepository.findByUser_idAndType(findUser.getId(), oAuth2UserInfo.getProviderType().ordinal());
+        AuthProvider foundAuthProvider = providerRepository.findByUser_idAndType(findUser.getId(), oAuth2UserInfo.getProviderType().getType());
         if(foundAuthProvider == null) {
             AuthProvider authProvider = AuthProvider.builder()
                 .user(findUser)
                 .providerName(oAuth2UserInfo.getProviderType().name())
-                .providerType(oAuth2UserInfo.getProviderType().ordinal())
+                .providerType(oAuth2UserInfo.getProviderType().getType())
                 .build();
             providerRepository.save(authProvider);
         }
@@ -138,5 +140,15 @@ public class AuthService {
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), null, List.of(new SimpleGrantedAuthority(user.getRoleType().name())));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
+    }
+
+    private String setUserIdByOAuth2User(OAuth2UserInfo userInfo, String target){
+        String userid = target;
+        if(!StringUtils.hasText(userid)){
+            StringBuilder builder = new StringBuilder();
+            builder.append(userInfo.getProviderType().name()).append("_").append(userInfo.getId());
+            userid = builder.toString();
+        }
+        return userid;
     }
 }

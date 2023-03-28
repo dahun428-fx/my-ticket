@@ -3,12 +3,15 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import FacebookProvider from "next-auth/providers/facebook";
+import KakaoProvider from 'next-auth/providers/kakao';
+import NaverProvider from 'next-auth/providers/naver';
 
 import NextAuth from "next-auth/next";
 import { PAGE_LOGIN } from "../../../api/url/enum/user.page.url";
 import { oAuth2Login, userLogin } from "../../../api/user";
 import { getNewToken } from "../../../api/auth";
 import AllowProvider from '../../../configs/provider/config.oAuth2.provider.controll';
+import { KAKAO_PROVIDER, NAVER_PROVIDER } from "../../../configs/provider/config.oAuth2.provider.enum";
 
 
 async function refreshAccessToken(tokenObject) {
@@ -51,13 +54,6 @@ const providers = [
     GoogleProvider({
         clientId:process.env.GOOGLE_CLIENT_ID,
         clientSecret:process.env.GOOGLE_CLIENT_PW,
-        // authorization: {
-        //     params: {
-        //       prompt: "consent",
-        //       access_type: "offline",
-        //       response_type: "code"
-        //     }
-        // }
     }),
     GithubProvider({
         clientId:process.env.GITHUB_CLIENT_ID,
@@ -66,6 +62,14 @@ const providers = [
     FacebookProvider({
         clientId:process.env.FACEBOOK_CLIENT_ID,
         clientSecret:process.env.FACEBOOK_CLIENT_PW,
+    }),
+    KakaoProvider({
+        clientId:process.env.KAKAO_CLIENT_ID,
+        clientSecret:process.env.KAKAO_CLIENT_PW,
+    }),
+    NaverProvider({
+        clientId:process.env.NAVER_CLIENT_ID,
+        clientSecret:process.env.NAVER_CLIENT_PW,
     })
 
 ]
@@ -74,9 +78,15 @@ const providers = [
 const callbacks = {
 
     signIn : async({user, account, profile, email, credentials}) =>{
+        console.log('signin', user, account, profile, email, credentials)
         if(account) {
             const {provider} = account;
             if(AllowProvider(provider)) {
+
+                if(provider === NAVER_PROVIDER) {
+                    user.name = profile.response.name;
+                }
+
                 const {data} = await oAuth2Login({user, provider});
                 if(!data) {
                     return false;

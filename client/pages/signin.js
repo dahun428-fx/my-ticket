@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import { signIn } from 'next-auth/react';
 import WithAuth from '../Hoc/withAuth';
 import getAllowProvider from '../configs/provider/config.oAuth2.provider.controll';
-import { FACEBOOK_PROVIDER, GITHUB_PROVIDER, GOOGLE_PROVIDER } from '../configs/provider/config.oAuth2.provider.enum';
+import { FACEBOOK_PROVIDER, GITHUB_PROVIDER, GOOGLE_PROVIDER, KAKAO_PROVIDER, NAVER_PROVIDER } from '../configs/provider/config.oAuth2.provider.enum';
 
  function login() {
   
@@ -62,6 +62,18 @@ import { FACEBOOK_PROVIDER, GITHUB_PROVIDER, GOOGLE_PROVIDER } from '../configs/
         getAllowProvider(FACEBOOK_PROVIDER) &&
       <div>
       <Button type="button" name={FACEBOOK_PROVIDER} title="signin with FB" onClick={(e) => signinWithProvider(e)}/>
+      </div>
+      }
+      {
+        getAllowProvider(KAKAO_PROVIDER) &&
+      <div>
+      <Button type="button" name={KAKAO_PROVIDER} title="signin with Kakao" onClick={(e) => signinWithProvider(e)}/>
+      </div>
+      }
+      {
+        getAllowProvider(NAVER_PROVIDER) &&
+      <div>
+      <Button type="button" name={NAVER_PROVIDER} title="signin with Naver" onClick={(e) => signinWithProvider(e)}/>
       </div>
       }
       {/* <a href='http://localhost:4001/oauth2/authorization/google'>sign with google</a> */}

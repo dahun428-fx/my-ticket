@@ -18,7 +18,7 @@ export class NotFoundError extends ApiError {
 export class ForbiddenError extends ApiError {
     name = 'ForbiddenError';
     message = '권한이 없습니다.';
-    redirectUrl = '/'
+    redirectUrl = '/error/error'
 }
 
 export class AuthError extends ApiError {

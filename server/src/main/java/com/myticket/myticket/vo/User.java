@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +14,7 @@ import javax.persistence.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.myticket.myticket.auth.Enum.ProviderType;
+import com.myticket.myticket.common.converter.UserRoleTypeConverter;
 import com.myticket.myticket.user.Enum.UserRoleType;
 
 import lombok.AllArgsConstructor;
@@ -40,7 +41,7 @@ public class User implements UserDetails {
     private String name;
     @Column(name = "user_password")
     private String password;
-    @Column(name = "user_role")
+    @Column(name = "user_role") @Convert(converter = UserRoleTypeConverter.class)
     private UserRoleType roleType;
     @Transient//escape Jpa
     Collection<GrantedAuthority> authorities;

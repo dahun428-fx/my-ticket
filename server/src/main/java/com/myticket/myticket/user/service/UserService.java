@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
         AuthProvider authProvider = AuthProvider.builder()
                                             .user(user)
                                             .providerName(ProviderType.LOCAL.name())
-                                            .providerType(ProviderType.LOCAL.ordinal())
+                                            .providerType(ProviderType.LOCAL.getType())
                                             .build();
         providerRepository.save(authProvider);
 
