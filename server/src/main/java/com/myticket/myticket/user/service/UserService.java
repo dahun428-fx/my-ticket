@@ -10,9 +10,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.myticket.myticket.auth.Enum.ProviderType;
+import com.myticket.myticket.auth.repository.AuthProviderRepository;
+import com.myticket.myticket.auth.vo.AuthProvider;
 import com.myticket.myticket.user.Enum.UserEnumType;
 import com.myticket.myticket.user.Enum.UserRoleType;
 import com.myticket.myticket.user.dto.CreateUserDto;
@@ -31,20 +34,31 @@ public class UserService implements UserDetailsService {
     protected final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+    private final AuthProviderRepository providerRepository;
     private final PasswordEncoder encoder;
 
+    @Transactional
     public CreateUserDto addUser(CreateUserDto createUserDto){
         User findUser = userRepository.findById(createUserDto.getId());
         if(findUser != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, UserEnumType.SIGN_UP_ALREADY_EXIST_USER.getMessage());
         }
-        createUserDto.setRoleType(UserRoleType.ROLE_USER);
-        createUserDto.setPassword(encoder.encode(createUserDto.getPassword()));
 
-        User user = new User();
-        BeanUtils.copyProperties(createUserDto, user);
-        user.setProviderType(ProviderType.LOCAL);
+        User user = User.builder()
+                        .id(createUserDto.getId())
+                        .name(createUserDto.getName())
+                        .password(encoder.encode(createUserDto.getPassword()))
+                        .roleType(UserRoleType.ROLE_USER)
+                        .build();
         userRepository.save(user);
+        AuthProvider authProvider = AuthProvider.builder()
+                                            .user(user)
+                                            .providerName(ProviderType.LOCAL.name())
+                                            .providerType(ProviderType.LOCAL.ordinal())
+                                            .build();
+        providerRepository.save(authProvider);
+
+        BeanUtils.copyProperties(user, createUserDto);
         createUserDto.setPassword("");
         return createUserDto;
     }

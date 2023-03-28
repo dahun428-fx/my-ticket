@@ -5,7 +5,8 @@ import { userLogin } from '../api/user';
 import Cookies from 'js-cookie';
 import { signIn } from 'next-auth/react';
 import WithAuth from '../Hoc/withAuth';
-import getAllowProvider from '../configs/config.oAuth2.provider.controll';
+import getAllowProvider from '../configs/provider/config.oAuth2.provider.controll';
+import { FACEBOOK_PROVIDER, GITHUB_PROVIDER, GOOGLE_PROVIDER } from '../configs/provider/config.oAuth2.provider.enum';
 
  function login() {
   
@@ -33,13 +34,9 @@ import getAllowProvider from '../configs/config.oAuth2.provider.controll';
         setUserpw(val);
     } 
   }
-  const signinWithGoogle = (e) => {
-    console.log('signinWithGoogle');
-    signIn('google')
-  }
-  const signinWithGithub = (e) => {
-    console.log('signingithub');
-    signIn('github');
+  const signinWithProvider = (e) => {
+    let provider = e.target.name;
+    signIn(provider);
   }
   
   return (
@@ -50,15 +47,21 @@ import getAllowProvider from '../configs/config.oAuth2.provider.controll';
           <Input name="userpw" type="password" placeholder="" title={`userpw`} onChange={onChangeInputHandler} value={userpw}/>
           <Button type="submit" title="submit" />
       </form>
-      {getAllowProvider('google') && 
+      {getAllowProvider(GOOGLE_PROVIDER) && 
         <div>
-        <Button type="button" title="signin with google" onClick={signinWithGoogle}/>
+        <Button type="button" name={GOOGLE_PROVIDER} title="signin with google" onClick={(e) => signinWithProvider(e)}/>
         </div>
       }
       {
-        getAllowProvider('github') &&
+        getAllowProvider(GITHUB_PROVIDER) &&
       <div>
-      <Button type="button" title="signin with github" onClick={signinWithGithub}/>
+      <Button type="button" name={GITHUB_PROVIDER} title="signin with github" onClick={(e) => signinWithProvider(e)}/>
+      </div>
+      }
+      {
+        getAllowProvider(FACEBOOK_PROVIDER) &&
+      <div>
+      <Button type="button" name={FACEBOOK_PROVIDER} title="signin with FB" onClick={(e) => signinWithProvider(e)}/>
       </div>
       }
       {/* <a href='http://localhost:4001/oauth2/authorization/google'>sign with google</a> */}

@@ -1,12 +1,14 @@
 import CredentialsProvider from "next-auth/providers/credentials";
+
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+import FacebookProvider from "next-auth/providers/facebook";
 
 import NextAuth from "next-auth/next";
 import { PAGE_LOGIN } from "../../../api/url/enum/user.page.url";
 import { oAuth2Login, userLogin } from "../../../api/user";
 import { getNewToken } from "../../../api/auth";
-import AllowProvider from '../../../configs/config.oAuth2.provider.controll';
+import AllowProvider from '../../../configs/provider/config.oAuth2.provider.controll';
 
 
 async function refreshAccessToken(tokenObject) {
@@ -60,6 +62,10 @@ const providers = [
     GithubProvider({
         clientId:process.env.GITHUB_CLIENT_ID,
         clientSecret:process.env.GITHUB_CLIENT_PW,
+    }),
+    FacebookProvider({
+        clientId:process.env.FACEBOOK_CLIENT_ID,
+        clientSecret:process.env.FACEBOOK_CLIENT_PW,
     })
 
 ]
@@ -72,7 +78,6 @@ const callbacks = {
             const {provider} = account;
             if(AllowProvider(provider)) {
                 const {data} = await oAuth2Login({user, provider});
-                console.log('sign in : ', provider, ', user : ', user);
                 if(!data) {
                     return false;
                 }

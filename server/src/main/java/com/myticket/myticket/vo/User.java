@@ -47,8 +47,6 @@ public class User implements UserDetails {
 
     @Column(name = "refresh_token")
     private String refreshToken;
-    @Column(name = "provider")
-    private ProviderType providerType;
 
     //ouath
     @Transient
@@ -92,12 +90,11 @@ public class User implements UserDetails {
     }
 
     @Builder
-    public User(String id, String name, String password, UserRoleType roleType, ProviderType providerType) {
+    public User(String id, String name, String password, UserRoleType roleType) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.roleType = roleType;
-        this.providerType = providerType;
     }
 
 }

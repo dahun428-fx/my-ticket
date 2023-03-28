@@ -35,6 +35,10 @@ const nextConfig = {
       {
         source :`/api/user/oauth`,
         destination: `${SERVER_BASE_URL}/api/v1/auth/oauth`
+      },
+      {
+        source : `/api/user/signup`,
+        destination: `${SERVER_BASE_URL}/api/v1/user/signup`
       }
     ]
   }

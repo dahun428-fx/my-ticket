@@ -1,19 +1,29 @@
 import React, {useState} from 'react'
 import Input from '../Component/Form/Input'
 import Button from '../Component/Common/Button'
+import { userSignUp } from '../api/user';
+import { useRouter } from 'next/router';
 
 export default function signup() {
+
+    const router = useRouter();
 
     const [userid, setUserid] = useState("");
     const [userpw, setUserpw] = useState("");
     const [username, setUsername] = useState("");
 
-    const onSubmitHandler = (e) => {
+    const onSubmitHandler = async (e) => {
         e.preventDefault();
         let form = {
             userid, userpw, username
         }
         console.log(form);
+        const res = await userSignUp(form);
+        console.log(res);
+        if(res.status === 200) {
+            alert('회원가입이 완료되었습니다.');
+            router.push('/signin');
+        }   
     }
 
     const onChangeInputHandler = (e) => {

@@ -19,6 +19,8 @@ import org.springframework.web.server.ResponseStatusException;
 import com.myticket.myticket.user.repository.UserRepository;
 import com.myticket.myticket.auth.dto.OAuth2UserInfo;
 import com.myticket.myticket.auth.dto.TokenDto;
+import com.myticket.myticket.auth.repository.AuthProviderRepository;
+import com.myticket.myticket.auth.vo.AuthProvider;
 import com.myticket.myticket.jwt.JwtTokenProvider;
 import com.myticket.myticket.jwt.Enum.JwtEnum;
 import com.myticket.myticket.user.Enum.UserEnumType;
@@ -36,6 +38,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final UserRepository userRepository;
+    private final AuthProviderRepository providerRepository;
 
     @Transactional
     public TokenDto oAuthExcute(OAuth2UserInfo oAuth2UserInfo){
@@ -48,10 +51,18 @@ public class AuthService {
                             .name(oAuth2UserInfo.getName())
                             .password("")
                             .roleType(UserRoleType.ROLE_USER)
-                            .providerType(oAuth2UserInfo.getProviderType())
                             .build();
             userRepository.save(user);
             findUser = user;
+        } 
+        AuthProvider foundAuthProvider = providerRepository.findByUser_idAndType(findUser.getId(), oAuth2UserInfo.getProviderType().ordinal());
+        if(foundAuthProvider == null) {
+            AuthProvider authProvider = AuthProvider.builder()
+                .user(findUser)
+                .providerName(oAuth2UserInfo.getProviderType().name())
+                .providerType(oAuth2UserInfo.getProviderType().ordinal())
+                .build();
+            providerRepository.save(authProvider);
         }
 
         Authentication authentication = this.createOAuth2Authentication(findUser);
