@@ -9,4 +9,8 @@ import com.myticket.myticket.vo.User;
 
 public interface AuthProviderRepository extends CrudRepository<AuthProvider, Long> {
     AuthProvider findByUser_idAndType(String userid, int type);
+
+    AuthProvider findById(String id);
+
+    AuthProvider findByIdAndType(String id, int type);
 }

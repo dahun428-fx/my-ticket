@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import com.myticket.myticket.user.repository.UserRepository;
+import com.myticket.myticket.auth.Enum.ProviderType;
 import com.myticket.myticket.auth.dto.OAuth2UserInfo;
 import com.myticket.myticket.auth.dto.TokenDto;
 import com.myticket.myticket.auth.repository.AuthProviderRepository;
@@ -40,43 +41,114 @@ public class AuthService {
     private final UserRepository userRepository;
     private final AuthProviderRepository providerRepository;
 
+    /*
+     * 
+     * 먼저 가입을 시킨다 --> db 에는 이메일 or auth id 로 (카카오)
+     * 
+     * 
+     * ==> LOCAL 여부?
+     * 기존 provider 와 연동 되어있는 유저,
+     * 
+     * provider 만 가입되어 있는 유저.
+     * 
+     */
     @Transactional
-    public TokenDto oAuthExcute(OAuth2UserInfo oAuth2UserInfo){
-        String userid = this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getEmail());
+    public TokenDto oAuthExcute(OAuth2UserInfo oAuth2UserInfo) {
+        User resultUser = null;
+        AuthProvider findProvider = providerRepository.findByIdAndType(oAuth2UserInfo.getId(),
+                oAuth2UserInfo.getProviderType().getType());
+        // provider 여부 확인 --> 없는 경우 가입
+        if (findProvider == null) {
+            logger.info("oAuthExcute, 회원가입이 필요한 유저입니다., oAuth2UserInfo : {}", oAuth2UserInfo);
 
-        User findUser = userRepository.findById(userid);
-        if(findUser == null) {
+            // user id 중에 중복된 email이 존재한다면, provider 만 등록
+            User checkUser = userRepository.findById(oAuth2UserInfo.getEmail());
+            if (checkUser == null) {
+                String makeUserId = this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getEmail());
+                User signUpUser = User.builder()
+                        .id(makeUserId)
+                        .name(this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getName()))
+                        .password("")
+                        .roleType(UserRoleType.ROLE_OAUTH2)
+                        .build();
+                userRepository.save(signUpUser);
+                checkUser = signUpUser;
+            }
 
-            logger.info("oAuthExcute, 회원가입이 필요한 유저입니다., {}", userid);
-            User user = User.builder()
-                            .id(userid)
-                            .name(this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getName()))
-                            .password("")
-                            .roleType(UserRoleType.ROLE_OAUTH2)
-                            .build();
-            userRepository.save(user);
-            findUser = user;
-        } 
-        AuthProvider foundAuthProvider = providerRepository.findByUser_idAndType(findUser.getId(), oAuth2UserInfo.getProviderType().getType());
-        if(foundAuthProvider == null) {
             AuthProvider authProvider = AuthProvider.builder()
-                .user(findUser)
-                .providerName(oAuth2UserInfo.getProviderType().name())
-                .providerType(oAuth2UserInfo.getProviderType().getType())
-                .build();
+                    .user(checkUser)
+                    .providerName(oAuth2UserInfo.getProviderType().name())
+                    .providerEmail(oAuth2UserInfo.getEmail())
+                    .providerId(oAuth2UserInfo.getId())
+                    .providerType(oAuth2UserInfo.getProviderType().getType())
+                    .build();
             providerRepository.save(authProvider);
+            resultUser = checkUser;
+            // provider 있는 경우
+        } else {
+            User findUser = userRepository.findById(findProvider.getUser().getId());
+            logger.info("oAuthExcute, 회원 가입이 되어 있는 유저 입니다 , User : {}", findUser);
+            resultUser = findUser;
         }
 
-        Authentication authentication = this.createOAuth2Authentication(findUser);
+        // String userid = this.setUserIdByOAuth2User(oAuth2UserInfo,
+        // oAuth2UserInfo.getEmail());
+
+        // User findUser = userRepository.findById(userid);
+        // if (findUser == null) {
+
+        // logger.info("oAuthExcute, 회원가입이 필요한 유저입니다., {}", userid);
+        // User user = User.builder()
+        // .id(userid)
+        // .name(this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getName()))
+        // .password("")
+        // .roleType(UserRoleType.ROLE_OAUTH2)
+        // .build();
+        // userRepository.save(user);
+        // findUser = user;
+        // }
+        // AuthProvider foundAuthProvider =
+        // providerRepository.findByIdAndType(oAuth2UserInfo.getId(),
+        // oAuth2UserInfo.getProviderType().getType());
+        // // AuthProvider foundAuthProvider =
+        // // providerRepository.findByUser_idAndType(findUser.getId(),
+        // // oAuth2UserInfo.getProviderType().getType());
+        // if (foundAuthProvider == null) {
+        // AuthProvider authProvider = AuthProvider.builder()
+        // .user(findUser)
+        // .providerName(oAuth2UserInfo.getProviderType().name())
+        // .providerId(oAuth2UserInfo.getEmail())
+        // .providerType(oAuth2UserInfo.getProviderType().getType())
+        // .build();
+        // providerRepository.save(authProvider);
+        // }
+
+        Authentication authentication = this.createOAuth2Authentication(resultUser);
         String accessToken = jwtTokenProvider.createToken(authentication);
         Long accessTokenExpiry = jwtTokenProvider.getAccessTokenExpiry();
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
-        findUser.updateRefreshToken(refreshToken);
+        resultUser.updateRefreshToken(refreshToken);
 
         return new TokenDto(accessToken, refreshToken, accessTokenExpiry);
     }
 
+    public void addOAuthProviderForExistUser(String existUserid, OAuth2UserInfo oAuth2UserInfo) {
+        User findUser = userRepository.findById(existUserid);
+
+        AuthProvider foundAuthProvider = providerRepository.findByUser_idAndType(findUser.getId(),
+                oAuth2UserInfo.getProviderType().getType());
+        if (foundAuthProvider == null) {
+            AuthProvider authProvider = AuthProvider.builder()
+                    .user(findUser)
+                    .providerName(oAuth2UserInfo.getProviderType().name())
+                    .providerEmail(oAuth2UserInfo.getEmail())
+                    .providerId(oAuth2UserInfo.getId())
+                    .providerType(oAuth2UserInfo.getProviderType().getType())
+                    .build();
+            providerRepository.save(authProvider);
+        }
+    }
 
     @Transactional
     public TokenDto authenticate(String id, String password) {
@@ -85,6 +157,14 @@ public class AuthService {
         if (findUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL.getMessage());
         }
+
+        // SNS 로그인 체크
+        AuthProvider findProvider = providerRepository.findByUser_idAndType(id, ProviderType.LOCAL.getType());
+        System.out.println("findProvider : " + findProvider);
+        if (findProvider == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL_SNS.getMessage());
+        }
+
         if (!encoder.matches(password, findUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL.getMessage());
         }
@@ -125,7 +205,7 @@ public class AuthService {
     private Authentication createAuthentication(String id, String password) {
         // 받아온 유저네임과 패스워드를 이용해 UsernamePasswordAuthenticationToken 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
-        
+
         // authenticationToken 객체를 통해 Authentication 객체 생성
         // 이 과정에서 CustomUserDetailsService 에서 우리가 재정의한 loadUserByUsername 메서드 호출
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -135,16 +215,17 @@ public class AuthService {
         return authentication;
     }
 
-    //oAuth2
-    private Authentication createOAuth2Authentication(User user){
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), null, List.of(new SimpleGrantedAuthority(user.getRoleType().name())));
+    // oAuth2
+    private Authentication createOAuth2Authentication(User user) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), null,
+                List.of(new SimpleGrantedAuthority(user.getRoleType().name())));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
 
-    private String setUserIdByOAuth2User(OAuth2UserInfo userInfo, String target){
+    private String setUserIdByOAuth2User(OAuth2UserInfo userInfo, String target) {
         String userid = target;
-        if(!StringUtils.hasText(userid)){
+        if (!StringUtils.hasText(userid)) {
             StringBuilder builder = new StringBuilder();
             builder.append(userInfo.getProviderType().name()).append("_").append(userInfo.getId());
             userid = builder.toString();

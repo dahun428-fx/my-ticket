@@ -10,6 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -59,27 +61,44 @@ public class AuthController {
     }
 
     @PostMapping(value = "/oauth")
-    public ResponseEntity<TokenDto> oauth(@AuthenticationPrincipal User loadUser, @RequestBody Map<String, Object> VO){
+    public ResponseEntity<TokenDto> oauth(@AuthenticationPrincipal User loadUser, @RequestBody Map<String, Object> VO) {
         logger.info("oauth loadUser Controller , {}", loadUser);
         ProviderType providerType = ProviderType.valueOf(VO.get("provider").toString().toUpperCase());
-        OAuth2UserInfo user = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, (Map<String,Object>) VO.get("user"));
+        OAuth2UserInfo user = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType,
+                (Map<String, Object>) VO.get("user"));
+
         TokenDto tokenDto = authService.oAuthExcute(user);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenDto.getAccessToken());
         httpHeaders.add(JwtFilter.REFRESH_HEADER, tokenDto.getRefreshToken());
         logger.info("oAuth2Login token 발급, {}", tokenDto);
 
-        return new ResponseEntity<>(tokenDto,httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
     }
 
-    //연동 sign up --> signin --> 자동 로그인 연동 버튼 클릭 --> OAuth2 로그인 성공 --> 
-    
-    //OAuth 파라미터 전달 + 기존 userId 전달 --> Provider 등록 ( 기존 id 로 ) 
-    //기존아이디 + OAuth2 아이디
+    @PostMapping(value = "/add/provider")
+    public ResponseEntity<String> postMethodName(
+            @RequestBody Map<String, Object> VO) {
+        System.out.println("VO : " + VO);
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUserId = userDetails.getUsername();
+        System.out.println("user : " + currentUserId);
+        ProviderType providerType = ProviderType.valueOf(VO.get("provider").toString().toUpperCase());
+        OAuth2UserInfo user = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType,
+                (Map<String, Object>) VO.get("user"));
+        authService.addOAuthProviderForExistUser(currentUserId, user);
 
-    //user update 페이지 --> axios get user 정보 --> user / provider 정보
-    //--> 저장된 provider 없으면, 연동 가능한 provider 리스트 출력
-    //--> provider 버튼 클릭 --> signin 함수 수행 
-    //--> spring context id 에 user.id 저장
-    //-->
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 연동 sign up --> signin --> 자동 로그인 연동 버튼 클릭 --> OAuth2 로그인 성공 -->
+
+    // OAuth 파라미터 전달 + 기존 userId 전달 --> Provider 등록 ( 기존 id 로 )
+    // 기존아이디 + OAuth2 아이디
+
+    // user update 페이지 --> axios get user 정보 --> user / provider 정보
+    // --> 저장된 provider 없으면, 연동 가능한 provider 리스트 출력
+    // --> provider 버튼 클릭 --> signin 함수 수행
+    // --> spring context id 에 user.id 저장
+    // -->
 }

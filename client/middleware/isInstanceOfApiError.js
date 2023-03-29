@@ -5,6 +5,10 @@ export function isInstanceOfApiError(object) {
 }
 
 export class ApiError extends Error {
+    constructor(message){
+        console.log('apierror', message)
+        super(message);
+    }
     redirectUrl = '';
     notFound = false;
 }
@@ -22,8 +26,12 @@ export class ForbiddenError extends ApiError {
 }
 
 export class AuthError extends ApiError {
+    constructor(message) {
+        super(message);
+        this.message = message;
+    }
     name = 'AuthError';
-    message = '인증되지 않은 사용자입니다.';
+    // message = '인증되지 않은 사용자입니다.';
     redirectUrl = '/signin'
 }
 

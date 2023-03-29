@@ -39,7 +39,8 @@ export default class ErrorBoundary extends React.Component {
 
     //promise 중 캐치하지 못한 rejection
     handleRejectedPromise = (event) => {
-        event?.promise?.catch?.(this.setError)
+        console.log('errrrrr' , event)
+        event?.promise?.catch?.(this.setError(event.err))
         event.preventDefault?.()
     }
     componentDidMount(){
@@ -64,14 +65,15 @@ export default class ErrorBoundary extends React.Component {
                 window.location.href = redirectUrl;
                 return;
             }
+            console.log(message)
             return (
-
             <>
                 <ErrorPage errorMessage={message}/>
             </>
             ) 
         }
         return this.props.children;
+        // return <ErrorPage />
     }
 
 }

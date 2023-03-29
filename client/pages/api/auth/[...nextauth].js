@@ -12,7 +12,8 @@ import { oAuth2Login, userLogin } from "../../../api/user";
 import { getNewToken } from "../../../api/auth";
 import AllowProvider from '../../../configs/provider/config.oAuth2.provider.controll';
 import { KAKAO_PROVIDER, NAVER_PROVIDER } from "../../../configs/provider/config.oAuth2.provider.enum";
-
+import setError from '../../../middleware/axiosErrorInstance'
+import withGetServerSideProps from "../../../middleware/withServerSideProps";
 
 async function refreshAccessToken(tokenObject) {
     try {
@@ -37,7 +38,7 @@ const providers = [
     CredentialsProvider({
         name:'Credentials',
         authorize: async({id, password}) => {
-            try {
+            // try {
 
                 const user = await userLogin({userid:id, userpw:password});
                 const {accessToken, refreshToken} = user.data;
@@ -46,9 +47,11 @@ const providers = [
                     return user;
                 }
                 return null;
-            } catch (error) {
-                Promise.reject(error);
-            }
+            // } catch (error) {
+                // console.log('error',error);
+                // Promise.reject(error);
+                // return setError(error);
+            // }
         }
     }),
     GoogleProvider({

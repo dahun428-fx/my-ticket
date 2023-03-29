@@ -7,19 +7,24 @@ import { signIn } from 'next-auth/react';
 import WithAuth from '../Hoc/withAuth';
 import getAllowProvider from '../configs/provider/config.oAuth2.provider.controll';
 import { FACEBOOK_PROVIDER, GITHUB_PROVIDER, GOOGLE_PROVIDER, KAKAO_PROVIDER, NAVER_PROVIDER } from '../configs/provider/config.oAuth2.provider.enum';
+import setError from '../middleware/axiosErrorInstance';
 
  function login() {
   
   const [userid, setUserid] = useState("");
   const [userpw, setUserpw] = useState("");
     
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-
-    signIn('credentials', {
-      id:userid, password:userpw, redirect: true, 
-      callbackUrl:'/test/loginSuccess'
-    })
+      const res = await signIn('credentials', {
+        id:userid, password:userpw,
+        redirect: false
+        // callbackUrl:'/test/loginSuccess'
+      });
+      if(res.error) {
+        console.log('signin',res);
+        alert(res.error)
+      }
     return () =>{};
   }
 
