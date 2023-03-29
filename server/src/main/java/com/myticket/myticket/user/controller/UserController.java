@@ -37,7 +37,7 @@ public class UserController {
     }
     
     @GetMapping(value = "/getUser", produces = "application/json; charset=utf8")
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN', 'ROLE_OAUTH2')")
     public ResponseEntity<ReadUserDto> getUser(@AuthenticationPrincipal User user, HttpServletRequest req) {
         logger.info("get User Controller , {}", user);
         ReadUserDto findUser = new ReadUserDto();

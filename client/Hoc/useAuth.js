@@ -8,7 +8,8 @@ export default function useAuth(shouldRedirect) {
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    const permitAll = ['/user/updateAuth', '/test/getuserTest']
+    // const permitAll = ['/user/updateAuth', '/test/getuserTest']
+    const permitAll = [ '/test/getuserTest']
 
     useEffect(() => {
         if (session?.error === "RefreshAccessTokenError") {

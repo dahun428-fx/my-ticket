@@ -60,10 +60,10 @@ export default class ErrorBoundary extends React.Component {
             if(notFound) {
                 return <NotFoundPage />
             }
-            // if(redirectUrl && !(error instanceof AuthError)) {
-            //     window.location.href = redirectUrl;
-            //     return;
-            // }
+            if(redirectUrl && !(error instanceof AuthError)) {
+                window.location.href = redirectUrl;
+                return;
+            }
             return (
 
             <>
