@@ -40,7 +40,7 @@ public class AuthController {
     // login
     @PostMapping(value = "/authenticate")
     public ResponseEntity<TokenDto> signIn(@RequestBody LoginUserDto loginUserDto) {
-        TokenDto tokenDto = authService.authenticate(loginUserDto.getId(), loginUserDto.getPassword());
+        TokenDto tokenDto = authService.login(loginUserDto.getId(), loginUserDto.getPassword());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenDto.getAccessToken());
         httpHeaders.add(JwtFilter.REFRESH_HEADER, tokenDto.getRefreshToken());
@@ -67,7 +67,7 @@ public class AuthController {
         OAuth2UserInfo user = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType,
                 (Map<String, Object>) VO.get("user"));
 
-        TokenDto tokenDto = authService.oAuthExcute(user);
+        TokenDto tokenDto = authService.oAuthLogin(user);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenDto.getAccessToken());
         httpHeaders.add(JwtFilter.REFRESH_HEADER, tokenDto.getRefreshToken());
@@ -77,7 +77,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/add/provider")
-    public ResponseEntity<String> postMethodName(
+    public ResponseEntity<String> addProvider(
             @RequestBody Map<String, Object> VO) {
         System.out.println("VO : " + VO);
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -18,10 +18,10 @@ import setError from '../middleware/axiosErrorInstance';
     e.preventDefault();
       const res = await signIn('credentials', {
         id:userid, password:userpw,
-        redirect: false
-        // callbackUrl:'/test/loginSuccess'
+        redirect: false,
+        callbackUrl:'/test/loginSuccess'
       });
-      if(res.error) {
+      if(res?.error) {
         console.log('signin',res);
         alert(res.error)
       }

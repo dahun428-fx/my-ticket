@@ -14,14 +14,14 @@ export default function ErroInstance(error){
             throw new AuthError(data.message);
         }
         if(status == 403) {
-            throw new ForbiddenError();
+            throw new ForbiddenError(data.message);
         }
         if(status == 404) {
-            throw new NotFoundError();
+            throw new NotFoundError(data.message);
         }
         //duplicate user
         if(status == 409) {
-            throw new DuplicateError();
+            throw new DuplicateError(data.message);
         }
     }
     return Promise.reject(error);

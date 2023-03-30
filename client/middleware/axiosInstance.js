@@ -20,7 +20,8 @@ axiosClient.interceptors.request.use(async(config) => {
     }
     return config;
 }, error =>{
-    return setError(error);
+    // return setError(error);
+    return Promise.reject(error);
 })
  
 axiosClient.interceptors.response.use(
@@ -56,7 +57,9 @@ axiosClient.interceptors.response.use(
         //         }
         //     }
         // }
+        // setError(err);
         return setError(err);
+        // return Promise.reject(err);
     }
 )
 

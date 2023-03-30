@@ -1,5 +1,5 @@
 import axios from "../middleware/axiosInstance";
-import { GET_USER, USER_LOGIN, USER_SIGN_UP } from "./url/enum/user.api.url";
+import { GET_USER, USER_LOGIN, USER_LOGIN_OAUTH2, USER_SIGN_UP } from "./url/enum/user.api.url";
 
 
 export const userSignUp = async(data) => {
@@ -20,7 +20,7 @@ export const userLogin = async (data) => {
 }
 
 export const oAuth2Login = async(data) => {
-    return await axios.post(`${'/api/user/oauth'}`,data);
+    return await axios.post(USER_LOGIN_OAUTH2,data);
 }
 
 export const getUser = async () => {

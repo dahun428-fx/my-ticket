@@ -9,27 +9,29 @@ export default function useAuth(shouldRedirect) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     // const permitAll = ['/user/updateAuth', '/test/getuserTest']
-    const permitAll = [ '/test/getuserTest', '/signup']
+    // const permitAll = [ '/test/getuserTest', '/signup']
+    const permitAll = [ '/', '/signup',]
 
     useEffect(() => {
         if (session?.error === "RefreshAccessTokenError") {
             signOut({ callbackUrl: PAGE_LOGIN, redirect: shouldRedirect });
         }
         console.log('check session , ', session);
+
         if (permitAll.includes(router.route)) {
 
             setIsAuthenticated(true);
         
         } else if (session === null) {
             if (router.route !== PAGE_LOGIN) {
-                router.replace(PAGE_LOGIN);
+                router.replace(PAGE_LOGIN, undefined, {shallow:true});
                 setIsAuthenticated(false);
             } else if (router.route === PAGE_LOGIN) {
                 setIsAuthenticated(true);
             }
         } else if (session !== undefined) {
             if (router.route === PAGE_LOGIN) {
-                router.replace('/');
+                router.replace('/', undefined, {shallow:true});
             }
             setIsAuthenticated(true);
         }

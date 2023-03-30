@@ -1,7 +1,7 @@
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
-import axiosInstance from "../../../../middleware/axiosInstance";
 import axios from 'axios';
 import Button from '../../../../Component/Common/Button'
+import { addProvider } from "../../../../api/auth";
 //https://medium.com/@OloriAsabi/google-oauth2-using-the-new-google-identity-services-sdk-for-react-using-jwt-decode-d687d2e05aa2
 export default function GoogleLoginPage(props){
 
@@ -15,9 +15,9 @@ export default function GoogleLoginPage(props){
 
 export const GoogleLoginAction = (props) => {
 
-    const addProviderInUser = async (data) => {
-        return await axiosInstance.post("http://localhost:4001/api/v1/auth/add/provider", data)
-    }
+    // const addProviderInUser = async (data) => {
+    //     return await axiosInstance.post("http://localhost:4001/api/v1/auth/add/provider", data)
+    // }
 
     const onSuccessHandler = async (tokenResponse) => {
 
@@ -34,14 +34,11 @@ export const GoogleLoginAction = (props) => {
                                         }
                                         return providerData;
                                     });
-            const providerRes = await addProviderInUser({user:userInfo, provider:'google'});
-            console.log('userinfo : ', userInfo)
-
+            const providerRes = await addProvider({user:userInfo, provider:'google'});
     }
 
     const loginAction = useGoogleLogin({
         onSuccess:onSuccessHandler,
-
     })
    
     return (

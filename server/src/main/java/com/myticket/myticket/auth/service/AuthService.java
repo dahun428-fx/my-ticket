@@ -42,28 +42,24 @@ public class AuthService {
     private final AuthProviderRepository providerRepository;
 
     /*
-     * 
      * 먼저 가입을 시킨다 --> db 에는 이메일 or auth id 로 (카카오)
-     * 
-     * 
-     * ==> LOCAL 여부?
      * 기존 provider 와 연동 되어있는 유저,
-     * 
      * provider 만 가입되어 있는 유저.
      * 
      */
     @Transactional
-    public TokenDto oAuthExcute(OAuth2UserInfo oAuth2UserInfo) {
+    public TokenDto oAuthLogin(OAuth2UserInfo oAuth2UserInfo) {
         User resultUser = null;
         AuthProvider findProvider = providerRepository.findByIdAndType(oAuth2UserInfo.getId(),
                 oAuth2UserInfo.getProviderType().getType());
         // provider 여부 확인 --> 없는 경우 가입
         if (findProvider == null) {
-            logger.info("oAuthExcute, 회원가입이 필요한 유저입니다., oAuth2UserInfo : {}", oAuth2UserInfo);
+            logger.info("oAuthLogin, 회원가입이 필요한 유저입니다., oAuth2UserInfo : {}", oAuth2UserInfo);
 
             // user id 중에 중복된 email이 존재한다면, provider 만 등록
             User checkUser = userRepository.findById(oAuth2UserInfo.getEmail());
             if (checkUser == null) {
+                //Provider 회원 가입 --> id : email
                 String makeUserId = this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getEmail());
                 User signUpUser = User.builder()
                         .id(makeUserId)
@@ -73,6 +69,7 @@ public class AuthService {
                         .build();
                 userRepository.save(signUpUser);
                 checkUser = signUpUser;
+                logger.info("oAuthLogin, 회원 등록 완료 , oAuth2UserInfo : {}", signUpUser);
             }
 
             AuthProvider authProvider = AuthProvider.builder()
@@ -84,44 +81,12 @@ public class AuthService {
                     .build();
             providerRepository.save(authProvider);
             resultUser = checkUser;
-            // provider 있는 경우
+        // provider 있는 경우
         } else {
             User findUser = userRepository.findById(findProvider.getUser().getId());
             logger.info("oAuthExcute, 회원 가입이 되어 있는 유저 입니다 , User : {}", findUser);
             resultUser = findUser;
         }
-
-        // String userid = this.setUserIdByOAuth2User(oAuth2UserInfo,
-        // oAuth2UserInfo.getEmail());
-
-        // User findUser = userRepository.findById(userid);
-        // if (findUser == null) {
-
-        // logger.info("oAuthExcute, 회원가입이 필요한 유저입니다., {}", userid);
-        // User user = User.builder()
-        // .id(userid)
-        // .name(this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getName()))
-        // .password("")
-        // .roleType(UserRoleType.ROLE_OAUTH2)
-        // .build();
-        // userRepository.save(user);
-        // findUser = user;
-        // }
-        // AuthProvider foundAuthProvider =
-        // providerRepository.findByIdAndType(oAuth2UserInfo.getId(),
-        // oAuth2UserInfo.getProviderType().getType());
-        // // AuthProvider foundAuthProvider =
-        // // providerRepository.findByUser_idAndType(findUser.getId(),
-        // // oAuth2UserInfo.getProviderType().getType());
-        // if (foundAuthProvider == null) {
-        // AuthProvider authProvider = AuthProvider.builder()
-        // .user(findUser)
-        // .providerName(oAuth2UserInfo.getProviderType().name())
-        // .providerId(oAuth2UserInfo.getEmail())
-        // .providerType(oAuth2UserInfo.getProviderType().getType())
-        // .build();
-        // providerRepository.save(authProvider);
-        // }
 
         Authentication authentication = this.createOAuth2Authentication(resultUser);
         String accessToken = jwtTokenProvider.createToken(authentication);
@@ -151,20 +116,20 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto authenticate(String id, String password) {
+    public TokenDto login(String id, String password) {
 
         User findUser = userRepository.findById(id);
+        //유저 확인
         if (findUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL.getMessage());
         }
-
         // SNS 로그인 체크
         AuthProvider findProvider = providerRepository.findByUser_idAndType(id, ProviderType.LOCAL.getType());
-        System.out.println("findProvider : " + findProvider);
+        logger.info("oAuthExcute, SNS 로그인 여부 확인 , User : {}", findProvider);
         if (findProvider == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL_SNS.getMessage());
         }
-
+        //비밀번호 확인
         if (!encoder.matches(password, findUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL.getMessage());
         }
