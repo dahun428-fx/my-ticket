@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getUser, userProviderInfo } from "../../api/user";
 import GoogleLoginPage from "./provider/google/googleLoginPage";
+import GithubLoginPage from "./provider/github/githubLoginPage";
 
 function connectProvider(props) {
 
@@ -41,11 +42,14 @@ function connectProvider(props) {
                 <>
                     <div>
                         <GoogleLoginPage variant="outlined" title={`Google 로그인 연동`}
-                            disabled={googleProvider}
+                            // disabled={googleProvider}
                         />
                         {googleProvider &&
                             <span>연동 완료</span>
                         }
+                    </div>
+                    <div>
+                        <GithubLoginPage title={`Github 로그인 연동`}/>
                     </div>
                 </>
             }
