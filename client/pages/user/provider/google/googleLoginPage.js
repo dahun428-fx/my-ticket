@@ -15,10 +15,6 @@ export default function GoogleLoginPage(props){
 
 export const GoogleLoginAction = (props) => {
 
-    // const addProviderInUser = async (data) => {
-    //     return await axiosInstance.post("http://localhost:4001/api/v1/auth/add/provider", data)
-    // }
-
     const onSuccessHandler = async (tokenResponse) => {
 
         const userInfo = await axios
@@ -42,7 +38,7 @@ export const GoogleLoginAction = (props) => {
     })
    
     return (
-        <Button title={props.title}
+        <Button {...props}
                 onClick={() => loginAction()}
         />
     )

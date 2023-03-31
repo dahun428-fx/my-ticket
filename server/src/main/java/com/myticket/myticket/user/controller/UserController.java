@@ -1,5 +1,8 @@
 package com.myticket.myticket.user.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.myticket.myticket.user.service.UserService;
+import com.myticket.myticket.auth.dto.ReadProviderDto;
 import com.myticket.myticket.user.dto.CreateUserDto;
 import com.myticket.myticket.user.dto.ReadUserDto;
 
@@ -36,6 +40,14 @@ public class UserController {
         return ResponseEntity.ok().body(createdUser);
     }
     
+    @GetMapping("/getProviderInfo")
+    public ResponseEntity<List<ReadProviderDto>> getProviderInfo(@AuthenticationPrincipal User user){
+        logger.info("getProviderInfo Controller , {}", user);
+        List<ReadProviderDto> list = userService.getProviderInfo(user.getUsername());
+
+        return ResponseEntity.ok().body(list);
+    }
+
     @GetMapping(value = "/getUser", produces = "application/json; charset=utf8")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN', 'ROLE_OAUTH2')")
     public ResponseEntity<ReadUserDto> getUser(@AuthenticationPrincipal User user, HttpServletRequest req) {

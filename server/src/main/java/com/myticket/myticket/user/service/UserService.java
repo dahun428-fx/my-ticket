@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.myticket.myticket.auth.Enum.ProviderType;
+import com.myticket.myticket.auth.dto.ReadProviderDto;
 import com.myticket.myticket.auth.repository.AuthProviderRepository;
 import com.myticket.myticket.auth.vo.AuthProvider;
+import com.myticket.myticket.common.util.Utils;
 import com.myticket.myticket.user.Enum.UserEnumType;
 import com.myticket.myticket.user.Enum.UserRoleType;
 import com.myticket.myticket.user.dto.CreateUserDto;
@@ -36,6 +38,13 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final AuthProviderRepository providerRepository;
     private final PasswordEncoder encoder;
+
+    public List<ReadProviderDto> getProviderInfo(String userid){
+        List<AuthProvider> providerList = providerRepository.findByUser_id(userid);
+        System.out.println("providerList  : "+providerList);
+        List<ReadProviderDto> resultList = Utils.mapList(providerList, ReadProviderDto.class);
+        return resultList;
+    }
 
     @Transactional
     public CreateUserDto addUser(CreateUserDto createUserDto){

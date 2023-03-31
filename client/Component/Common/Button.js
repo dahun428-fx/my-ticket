@@ -1,7 +1,8 @@
 import React from 'react'
+import Button from '@mui/material/Button'
 
-export default function Button(props) {
+export default function Btn(props) {
   return (
-    <button {...props}>{props.title}</button>
+    <Button {...props}>{props.title}</Button>
   )
 }

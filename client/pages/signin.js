@@ -16,20 +16,19 @@ import setError from '../middleware/axiosErrorInstance';
     
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-      const res = await signIn('credentials', {
-        id:userid, password:userpw,
-        redirect: false,
-        callbackUrl:'/test/loginSuccess'
-      });
-      if(res?.error) {
-        console.log('signin',res);
-        alert(res.error)
-      }
+    await signIn('credentials', {
+          id:userid, password:userpw,
+          redirect: false,
+          callbackUrl:'/test/loginSuccess'
+        }).then((data) => {
+          if(data?.error){
+            setError({response:{data:{message:data.error}, status:data.status}});
+          }
+        })
     return () =>{};
   }
 
   const onChangeInputHandler = (e) => {
-    console.log(e.target.name);
     let name = e.target.name;
     let val = e.target.value;
 

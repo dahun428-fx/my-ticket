@@ -57,9 +57,9 @@ axiosClient.interceptors.response.use(
         //         }
         //     }
         // }
-        // setError(err);
         return setError(err);
-        // return Promise.reject(err);
+        // return Promise.reject(err)
+        // throw setError(err);
     }
 )
 

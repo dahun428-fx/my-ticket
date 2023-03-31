@@ -41,6 +41,15 @@ public class AuthService {
     private final UserRepository userRepository;
     private final AuthProviderRepository providerRepository;
 
+    @Transactional
+    public void signOut(String userid) {
+        User findUser = userRepository.findById(userid);
+        if(findUser == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.USER_NOT_FOUND.getMessage());
+        }
+        findUser.updateRefreshToken("");
+    }
+
     /*
      * 먼저 가입을 시킨다 --> db 에는 이메일 or auth id 로 (카카오)
      * 기존 provider 와 연동 되어있는 유저,

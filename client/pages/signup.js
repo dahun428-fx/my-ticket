@@ -17,9 +17,7 @@ export default function signup() {
         let form = {
             userid, userpw, username
         }
-        console.log(form);
         const res = await userSignUp(form);
-        console.log(res);
         if(res.status === 200) {
             alert('회원가입이 완료되었습니다.');
             router.push('/signin');
@@ -28,7 +26,6 @@ export default function signup() {
     }
 
     const onChangeInputHandler = (e) => {
-        console.log(e.target.name);
         let name = e.target.name;
         let val = e.target.value;
 

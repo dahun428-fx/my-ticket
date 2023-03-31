@@ -3,6 +3,7 @@ import Link from 'next/link';
 import useAuth from '../../Hoc/useAuth';
 import { signOut, useSession } from 'next-auth/react';
 import { AppBar, Toolbar, Typography } from '@mui/material';
+import { userSignOut } from '../../api/user';
 
 export default function Navbar() {
 
@@ -10,6 +11,7 @@ export default function Navbar() {
   const { data: session } = useSession();
   const signOutHandler = (e) => {
     e.preventDefault();
+    userSignOut();
     signOut();
   }
 
@@ -24,7 +26,7 @@ export default function Navbar() {
       title : "Signup", link : "/signup", authType :'logout'
     },
     {
-      title : "로그인 연동", link : "/user/updateAuth", authType:'login', 
+      title : "로그인 연동", link : "/user/connectProvider", authType:'login', 
     },
     {
       title : "get User Test", link : "/test/getuserTest", authType:'login', 

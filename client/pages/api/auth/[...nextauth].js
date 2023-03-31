@@ -38,20 +38,14 @@ const providers = [
     CredentialsProvider({
         name:'Credentials',
         authorize: async({id, password}) => {
-            // try {
+            const user = await userLogin({userid:id, userpw:password})
 
-                const user = await userLogin({userid:id, userpw:password});
-                const {accessToken, refreshToken} = user.data;
+            const {accessToken, refreshToken} = user.data;
 
-                if(accessToken && refreshToken) {
-                    return user;
-                }
-                return null;
-            // } catch (error) {
-                // console.log('error',error);
-                // Promise.reject(error);
-                // return setError(error);
-            // }
+            if(accessToken && refreshToken) {
+                return user;
+            }
+            return null;
         }
     }),
     GoogleProvider({
@@ -81,7 +75,7 @@ const providers = [
 const callbacks = {
 
     signIn : async({user, account, profile, email, credentials}) =>{
-        console.log('signin', user, account, profile, email, credentials)
+        // console.log('signin', user, account, profile, email, credentials)
         if(account) {
             const {provider} = account;
             if(AllowProvider(provider)) {
@@ -144,6 +138,7 @@ const callbacks = {
 const pages = {
     signIn : PAGE_LOGIN,
     signOut : '/test/signOutSuccess',
+    error:'/signin'
 }
 
 export const option = {

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -36,6 +37,16 @@ public class AuthController {
 
     protected final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private AuthService authService;
+
+    @GetMapping(value = "/signout")
+    public ResponseEntity<String> signOut() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUserId = userDetails.getUsername();
+        logger.info("signout , {}", currentUserId);
+        authService.signOut(currentUserId);
+        
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     // login
     @PostMapping(value = "/authenticate")

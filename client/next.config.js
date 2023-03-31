@@ -43,6 +43,14 @@ const nextConfig = {
       {
         source:'/api/auth/add/provider',
         destination : `${SERVER_BASE_URL}/api/v1/auth/add/provider`
+      },
+      {
+        source:'/api/user/signout',
+        destination : `${SERVER_BASE_URL}/api/v1/auth/signout`
+      },
+      {
+        source:'/api/user/providerinfo',
+        destination : `${SERVER_BASE_URL}/api/v1/user/getProviderInfo`
       }
     ]
   }
