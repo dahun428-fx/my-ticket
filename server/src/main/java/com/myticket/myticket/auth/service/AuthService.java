@@ -121,7 +121,10 @@ public class AuthService {
                     .providerType(oAuth2UserInfo.getProviderType().getType())
                     .build();
             providerRepository.save(authProvider);
-        }
+        } 
+        // else {
+        //     throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.USER_OAUTH_ALREADY_EXIST.getMessage());
+        // }
     }
 
     @Transactional

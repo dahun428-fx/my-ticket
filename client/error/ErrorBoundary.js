@@ -85,7 +85,7 @@ export default class ErrorBoundary extends React.Component {
           </>
         )
       } else if(error) {
-        window.location.href = '/';
+        // window.location.href = '/';
       }
   
       return this.props.children;

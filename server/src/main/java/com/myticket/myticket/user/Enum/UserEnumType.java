@@ -18,7 +18,9 @@ public enum UserEnumType {
     LOGIN_FAIL_SNS("fail", "SNS 로그인을 이용해주세요."),
 
     USER_NOT_FOUND("fail", "해당 회원을 찾을 수 없습니다."),
-    USER_RE_LOGIN("fail", "다시 로그인을 시도 해주십시오.");
+    USER_RE_LOGIN("fail", "다시 로그인을 시도 해주십시오."),
+
+    USER_OAUTH_ALREADY_EXIST("fail", "이미 등록된 회원입니다.");
 
     private final String status;
     private final String message;

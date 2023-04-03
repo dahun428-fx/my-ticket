@@ -49,7 +49,7 @@ function connectProvider(props) {
                         }
                     </div>
                     <div>
-                        <GithubLoginPage title={`Github 로그인 연동`}/>
+                        <GithubLoginPage variant="outlined" title={`Github 로그인 연동`}/>
                     </div>
                 </>
             }

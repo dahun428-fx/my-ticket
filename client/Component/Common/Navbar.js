@@ -20,7 +20,7 @@ export default function Navbar() {
       title : "HOME", link : "/", authType:'permitAll'
     },
     {
-      title : "Singin", link : "/signin", authType:'logout'
+      title : "SignIn", link : "/signin", authType:'logout'
     },
     {
       title : "Signup", link : "/signup", authType :'logout'
