@@ -59,10 +59,10 @@ public class AuthService {
     @Transactional
     public TokenDto oAuthLogin(OAuth2UserInfo oAuth2UserInfo) {
         User resultUser = null;
-        AuthProvider findProvider = providerRepository.findByIdAndType(oAuth2UserInfo.getId(),
+        List<AuthProvider> findProvider = providerRepository.findByIdAndType(oAuth2UserInfo.getId(),
                 oAuth2UserInfo.getProviderType().getType());
         // provider 여부 확인 --> 없는 경우 가입
-        if (findProvider == null) {
+        if (findProvider.size() < 1) {
             logger.info("oAuthLogin, 회원가입이 필요한 유저입니다., oAuth2UserInfo : {}", oAuth2UserInfo);
 
             // user id 중에 중복된 email이 존재한다면, provider 만 등록
@@ -92,7 +92,7 @@ public class AuthService {
             resultUser = checkUser;
         // provider 있는 경우
         } else {
-            User findUser = userRepository.findById(findProvider.getUser().getId());
+            User findUser = userRepository.findById(findProvider.get(0).getUser().getId());
             logger.info("oAuthExcute, 회원 가입이 되어 있는 유저 입니다 , User : {}", findUser);
             resultUser = findUser;
         }
@@ -110,9 +110,10 @@ public class AuthService {
     public void addOAuthProviderForExistUser(String existUserid, OAuth2UserInfo oAuth2UserInfo) {
         User findUser = userRepository.findById(existUserid);
 
-        AuthProvider foundAuthProvider = providerRepository.findByUser_idAndType(findUser.getId(),
-                oAuth2UserInfo.getProviderType().getType());
-        if (foundAuthProvider == null) {
+        // AuthProvider foundAuthProvider = providerRepository.findByUser_idAndType(findUser.getId(),
+        //         oAuth2UserInfo.getProviderType().getType());
+        List<AuthProvider> foundAuthProvider = providerRepository.findByIdAndType(oAuth2UserInfo.getId(), oAuth2UserInfo.getProviderType().getType());
+        if (foundAuthProvider.size() < 1) {
             AuthProvider authProvider = AuthProvider.builder()
                     .user(findUser)
                     .providerName(oAuth2UserInfo.getProviderType().name())
@@ -122,9 +123,9 @@ public class AuthService {
                     .build();
             providerRepository.save(authProvider);
         } 
-        // else {
-        //     throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, UserEnumType.USER_OAUTH_ALREADY_EXIST.getMessage());
-        // }
+        else {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, UserEnumType.USER_OAUTH_ALREADY_EXIST.getMessage());
+        }
     }
 
     @Transactional
