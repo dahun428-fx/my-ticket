@@ -20,25 +20,16 @@ export default function GithubLoginPage(props) {
 
 export const GithubLoginAction = (props) => {
     
-    // useEffect(()=>{
 
-    //     console.log('githubLoginaction ,', props);
-    // },[])
-    
-    
-    const URL = "https://github.com/login/oauth/authorize";
-    const redirect_uri = 'http://localhost:3000/user/provider/github/GithubOAuthProvider';
-
+    // console.log(props)
 
     const loginAction = async () => {
-        let option = `width = 350, height = 600`
-        let popUp = window.open(`${URL}?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&redirect_uri=${redirect_uri}&scope=user`, 'githubLoginPage', option);
-        localStorage.setItem('githubLogin', 'popup');
+        props.popupopen();
 
     }
 
     return (
-        <Button {...props} onClick={()=>loginAction()}/>
+        <Button title={props.title} variant={props.variant} onClick={()=>loginAction()}/>
     );
 
 }
