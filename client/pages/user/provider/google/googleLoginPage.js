@@ -40,8 +40,8 @@ export const GoogleLoginAction = (props) => {
     })
    
     return (
-        <Button {...props}
-                onClick={() => loginAction()}
-        />
+        <>
+            <Button title={props.title} variant={props.variant} disabled={props.disabled} onClick={()=>loginAction()} />
+        </>
     )
 }

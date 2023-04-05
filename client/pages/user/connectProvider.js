@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getUser, userProviderInfo } from "../../api/user";
 import GoogleLoginPage from "./provider/google/googleLoginPage";
 import GithubLoginPage from "./provider/github/githubLoginPage";
 import FacebookLoginPage from "./provider/facebook/facebookLoginPage";
+import KakaoLoginPage from "./provider/kakao/kakaoLoginPage";
 
 function connectProvider(props) {
 
@@ -11,38 +12,26 @@ function connectProvider(props) {
     const [googleProvider, setGoogleProvider ] = useState(false);
     const [githubProvider, setGithubProvider ] = useState(false);
     const [fbProvider, setFbProvider ] = useState(false);
+    const [kakaoProvider, setKakaoProvider ] = useState(false);
 
     useEffect(()=>{
         (async () => {
 
-            // const user = await getUser();
-            // console.log('res ', user);
-            // const providerInfo = await userProviderInfo();
-            // console.log('info ', providerInfo);
-            await userProviderInfo().then((res) => {
-                const {data} = res;
-                setProvider(data);
-                // console.log('rrrpp : ', data)
-                if(data) {
-                    data.forEach((item) => {
-                        setProviderHandler(item?.name);
-                        // if(item?.name === 'GOOGLE') {
-                        //     setGoogleProvider(true);
-                        // } else if (item?.name === 'GITHUB') {
-                        //     setGithubProvider(true);
-                        // } else if (item?.name === 'FACEBOOK') {
-                        //     setFbProvider(true);
-                        // }
-                    })
-                }
-
-            });
+        
+            const {data} = await userProviderInfo();
+            setProvider(data);
+            if(data) {
+                data.forEach((item) => {
+                    setProviderHandler(item?.name);
+                })
+            }
+            
         })();
+    },[]);
 
-    },[googleProvider, githubProvider, fbProvider]);
+     
 
     const setProviderHandler = (provider) => {
-        console.log(provider);
         provider = provider.toUpperCase();
         switch (provider) {
             case "GOOGLE":
@@ -101,9 +90,19 @@ function connectProvider(props) {
                             <span>연동 완료</span>
                         }
                     </div>
+                    <div>
+                        <KakaoLoginPage 
+                            variant="outlined"
+                            title="Kakao 로그인 연동"
+                            disabled={kakaoProvider}
+                            setProviderHandler={setProviderHandler}
+                        />
+                    </div>
                 </>
             }
         </div>
     )
 }
 export default connectProvider;
+
+

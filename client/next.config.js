@@ -60,6 +60,10 @@ const nextConfig = {
         source:`/fb/login/oauth/accessToken/:code/:redirecturl*`,
         destination : `https://graph.facebook.com/v16.0/oauth/access_token?client_id=${process.env.FACEBOOK_CLIENT_ID}&client_secret=${process.env.FACEBOOK_CLIENT_PW}&code=:code&redirect_uri=${process.env.NEXTAUTH_URL}/:redirecturl*`
         // destination : `https://graph.facebook.com/v16.0/oauth/access_token?client_id=${process.env.FACEBOOK_CLIENT_ID}&client_secret=${process.env.FACEBOOK_CLIENT_PW}&code=:code&redirect_uri=http://localhost:3000/user/connectProvider`
+      },
+      {
+        source:`/kakao/login/oauth/accessToken`,
+        destination:`https://kauth.kakao.com/oauth/token`
       }
     ]
   }

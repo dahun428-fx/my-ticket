@@ -65,7 +65,9 @@ export const GithubLoginAction = (props) => {
     }
 
     return (
-        <Button title={props.title} variant={props.variant} disabled={props.disabled} onClick={()=>loginAction()} />
+        <>
+            <Button title={props.title} variant={props.variant} disabled={props.disabled} onClick={()=>loginAction()} />
+        </>
     );
 
 }
