@@ -12,7 +12,9 @@ export default function Navbar() {
   const signOutHandler = (e) => {
     e.preventDefault();
     userSignOut();
-    signOut();
+    signOut({
+      callbackUrl:'/'
+    });
   }
 
   const navbarList = [

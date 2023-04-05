@@ -15,8 +15,7 @@ export default function GithubRedirectPage (props) {
         (async()=>{
             const tokenResponse = await getAccessToken();
             if(tokenResponse && tokenResponse?.access_token) {
-                console.log('tokenResponse redirect', tokenResponse);
-                
+                // console.log('tokenResponse redirect', tokenResponse);
 
                 const accessToken = tokenResponse.access_token;
                 const getEmail = await axios.get('https://api.github.com/user/emails', {
@@ -32,7 +31,7 @@ export default function GithubRedirectPage (props) {
                     return res.data;
                 });
 
-                console.log('re getEmail ', getEmail, ' re getData ', getData);
+                // console.log('re getEmail ', getEmail, ' re getData ', getData);
                 const user = {
                     id : getData.id,
                     email : getEmail,
@@ -40,12 +39,12 @@ export default function GithubRedirectPage (props) {
                     image : getData.avatar_url
                 }
                 const provider = 'github';
-                console.log('user ' , user , ' provider' ,provider);
+                // console.log('user ' , user , ' provider' ,provider);
 
                 const providerRes = await addProvider({user, provider}).then(res => {
-                    console.log(opener.window)
+                    // console.log(opener.window)
                 });
-                console.log(providerRes);
+                // console.log(providerRes);
                 setIsToken(true);
 
             }
@@ -63,7 +62,7 @@ export default function GithubRedirectPage (props) {
         const getAccessTokenURL = `/github/login/oauth/accessToken`;
 
         if(codeParam && !isToken) {
-            console.log('redirect // codeParam', codeParam);
+            // console.log('redirect // codeParam', codeParam);
             return await axios.post(`${getAccessTokenURL}/${codeParam}`, {
                 // redirect_uri : redirectUri
             }, {

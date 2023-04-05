@@ -12,8 +12,6 @@ import { oAuth2Login, userLogin } from "../../../api/user";
 import { getNewToken } from "../../../api/auth";
 import AllowProvider from '../../../configs/provider/config.oAuth2.provider.controll';
 import { KAKAO_PROVIDER, NAVER_PROVIDER } from "../../../configs/provider/config.oAuth2.provider.enum";
-import setError from '../../../middleware/axiosErrorInstance'
-import withGetServerSideProps from "../../../middleware/withServerSideProps";
 
 async function refreshAccessToken(tokenObject) {
     try {
@@ -137,7 +135,6 @@ const callbacks = {
 
 const pages = {
     signIn : PAGE_LOGIN,
-    signOut : '/test/signOutSuccess',
     error:'/signin'
 }
 

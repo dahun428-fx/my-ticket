@@ -40,7 +40,7 @@ export const GithubLoginAction = (props) => {
                     return res.data;
                 });
 
-                console.log('re getEmail ', getEmail, ' re getData ', getData);
+                // console.log('re getEmail ', getEmail, ' re getData ', getData);
                 const user = {
                     id : getData.id,
                     email : getEmail,
@@ -50,8 +50,9 @@ export const GithubLoginAction = (props) => {
                 const provider = 'github';
                 // console.log('user ' , user , ' provider' ,provider);
 
-                const providerRes = await addProvider({user, provider});
-                console.log(providerRes);
+                await addProvider({user, provider});
+                props.setProviderHandler(provider);
+                // console.log(providerRes);
             }
         // })();
     }
@@ -64,7 +65,7 @@ export const GithubLoginAction = (props) => {
     }
 
     return (
-        <Button title={props.title} variant={props.variant} onClick={()=>loginAction()}/>
+        <Button title={props.title} variant={props.variant} disabled={props.disabled} onClick={()=>loginAction()} />
     );
 
 }

@@ -30,7 +30,9 @@ export const GoogleLoginAction = (props) => {
                                         }
                                         return providerData;
                                     });
-            const providerRes = await addProvider({user:userInfo, provider:'google'});
+            const provider = 'google';
+            await addProvider({user:userInfo, provider});
+            props.setProviderHandler(provider);
     }
 
     const loginAction = useGoogleLogin({
