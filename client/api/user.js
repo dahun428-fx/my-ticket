@@ -1,4 +1,6 @@
-import axios from "../middleware/axiosInstance";
+// import axios from "../middleware/axiosInstance";
+// import axios from "axios";
+import axios from '../middleware/axiosInterceptorHook';
 import { GET_USER, USER_LOGIN, USER_LOGIN_OAUTH2, USER_SIGN_UP, USER_SGIN_OUT, USER_PROVIDER_INFO } from "./url/enum/user.api.url";
 
 export const userSignOut = async () => {

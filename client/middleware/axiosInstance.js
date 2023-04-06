@@ -2,6 +2,7 @@ import axios, {HeadersDefaults} from 'axios';
 import getConfig from '../configs/config.export';
 import setError from './axiosErrorInstance';
 import { getSession } from 'next-auth/react';
+import Loading from '../Component/Common/Loading';
 const config = getConfig();
 const axiosClient = axios.create();
 
@@ -12,6 +13,7 @@ axiosClient.defaults.headers = {
 
 axiosClient.interceptors.request.use(async(config) => {
     console.log('loading.....')
+    // document.body.classList.add(<Loading />);
     const session = await getSession();
     if(session) {
         const { accessToken, refreshToken } = session;

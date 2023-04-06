@@ -1,4 +1,5 @@
-import axios from "../middleware/axiosInstance"
+// import axios from "../middleware/axiosInstance"
+import axios from '../middleware/axiosInterceptorHook';
 import { ADD_PROVIDER, REFRESH_TOKEN } from "./url/enum/auth.api.url"
 
 export const getNewToken = async (refreshToken) => {
