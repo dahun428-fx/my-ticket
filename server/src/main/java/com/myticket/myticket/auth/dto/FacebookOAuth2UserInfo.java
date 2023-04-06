@@ -15,7 +15,13 @@ public class FacebookOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getId() {
-        return (String) attributes.get("id");
+        String id = null;
+        if(attributes.get("id") instanceof Integer) {
+            id = String.valueOf(attributes.get("id"));
+        } else {
+            id = (String) attributes.get("id");
+        }
+        return id;
     }
 
     @Override

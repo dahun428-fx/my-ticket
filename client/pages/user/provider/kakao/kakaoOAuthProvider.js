@@ -1,6 +1,12 @@
-import React, { useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const KakaoOAuthProvider = (props) => {
+
+    const [ clientId, setClientId ]= useState("");
+    const [ authURL, setAuthURL ] = useState("");
+    const [ redirectUri, setRedirectUri ] = useState("");
+    const [ accessTokenUri, setAccessTokenUri ] = useState("");
 
     useEffect(()=>{
 
@@ -18,7 +24,7 @@ const KakaoOAuthProvider = (props) => {
         options.windowName = options.windowName ||  'ConnectWithOAuth'; // should not include space for IE
         options.windowOptions = options.windowOptions || 'location=0,status=0,width=400,height=800';
         options.onSuccess = options.onSuccess || function(){ window.location.reload(); };
-        options.path = options.path || `${options.auth_url}?client_id=${options.client_id}&redirect_uri=${options.redirect_uri}&response_type=code`;
+        options.path = options.path || `${options.auth_url}?client_id=${options.client_id}&redirect_uri=${options.redirect_uri}&response_type=code&scope=account_email,profile_image`;
         var that = window;
         that._oauthWindow = window.open(options.path, options.windowName, options.windowOptions);
         

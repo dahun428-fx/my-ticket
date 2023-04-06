@@ -1,7 +1,7 @@
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import axios from 'axios';
-import Button from '../../../../Component/Common/Button'
 import { addProvider } from "../../../../api/auth";
+import Button from "../../../../Component/Common/Button";
 //https://medium.com/@OloriAsabi/google-oauth2-using-the-new-google-identity-services-sdk-for-react-using-jwt-decode-d687d2e05aa2
 export default function GoogleLoginPage(props){
 
@@ -40,8 +40,6 @@ export const GoogleLoginAction = (props) => {
     })
    
     return (
-        <>
-            <Button title={props.title} variant={props.variant} disabled={props.disabled} onClick={()=>loginAction()} />
-        </>
+        <Button title={props.title} variant={props.variant} disabled={props.disabled} onClick={()=>loginAction()} />
     )
 }

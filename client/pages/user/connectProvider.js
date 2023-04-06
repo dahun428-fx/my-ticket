@@ -17,7 +17,6 @@ function connectProvider(props) {
     useEffect(()=>{
         (async () => {
 
-        
             const {data} = await userProviderInfo();
             setProvider(data);
             if(data) {
@@ -33,7 +32,7 @@ function connectProvider(props) {
 
     const setProviderHandler = (provider) => {
         provider = provider.toUpperCase();
-        switch (provider) {
+        switch (provider) { 
             case "GOOGLE":
                 setGoogleProvider(true);
                 break;
@@ -43,7 +42,9 @@ function connectProvider(props) {
             case "FACEBOOK":
                 setFbProvider(true);
                 break;
-        
+            case "KAKAO" :
+                setKakaoProvider(true);
+                break;
             default:
                 break;
         }
@@ -97,6 +98,9 @@ function connectProvider(props) {
                             disabled={kakaoProvider}
                             setProviderHandler={setProviderHandler}
                         />
+                        {kakaoProvider &&
+                            <span>연동 완료</span>
+                        }
                     </div>
                 </>
             }

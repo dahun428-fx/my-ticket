@@ -64,6 +64,10 @@ const nextConfig = {
       {
         source:`/kakao/login/oauth/accessToken`,
         destination:`https://kauth.kakao.com/oauth/token`
+      },
+      {
+        source:`/kakao/v2/user/me`,
+        destination: `https://kauth.kakao.com/v2/user/me`
       }
     ]
   }

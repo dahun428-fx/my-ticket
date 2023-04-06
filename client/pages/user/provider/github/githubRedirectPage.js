@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { addProvider } from "../../../../api/auth";
 
 export default function GithubRedirectPage (props) {
