@@ -10,7 +10,7 @@ export default function useAuth(shouldRedirect) {
 
     // const permitAll = ['/user/updateAuth', '/test/getuserTest']
     // const permitAll = [ '/test/getuserTest', '/signup']
-    const permitAll = [ '/', '/signup',]
+    const permitAll = [ '/', '/signup', '/product/movie']
 
     useEffect(() => {
         if (session?.error === "RefreshAccessTokenError") {

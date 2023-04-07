@@ -1,13 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import GoogleLoginPage from "./google/googleLoginPage";
 import GithubLoginPage from "./github/githubLoginPage";
 import FacebookLoginPage from "./facebook/facebookLoginPage";
 import KakaoLoginPage from "./kakao/kakaoLoginPage";
 import NaverLoginPage from "./naver/naverLoginPage";
-import { getServerSession } from "next-auth";
-import {option} from "../../api/auth/[...nextauth]";
-import { USER_PROVIDER_INFO } from "../../../api/url/enum/user.api.url";
-import makeAxiosInstance from "../../../middleware/axiosInstance";
 
 function connectProvider(props) {
 
