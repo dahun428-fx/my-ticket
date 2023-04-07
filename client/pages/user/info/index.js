@@ -20,7 +20,6 @@ const UserInfoPage = (props) => {
             </>
             }
         </>
-        // <div> .. . </div>
     )
 }
 

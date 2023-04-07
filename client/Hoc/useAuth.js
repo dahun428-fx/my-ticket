@@ -16,7 +16,7 @@ export default function useAuth(shouldRedirect) {
         if (session?.error === "RefreshAccessTokenError") {
             signOut({ callbackUrl: PAGE_LOGIN, redirect: shouldRedirect });
         }
-        console.log('check session , ', session);
+        // console.log('check session , ', session);
 
         if (permitAll.includes(router.route)) {
 

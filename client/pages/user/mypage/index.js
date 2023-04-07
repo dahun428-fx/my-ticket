@@ -27,13 +27,11 @@ export async function getServerSideProps(context) {
     const axios = await makeAxiosInstance(session);
     
     const {data:providerList} = await axios.get(USER_PROVIDER_INFO);
-    const {data:me} = await axios.get(USER_ME);
-    // const user = new User(me.id, me.name);
-    // console.log(user);
+    const {data:user} = await axios.get(USER_ME);
     return {
       props: {
         providerList,
-        user:me,
+        user,
       },
     }
   }

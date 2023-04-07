@@ -33,7 +33,6 @@ export default function Navbar() {
   }, [session]);
 
   useEffect(()=>{
-    console.log('sessssss : ', session);
     const navbarList = [
       {
         title : "HOME", link : "/", authType:'permitAll'
