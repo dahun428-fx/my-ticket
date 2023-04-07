@@ -53,6 +53,10 @@ const nextConfig = {
         destination : `${SERVER_BASE_URL}/api/v1/user/getProviderInfo`
       },
       {
+        source: '/api/user/me',
+        destination : `${SERVER_BASE_URL}/api/v1/user/findUserInfo`
+      },
+      {
         source:`/github/login/oauth/accessToken/:code`,
         destination: `https://github.com/login/oauth/access_token?client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_PW}&code=:code`
       },

@@ -11,8 +11,7 @@ import makeAxiosInstance from "../../../middleware/axiosInstance";
 
 function connectProvider(props) {
 
-    const [provider, setProvider] = useState(props.providerList);
-    const [loading, setLoading] = useState(false);
+    const [provider, setProvider] = useState([]);
 
     const [googleProvider, setGoogleProvider ] = useState(false);
     const [githubProvider, setGithubProvider ] = useState(false);
@@ -21,17 +20,14 @@ function connectProvider(props) {
     const [naverProvider, setNaverProvider ] = useState(false);
 
     useEffect(()=>{
-        (async () => {
-            
-            setProvider(provider);
-            if(provider) {
-                provider.forEach((item) => {
-                    setProviderHandler(item?.name);
-                })
-            }
-        })();
-        return () => {setProvider([])}
-    },[]);
+        setProvider(props.providerList);
+        if(provider) {
+            provider.forEach((item) => {
+                setProviderHandler(item?.name);
+            })
+        }
+        return () => {};
+    },[provider]);
 
      
 
@@ -62,8 +58,7 @@ function connectProvider(props) {
         <div>
             
             {
-                (provider) &&
-
+                provider.length > 0 &&
                 <>
                     <div>
                         <GoogleLoginPage 
@@ -128,16 +123,16 @@ function connectProvider(props) {
 }
 export default connectProvider;
 
-export async function getServerSideProps(context) {
-    const session = await getServerSession(context.req, context.res, option)
-    const axios = await makeAxiosInstance(session);
+// export async function getServerSideProps(context) {
+//     const session = await getServerSession(context.req, context.res, option)
+//     const axios = await makeAxiosInstance(session);
     
-    const {data} = await axios.get(USER_PROVIDER_INFO);
+//     const {data} = await axios.get(USER_PROVIDER_INFO);
 
-    return {
-      props: {
-        providerList:data,
-      },
-    }
-  }
+//     return {
+//       props: {
+//         providerList:data,
+//       },
+//     }
+//   }
 

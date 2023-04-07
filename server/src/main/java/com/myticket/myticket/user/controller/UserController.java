@@ -48,6 +48,15 @@ public class UserController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping("/findUserInfo")
+    public ResponseEntity<ReadUserDto> findUserInfo(@AuthenticationPrincipal User user) {
+        logger.info("findUserInfo Controller , {}", user);
+        ReadUserDto readUser = new ReadUserDto();
+        readUser.setId(user.getUsername());
+        ReadUserDto findUser = userService.findUserById(readUser);
+        return ResponseEntity.ok().body(findUser);
+    }
+
     @GetMapping(value = "/getUser", produces = "application/json; charset=utf8")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN', 'ROLE_OAUTH2')")
     public ResponseEntity<ReadUserDto> getUser(@AuthenticationPrincipal User user, HttpServletRequest req) {

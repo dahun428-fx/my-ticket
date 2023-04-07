@@ -75,7 +75,7 @@ public class UserService implements UserDetailsService {
     public ReadUserDto findUserById(ReadUserDto readUserDto){
         User findUser = userRepository.findById(readUserDto.getId());
         if(findUser == null) {
-            return null;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, UserEnumType.USER_NOT_FOUND.getMessage());
         }
         BeanUtils.copyProperties(findUser, readUserDto);
         return readUserDto;

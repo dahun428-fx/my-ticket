@@ -45,7 +45,7 @@ export default function Navbar() {
         title : "Signup", link : "/signup", authType :'logout'
       },
       {
-        title : "My", link : "/user/provider", authType:'login', 
+        title : "My", link : "/user/mypage", authType:'login', 
       },
       {
         title : "get User Test", link : "/test/getuserTest", authType:'login', 
