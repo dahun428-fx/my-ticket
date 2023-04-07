@@ -68,6 +68,14 @@ const nextConfig = {
       {
         source:`/kakao/v2/user/me`,
         destination: `https://kauth.kakao.com/v2/user/me`
+      },
+      {
+        source:`/naver/login/oauth/accessToken/:code/:redirecturl*`,
+        destination:`https://nid.naver.com/oauth2.0/token?client_id=${process.env.NAVER_CLIENT_ID}&client_secret=${process.env.NAVER_CLIENT_PW}&grant_type=authorization_code&state=123456&code=:code&redirect_uri=${process.env.NEXTAUTH_URL}/:redirecturl*`,
+      },
+      {
+        source:`/naver/v2/user/me`,
+        destination : `https://openapi.naver.com/v1/nid/me`
       }
     ]
   }

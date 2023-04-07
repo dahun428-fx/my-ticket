@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 
-export default function GithubOAuthProvider (props) {
+const NaverOAuthProvider = (props) => {
 
     const [ clientId, setClientId ]= useState("");
     const [ authURL, setAuthURL ] = useState("");
@@ -9,14 +9,12 @@ export default function GithubOAuthProvider (props) {
     const [ accessTokenUri, setAccessTokenUri ] = useState("");
 
     useEffect(()=>{
-
         setClientId(props.clientId);
-        setAuthURL(`https://github.com/login/oauth/authorize`);
+        setAuthURL(`https://nid.naver.com/oauth2.0/authorize`);
         setRedirectUri(window.location.href);
-        setAccessTokenUri(`/github/login/oauth/accessToken`);
+        setAccessTokenUri(`/naver/login/oauth/accessToken`);
     },[])
- 
-    //Authorization popup window code
+
     const ShowAuthWindow = async (options) => {
         options.access_token_uri = options.access_token_uri || accessTokenUri;
         options.redirect_uri = options.redirect_uri || redirectUri; 
@@ -25,8 +23,7 @@ export default function GithubOAuthProvider (props) {
         options.windowName = options.windowName ||  'ConnectWithOAuth'; // should not include space for IE
         options.windowOptions = options.windowOptions || 'location=0,status=0,width=400,height=800';
         options.onSuccess = options.onSuccess || function(){ window.location.reload(); };
-        options.path = options.path || `${options.auth_url}?client_id=${options.client_id}&redirect_uri=${options.redirect_uri}&scope=user`;
-      
+        options.path = options.path || `${options.auth_url}?client_id=${options.client_id}&redirect_uri=${options.redirect_uri}&response_type=code`;
         var that = window;
         that._oauthWindow = window.open(options.path, options.windowName, options.windowOptions);
         
@@ -47,13 +44,13 @@ export default function GithubOAuthProvider (props) {
                 const urlParams = new URL(currentUrl).searchParams;
                 const codeParam = urlParams.get("code");
                 if(codeParam) {
-                    const {data} = await axios.post(`${options.access_token_uri}/${codeParam}`,{},{headers:{Accept: 'application/json'}})
+                    const {data} = await axios.get(`${options.access_token_uri}/${codeParam}/${new URL(options.redirect_uri).pathname}`)
                     .catch(err => {
                         that._oauthWindow.close();
                         throw new Error(err);
                     })
-                    options.onSuccess(data);
                     that._oauthWindow.close();
+                    options.onSuccess(data);
                 }
                 if (that._oauthWindow.closed) {
                     window.clearInterval(that._oauthInterval);
@@ -73,8 +70,7 @@ export default function GithubOAuthProvider (props) {
     });
 
     return (
-        <>
-        {childrenWithProps}
-        </>
+        <>{childrenWithProps}</>
     )
-}
+} 
+export default NaverOAuthProvider;

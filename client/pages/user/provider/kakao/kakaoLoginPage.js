@@ -19,16 +19,12 @@ export const KakaoLoginAction = (props) => {
         if(tokenResponse && tokenResponse?.access_token) {
             const accessToken = tokenResponse.access_token;
             const {data} = await axios.get(`https://kapi.kakao.com/v2/user/me`
-            // ,{
-            //     // property_keys : ["kakao_account.email"],
-            // }
             , 
             {
                 headers : {Authorization : `Bearer ${accessToken}`
                 , 'Content-Type' : "application/x-www-form-urlencoded;charset=utf-8"
             }
             })
-            // console.log('kakao', data);
 
             const user = {
                 id : data?.id,
@@ -36,7 +32,6 @@ export const KakaoLoginAction = (props) => {
                 name : "",
                 image : data?.kakao_account?.profile?.profile_image_url,
             }
-            // console.log('kakao, user , ', user)
             const provider = 'kakao';
             await addProvider({user, provider});
             props.setProviderHandler(provider);

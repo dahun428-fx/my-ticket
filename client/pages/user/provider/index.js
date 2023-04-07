@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
-import GoogleLoginPage from "./provider/google/googleLoginPage";
-import GithubLoginPage from "./provider/github/githubLoginPage";
-import FacebookLoginPage from "./provider/facebook/facebookLoginPage";
-import KakaoLoginPage from "./provider/kakao/kakaoLoginPage";
-import NaverLoginPage from "./provider/naver/naverLoginPage";
+import GoogleLoginPage from "./google/googleLoginPage";
+import GithubLoginPage from "./github/githubLoginPage";
+import FacebookLoginPage from "./facebook/facebookLoginPage";
+import KakaoLoginPage from "./kakao/kakaoLoginPage";
+import NaverLoginPage from "./naver/naverLoginPage";
 import { getServerSession } from "next-auth";
-import {option} from "../api/auth/[...nextauth]";
-import { USER_PROVIDER_INFO } from "../../api/url/enum/user.api.url";
-import makeAxiosInstance from "../../middleware/axiosInstance";
+import {option} from "../../api/auth/[...nextauth]";
+import { USER_PROVIDER_INFO } from "../../../api/url/enum/user.api.url";
+import makeAxiosInstance from "../../../middleware/axiosInstance";
 
 function connectProvider(props) {
 
     const [provider, setProvider] = useState(props.providerList);
+    const [loading, setLoading] = useState(false);
 
     const [googleProvider, setGoogleProvider ] = useState(false);
     const [githubProvider, setGithubProvider ] = useState(false);
@@ -21,6 +22,7 @@ function connectProvider(props) {
 
     useEffect(()=>{
         (async () => {
+            
             setProvider(provider);
             if(provider) {
                 provider.forEach((item) => {
@@ -58,7 +60,7 @@ function connectProvider(props) {
 
     return (
         <div>
-            hello update 
+            
             {
                 (provider) &&
 
@@ -135,7 +137,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         providerList:data,
-      }, // will be passed to the page component as props
+      },
     }
   }
 
