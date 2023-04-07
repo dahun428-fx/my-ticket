@@ -1,8 +1,10 @@
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Skeleton } from "@mui/material";
 import { useEffect, useState } from "react";
+import style from './Loading.module.css';
 
 const Loading = (props) => {
     
+
     // console.log('loading bar ... ',props.loading)
     // const [isLoading, setIsLoading] = useState(props.loading);
     // useEffect(()=>{
@@ -33,11 +35,11 @@ const Loading = (props) => {
     // )
     return (
         <>
-        <div>....loading</div>
-        {/* {props.loading ? <div>loading....</div> : 
-            // <>{props.children}</>
-            <>'''</>
-        } */}
+        <div className={style.overlay}>
+            <div className={style.overlay__inner}>
+                <div className={style.overlay__content}><span className={style.spinner}></span></div>
+            </div>
+        </div>
         </>
     )
 }

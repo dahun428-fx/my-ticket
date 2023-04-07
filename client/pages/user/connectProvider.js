@@ -4,10 +4,12 @@ import GoogleLoginPage from "./provider/google/googleLoginPage";
 import GithubLoginPage from "./provider/github/githubLoginPage";
 import FacebookLoginPage from "./provider/facebook/facebookLoginPage";
 import KakaoLoginPage from "./provider/kakao/kakaoLoginPage";
+import { Skeleton } from "@mui/material";
 
 function connectProvider(props) {
 
     const [provider, setProvider] = useState([]);
+    const [loading, setLoading ] = useState(false);
 
     const [googleProvider, setGoogleProvider ] = useState(false);
     const [githubProvider, setGithubProvider ] = useState(false);
@@ -15,8 +17,8 @@ function connectProvider(props) {
     const [kakaoProvider, setKakaoProvider ] = useState(false);
 
     useEffect(()=>{
+        setLoading(true);
         (async () => {
-
             const {data} = await userProviderInfo();
             setProvider(data);
             if(data) {
@@ -24,8 +26,9 @@ function connectProvider(props) {
                     setProviderHandler(item?.name);
                 })
             }
-            
+            setLoading(false);
         })();
+        return () => {setLoading(false)}
     },[]);
 
      
@@ -54,7 +57,7 @@ function connectProvider(props) {
         <div>
             hello update 
             {
-                provider &&
+                (provider && !loading) &&
 
                 <>
                     <div>
