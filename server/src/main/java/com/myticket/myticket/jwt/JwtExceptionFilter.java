@@ -26,6 +26,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             if (e.getMessage().equals(JwtEnum.EXPIRED.getStatus())) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, JwtEnum.EXPIRED.getStatus());
             } else {
+                logger.info("JwtExeption : error 발생, {}", HttpServletResponse.SC_UNAUTHORIZED);
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, JwtEnum.DENIED.getStatus());
             }
         }

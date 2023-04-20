@@ -22,6 +22,10 @@ import setError from '../middleware/axiosErrorInstance';
           callbackUrl:'/test/loginSuccess'
         }).then((data) => {
           if(data?.error){
+            if(data?.status === 401) {
+              setError({response:{data:{message:"로그인에 실패하였습니다. 아이디, 비밀번호를 확인해주세요."}, status:data.status}})
+              return;
+            }
             setError({response:{data:{message:data.error}, status:data.status}});
           }
         })
