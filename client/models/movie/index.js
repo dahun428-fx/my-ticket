@@ -1,5 +1,5 @@
 export default class Movie {
-    constructor(original_title, overview, poster_path, release_date, title, vote_average, vote_count) {
+    constructor(original_title, overview, poster_path, release_date, title, vote_average, vote_count, id) {
         this.original_title = original_title;
         this.overview = overview;
         this.poster_path = poster_path;
@@ -7,8 +7,13 @@ export default class Movie {
         this.title = title;
         this.vote_average = vote_average;
         this.vote_count = vote_count;
+        this.id=id;
     }
  
+    getMovieId(){
+        return this.id;
+    }
+
     getImageFullPath(){
         return `https://image.tmdb.org/t/p/w500/${this.poster_path}`;
     }
@@ -17,7 +22,7 @@ export default class Movie {
         if(!movieApiData) {
             return {};
         }
-        const {original_title, overview, poster_path, release_date, title, vote_average, vote_count} = movieApiData;
-        return new Movie(original_title, overview, poster_path, release_date, title, vote_average, vote_count);
+        const {original_title, overview, poster_path, release_date, title, vote_average, vote_count, id} = movieApiData;
+        return new Movie(original_title, overview, poster_path, release_date, title, vote_average, vote_count, id);
     }
 }
