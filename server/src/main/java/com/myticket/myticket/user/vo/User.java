@@ -1,4 +1,4 @@
-package com.myticket.myticket.vo;
+package com.myticket.myticket.user.vo;
 
 import java.util.Collection;
 import java.util.Map;

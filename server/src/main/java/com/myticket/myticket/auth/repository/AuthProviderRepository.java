@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 import com.myticket.myticket.auth.vo.AuthProvider;
-import com.myticket.myticket.vo.User;
+import com.myticket.myticket.user.vo.User;
 
 public interface AuthProviderRepository extends CrudRepository<AuthProvider, Long> {
     AuthProvider findByUser_idAndType(String userid, int type);

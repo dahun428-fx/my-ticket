@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import com.myticket.myticket.user.repository.UserRepository;
+import com.myticket.myticket.user.vo.User;
 import com.myticket.myticket.auth.Enum.ProviderType;
 import com.myticket.myticket.auth.dto.OAuth2UserInfo;
 import com.myticket.myticket.auth.dto.TokenDto;
@@ -26,7 +27,7 @@ import com.myticket.myticket.jwt.JwtTokenProvider;
 import com.myticket.myticket.jwt.Enum.JwtEnum;
 import com.myticket.myticket.user.Enum.UserEnumType;
 import com.myticket.myticket.user.Enum.UserRoleType;
-import com.myticket.myticket.vo.User;
+
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

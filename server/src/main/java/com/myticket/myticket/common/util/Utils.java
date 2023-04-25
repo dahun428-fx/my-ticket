@@ -32,4 +32,8 @@ public class Utils {
           .map(element -> mapper.map(element, targetClass))
           .collect(Collectors.toList());
     }
+
+    public static <S, T> T mapOne(Object source, Class<T> targetClass) {
+        return mapper.map(source, targetClass);
+    }
 }

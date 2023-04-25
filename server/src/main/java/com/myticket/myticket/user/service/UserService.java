@@ -23,7 +23,7 @@ import com.myticket.myticket.user.Enum.UserRoleType;
 import com.myticket.myticket.user.dto.CreateUserDto;
 import com.myticket.myticket.user.dto.ReadUserDto;
 import com.myticket.myticket.user.repository.UserRepository;
-import com.myticket.myticket.vo.User;
+import com.myticket.myticket.user.vo.User;
 
 import lombok.AllArgsConstructor;
 
