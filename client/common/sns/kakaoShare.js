@@ -6,14 +6,13 @@ const KakaoShare = () => {
 
     const router = useRouter();
 
-    const [route, setRoute] = useState("");
 
     useEffect(() => {
 
-        setRoute(router.pathname);
 
         const script = document.createElement("script");
         script.src = "https://developers.kakao.com/sdk/js/kakao.js";
+        script.crossOrigin;
         script.async = true;
         document.body.appendChild(script);
         console.log('router ::: ', router.asPath);
@@ -22,6 +21,7 @@ const KakaoShare = () => {
 
     const kakaoShareBtnEvent = () => {
         console.log('kakao share');
+        shareKakao(router.asPath, 'title');
     }
 
     const shareKakao = (route, title) => { // url이 id값에 따라 변경되기 때문에 route를 인자값으로 받아줌
