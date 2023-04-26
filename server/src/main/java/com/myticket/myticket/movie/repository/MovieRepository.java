@@ -10,6 +10,6 @@ import com.myticket.myticket.movie.vo.Movie;
 
 public interface MovieRepository extends CrudRepository<Movie, Long> {
 
-    @Query(nativeQuery = true, value="SELECT * FROM Movie as m WHERE m.id IN (:movieids)")
+    @Query(nativeQuery = true, value="SELECT * FROM Movie as m WHERE m.movie_id IN (:movieids)")
     List<Movie> findMovieByMovieids(@Param("movieids") List<Long> movieids);
 }

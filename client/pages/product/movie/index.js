@@ -6,9 +6,12 @@ import { useEffect, useState } from "react";
 import MovieCard from "../../../Component/Movie/Card";
 import Link from "next/link";
 import { Pagination, PaginationItem } from "@mui/material";
-import { movieGetPopularList } from "../../../api/movie";
+import { getMovieListForGetMovieInfo, movieGetPopularList, movieLikeListForUser } from "../../../api/movie";
 import { useRouter } from "next/router";
 import MoviePages from "../../../models/movie/pages";
+import { getSession, useSession } from "next-auth/react";
+import setError from '../../../middleware/axiosErrorInstance';
+import { PAGE_DETAIL } from "../../../api/url/enum/movie.page.url";
 
 const MovieListPage = (props) => {
     const router = useRouter();
@@ -21,16 +24,76 @@ const MovieListPage = (props) => {
 
     useEffect(()=>{
         const moviePages = new MoviePages(props.totalPages, props.totalResults);
-        setMovieList(props.popularMovieList);
         setTotalPages(moviePages.getTotalPages());
         // setTotalResults(props.totalResults);
-        return () => {setMovieList([]); }
+
+        (async () => {
+            await movieListRender(props.popularMovieList);
+        })();
+        return () => {}
     },[])
+
+    const movieListRender = async (movieList) => {
+        if(movieList) {
+            let resultList = movieList;
+            const session = await getSession();
+
+            resultList = await movieListAttachLikeCount(movieList);
+            if(session) {
+                resultList = await movieListAttachLikeStatus(resultList);
+            }
+            setMovieList(resultList);
+        }
+    }
+
+    const movieListAttachLikeStatus = async (movieList) => {
+        const {data} = await movieLikeListForUser();
+        if (data) {
+            const dataMap = data.reduce((newObj, obj) => {
+                newObj[obj.movieid] = obj.status;
+                return newObj;
+            }, {});
+            const resultList = movieList.map((item, index) => {
+                return {
+                    ...item,
+                    likeStatus : dataMap[item.id] ? dataMap[item.id] : false,
+                }
+            })
+            return resultList;
+        }
+        return movieList;
+    }
+
+    const movieListAttachLikeCount = async (movieList) => {
+        const param = movieList.map((item, index) => {
+            return {
+                movieid:item.id,
+            }
+        })
+        const {data} = await getMovieListForGetMovieInfo(param);
+
+        if(data) {
+
+            const dataMap = data.reduce((newObj, obj) => {
+                newObj[obj.movieid] = obj.likeCount;
+                return newObj;
+            }, {});
+            
+            const resultList = movieList.map((item, index) => {
+                return {
+                    ...item,
+                    likeCount : dataMap[item.id] ? dataMap[item.id] : 0
+                }
+            })
+            return resultList;
+        }
+        return movieList;
+    }
 
     const pageChangeHandler = async (event, value) => {
         setNowPage(value);
         const {data:{results}} = await movieGetPopularList(value);
-        setMovieList(results);
+        await movieListRender(results);
     }
 
     return (
@@ -54,12 +117,12 @@ const MovieListPage = (props) => {
                             style={{padding:5}}
                         >
                             <Link href={{
-                               pathname : `/product/movie/detail/${item.id}`,
+                               pathname : `${PAGE_DETAIL}/${item.id}`,
                                query : {
                                 backPage:nowPage,
                                }
                             }}
-                                as={`/product/movie/detail/${item.id}`}
+                                as={`${PAGE_DETAIL}/${item.id}`}
                             >
                                 <MovieCard movie={item}/>
                             </Link>

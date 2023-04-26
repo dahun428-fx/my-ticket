@@ -6,17 +6,42 @@ import makeAxiosInstance from "../../../../middleware/axiosInstance";
 import Movie from "../../../../models/movie";
 import Btn from "../../../../Component/Common/Button";
 import { useRouter } from "next/router";
+import { getMovieLikeByMovieid, getMovieListForGetMovieInfo, movieAddOrCancleLike } from "../../../../api/movie";
+import { getSession } from "next-auth/react";
+import setError from '../../../../middleware/axiosErrorInstance';
 
 const MovieDetail = (props) => {
 
     const [movieDetail, setMovieDetail] = useState(null);
+    const [likeStatus, setLikeStatus] = useState(false);
+    const [likeTotalCount, setLikeTotalCount] = useState(0);
     const router = useRouter();
 
     useEffect(()=>{
         
         const movie = new Movie().createMovieByApiData(props.movie);
         setMovieDetail(movie);
+        const param = [{movieid:props.movie.id}];
+        ( async () => {
+            const {data} = await getMovieListForGetMovieInfo(param);
+            let likeCount = 0;
+            if(data) {
+                likeCount = data[0].likeCount;
+            }
+            setLikeTotalCount(likeCount);
+        })();
+
     },[]);
+
+    useEffect(()=>{
+        ( async () => {
+            const {data} = await getMovieLikeByMovieid(props.movie.id);
+            if(data) {
+                setLikeStatus(data.status);
+            }
+        })();
+    },[]);
+
 
     const backBtnHandler = () => {
 
@@ -29,9 +54,23 @@ const MovieDetail = (props) => {
         },'/product/movie')
     }
 
-    const addLikeMovie = () => {
-        console.log('like', movieDetail)
+    const addLikeMovie = async () => {
+        const session = await getSession();
+        if(!session) {
+            setError({response:{data:{message:"로그인이 필요한 서비스 입니다."}, status:401}});
+        }
+        const likeData = {
+            movieid : movieDetail.getMovieId(),
+            status : likeStatus
+        }
+        const {data} = await movieAddOrCancleLike(likeData);
+        setLikeStatus(data.status);
 
+        if(likeStatus) {
+            setLikeTotalCount(likeTotalCount-1);
+        } else {
+            setLikeTotalCount(likeTotalCount+1);
+        }
     }
 
     return (
@@ -49,8 +88,7 @@ const MovieDetail = (props) => {
         }
         <Btn title={`back`} onClick={backBtnHandler}/>
         <div>
-            <Btn title={`like`} onClick={addLikeMovie}/>
-
+            <Btn title={`like ${likeStatus ? 'O' : 'X' } [${likeTotalCount}]`} onClick={addLikeMovie}/>
         </div>
         </>
     )
@@ -65,6 +103,7 @@ export async function getServerSideProps(context) {
     const {params:{movieid}} = context;
 
     const {data} = await axios.get(`${GET_MOVIE_DETAIL}/${movieid}`);
+
     return {
         props: {
             movie : data, 

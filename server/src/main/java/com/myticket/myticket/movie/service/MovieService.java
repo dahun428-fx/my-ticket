@@ -40,13 +40,27 @@ public class MovieService {
     @Transactional
     public MovieLikeDTO findMovieLike(Long movieid) {
         MovieLike foundLike = likeRepository.findByMovie_movieid(movieid);
+        if(foundLike == null) {
+            return null;
+        }
+
         return Utils.mapOne(foundLike, MovieLikeDTO.class);
     }
 
     @Transactional
     public MovieLikeDTO saveMovieLike(Long movieid, String userid) {
-        Movie movie = movieRepository.findById(movieid).orElse(null);
 
+        User foundUser = userRepository.findById(userid);
+        logger.info("found user :: {} ", foundUser);
+        //user 없을때 return
+        if(foundUser == null) {
+            return null;
+        } 
+
+        logger.info("save movie Like excute :: movieid : {}", movieid);
+
+        Movie movie = movieRepository.findById(movieid).orElse(null);
+        //movie 없을때, 저장
         if(movie == null) {
             movie = Movie.builder().movieid(movieid).likeCount(Long.valueOf(0)).build();
             movieRepository.save(movie);
@@ -54,38 +68,26 @@ public class MovieService {
         }
 
         MovieLike like = likeRepository.findByUser_idAndMovie_movieid(userid, movieid);
-        User foundUser = userRepository.findById(userid);
-        logger.info("found user :: {} ", foundUser);
 
-        if(foundUser == null) {
-            return null;
-        } 
+        //like 없을때 저장
         if(like == null) {
-            like = MovieLike.builder().user(foundUser).movie(movie).build();
+            like = MovieLike.builder().user(foundUser).movie(movie).status(false).build();
             likeRepository.save(like);
             logger.info("saved movie like :: {} ", like);
-            
-            like.updateMovieLikeStatus(true);
-            
-            Movie foundMovie = movieRepository.findById(movieid).orElse(null);
-            if(foundMovie != null) {
-                foundMovie.plusLikeCount();
-            }
-            
-        }
-
-        return Utils.mapOne(movie, MovieLikeDTO.class);
-    }
-
-    @Transactional
-    public MovieLikeDTO cancleMovieLike(Long movieid, String userid) {
+        } 
+        
+        //cancle or like
         Movie foundMovie = movieRepository.findById(movieid).orElse(null);
         MovieLike foundLike = likeRepository.findByUser_idAndMovie_movieid(userid, movieid);
-        if(foundLike == null || foundMovie == null || !foundLike.isStatus() || foundMovie.getLikeCount() < 1) {
-            return null;
+
+        if(foundLike.isStatus()) {
+            foundMovie.minusLikeCount();
+            foundLike.updateMovieLikeStatus(false);
+        } else {
+            foundMovie.plusLikeCount();
+            foundLike.updateMovieLikeStatus(true);
         }
-        foundMovie.minusLikeCount();
-        foundLike.updateMovieLikeStatus(false);
+
 
         return Utils.mapOne(foundLike, MovieLikeDTO.class);
     }

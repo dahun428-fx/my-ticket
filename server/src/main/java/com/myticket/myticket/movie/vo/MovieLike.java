@@ -28,11 +28,11 @@ public class MovieLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long no;
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", columnDefinition = "VARCHAR(100)")
     private User user;
 
-    @ManyToOne(targetEntity = Movie.class)
+    @ManyToOne(targetEntity = Movie.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "movie_id", referencedColumnName = "movie_id")
     private Movie movie;
 
@@ -45,9 +45,10 @@ public class MovieLike {
     private Long movieid;
 
     @Builder
-    public MovieLike(User user, Movie movie){
+    public MovieLike(User user, Movie movie, boolean status){
         this.user = user;
         this.movie = movie;
+        this.status = status;
     }
 
     public void updateMovieLikeStatus(boolean status) {

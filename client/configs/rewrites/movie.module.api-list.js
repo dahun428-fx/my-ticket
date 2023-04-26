@@ -1,4 +1,8 @@
-const { GET_MOVIE_POPULAR_LIST, GET_MOVIE_DETAIL } = require("../../api/url/enum/movie.api.url");
+const {ServerURL} = require('../config.export.module');
+
+let SERVER_BASE_URL = ServerURL();
+
+const { GET_MOVIE_POPULAR_LIST, GET_MOVIE_DETAIL, GET_MOVIE_LIKE, GET_MOVIE_LIKE_BY_USER, ADD_MOVIE_LIKE, GET_MOVIE_LIST } = require("../../api/url/enum/movie.api.url");
 
 const THE_MOVIE_API_URL=process.env.THE_MOVIE_API_URL;
 const THE_MOVIE_API_KEY=process.env.THE_MOVIE_API_KEY;
@@ -22,6 +26,22 @@ const MovieRewrites = [
     {
         source : `/${GET_MOVIE_DETAIL}/:movieid`,
         destination : getMovieUrl_kor('/3/movie/:movieid')
+    },
+    {
+        source : `${GET_MOVIE_LIKE_BY_USER}`,
+        destination : `${SERVER_BASE_URL}/api/v1/movie/get/like`
+    },
+    {
+        source : `${GET_MOVIE_LIKE}/:movieid`,
+        destination : `${SERVER_BASE_URL}/api/v1/movie/get/like/:movieid`
+    },
+    {
+        source : `${ADD_MOVIE_LIKE}/:movieid`,
+        destination : `${SERVER_BASE_URL}/api/v1/movie/add/like/:movieid`
+    },
+    {
+        source : `${GET_MOVIE_LIST}`,
+        destination : `${SERVER_BASE_URL}/api/v1/movie/get/movie`
     }
 ]
 
