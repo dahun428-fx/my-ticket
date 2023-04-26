@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { getMovieLikeByMovieid, getMovieListForGetMovieInfo, movieAddOrCancleLike } from "../../../../api/movie";
 import { getSession } from "next-auth/react";
 import setError from '../../../../middleware/axiosErrorInstance';
+import KakaoShare from "../../../../common/sns/kakaoShare";
 
 const MovieDetail = (props) => {
 
@@ -73,6 +74,10 @@ const MovieDetail = (props) => {
         }
     }
 
+    const shareSns = () => {
+        console.log('shareSns');
+    }
+
     return (
         <>
         { movieDetail &&
@@ -89,6 +94,8 @@ const MovieDetail = (props) => {
         <Btn title={`back`} onClick={backBtnHandler}/>
         <div>
             <Btn title={`like ${likeStatus ? 'O' : 'X' } [${likeTotalCount}]`} onClick={addLikeMovie}/>
+            {/* <Btn title={`share`} onClick={shareSns}/> */}
+            <KakaoShare />
         </div>
         </>
     )
