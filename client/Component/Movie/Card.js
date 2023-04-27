@@ -1,24 +1,39 @@
-import Image from "next/image";
 import Movie from "../../models/movie";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import LoadingButton from '@mui/lab/LoadingButton'
 import Typography from '@mui/material/Typography';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import { movieAddOrCancleLike } from "../../api/movie";
-import SaveIcon from '@mui/icons-material/Save'
 import setError from '../../middleware/axiosErrorInstance';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Collapse, IconButton, Popover } from "@mui/material";
+import Badge from '@mui/material/Badge';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { styled } from '@mui/material/styles';
+import SnsPopOver from "../Common/sns/popover";
+
+
+const ExpandMore = styled((props) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
 
 const MovieCard = (props) => {
 
     const [movie, setMovie] = useState(null);
     const [likeStatus, setLikeStatus] = useState(false);
     const [likeTotalCount, setLikeTotalCount] = useState(0);
-    const [isLoadingBtn, setIsLoadingBtn] = useState(false);
+    const [expanded, setExpanded] = useState(false);
 
     useEffect(()=>{
       let m = new Movie().createMovieByApiData(props.movie)
@@ -40,7 +55,6 @@ const MovieCard = (props) => {
         status : movie.likeStatus,
       }
       const {data} = await movieAddOrCancleLike(likeData);
-      console.log('errr: ',data);
       setLikeStatus(data.status);
       if(likeStatus) {
         setLikeTotalCount(likeTotalCount-1);
@@ -50,9 +64,15 @@ const MovieCard = (props) => {
       setIsLoadingBtn(false);
     }
 
+    const handleExpandClick = (e) => {
+      e.preventDefault();
+      setExpanded(!expanded);
+    };
+
     return (
       <>
       { movie &&
+      <>
       <Card sx={{ maxWidth: 345 }}>
         <CardMedia
           sx={{ height: 140 }}
@@ -63,23 +83,39 @@ const MovieCard = (props) => {
           <Typography gutterBottom variant="h5" component="div">
             {movie.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {movie.overview}
-          </Typography>
         </CardContent>
-        <CardActions>
-          {/* <Button size="small" onClick={(e)=>addLikeMovie(e)}>LIKE {likeStatus ? 'O' : 'X'} {likeTotalCount}</Button> */}
-          {/* <Button size="small" onClick={(e)=>addLikeMovie(e)}>LIKE {likeStatus ? 'O' : 'X'} {likeTotalCount}</Button> */}
-          <LoadingButton
-            loading={isLoadingBtn}
-            variant="outlined"
-            onClick={(e)=>addLikeMovie(e)}
+        <CardActions disableSpacing>
+          <IconButton onClick={(e)=>addLikeMovie(e)}>
+            <Badge 
+            color="secondary" 
+            badgeContent={likeTotalCount} max={999}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+            >
+              {likeStatus ? <FavoriteIcon /> : <FavoriteBorderIcon /> }
+            </Badge>
+          </IconButton>
+          <SnsPopOver movie={movie}/>
+          <ExpandMore
+            expand={expanded}
+            onClick={(e)=>handleExpandClick(e)}
+            aria-expanded={expanded}
+            aria-label="show more"
           >
-            LIKE {likeStatus ? 'O' : 'X'} [{likeTotalCount}]
-          </LoadingButton>
-          {/* <Button size="small">Learn More</Button> */}
+            <ExpandMoreIcon />
+          </ExpandMore>
         </CardActions>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <Typography variant="body2" color="text.secondary">
+              {movie.overview}
+            </Typography>
+          </CardContent>
+        </Collapse>
       </Card>
+      </>
       }
       </>
 

@@ -10,6 +10,10 @@ import { getMovieLikeByMovieid, getMovieListForGetMovieInfo, movieAddOrCancleLik
 import { getSession } from "next-auth/react";
 import setError from '../../../../middleware/axiosErrorInstance';
 import KakaoShare from "../../../../common/sns/kakaoShare";
+import NaverShare from "../../../../common/sns/naverShare";
+import Head from "next/head";
+import HeadMeta from "../../../../common/seo/movie/headMeta";
+import FacebookShare from "../../../../common/sns/fbShare";
 
 const MovieDetail = (props) => {
 
@@ -74,14 +78,13 @@ const MovieDetail = (props) => {
         }
     }
 
-    const shareSns = () => {
-        console.log('shareSns');
-    }
-
     return (
         <>
+
         { movieDetail &&
         <>
+            <HeadMeta movie={movieDetail} />
+
             <div>id:{movieDetail.id}</div>
             <div>title:{movieDetail.title}</div>
             <div>overview : {movieDetail.overview}</div>
@@ -95,7 +98,26 @@ const MovieDetail = (props) => {
         <div>
             <Btn title={`like ${likeStatus ? 'O' : 'X' } [${likeTotalCount}]`} onClick={addLikeMovie}/>
             {/* <Btn title={`share`} onClick={shareSns}/> */}
-            <KakaoShare />
+            {
+                movieDetail &&
+                <>
+                    <KakaoShare 
+                        title={movieDetail.title} 
+                        pageUrl={location.href}
+                        imagePath={movieDetail.getImageFullPath()}
+                        desc={movieDetail.overview}
+                    />
+                    <NaverShare
+                        title={movieDetail.title} 
+                        pageUrl={location.href}
+                    
+                    />
+                    <FacebookShare 
+                        pageUrl={location.href}
+                    />
+                </>
+
+            }
         </div>
         </>
     )
