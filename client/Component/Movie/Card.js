@@ -43,7 +43,6 @@ const MovieCard = (props) => {
     },[props.movie]);
 
     const addLikeMovie = async (e) => {
-        setIsLoadingBtn(true);
       
       e.preventDefault();
       const session = await getSession();
@@ -61,7 +60,6 @@ const MovieCard = (props) => {
       } else {
         setLikeTotalCount(likeTotalCount+1);
       }
-      setIsLoadingBtn(false);
     }
 
     const handleExpandClick = (e) => {
@@ -75,14 +73,17 @@ const MovieCard = (props) => {
       <>
       <Card sx={{ maxWidth: 345 }}>
         <CardMedia
-          sx={{ height: 140 }}
+          sx={{ height: 200 }}
           image={`${movie.getImageFullPath()}`}
           title={`${movie.title}`}
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {movie.title}
-          </Typography>
+          {
+            !expanded &&
+            <Typography gutterBottom variant="h5" component="div" noWrap={true}>
+              {movie.title}
+            </Typography>
+          }
         </CardContent>
         <CardActions disableSpacing>
           <IconButton onClick={(e)=>addLikeMovie(e)}>
@@ -109,6 +110,9 @@ const MovieCard = (props) => {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+            {movie.title}
+            </Typography>
             <Typography variant="body2" color="text.secondary">
               {movie.overview}
             </Typography>

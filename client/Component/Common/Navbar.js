@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import useAuth from '../../Hoc/useAuth';
 import { signOut, useSession } from 'next-auth/react';
-import { AppBar, Skeleton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Skeleton, Toolbar, Typography } from '@mui/material';
 import { userSignOut } from '../../api/user';
 
 export default function Navbar() {
@@ -34,9 +34,9 @@ export default function Navbar() {
 
   useEffect(()=>{
     const navbarList = [
-      {
-        title : "HOME", link : "/", authType:'permitAll'
-      },
+      // {
+      //   title : "HOME", link : "/", authType:'permitAll'
+      // },
       {
         title : "SignIn", link : "/signin", authType:'logout'
       },
@@ -49,9 +49,9 @@ export default function Navbar() {
       {
         title : "My", link : "/user/mypage", authType:'login', 
       },
-      {
-        title : "get User Test", link : "/test/getuserTest", authType:'login', 
-      },
+      // {
+      //   title : "get User Test", link : "/test/getuserTest", authType:'login', 
+      // },
       {
         title : "SignOut", link : "/signout", authType:'login', event:{
           onClick:(e)=>signOutHandler(e),
@@ -68,28 +68,96 @@ export default function Navbar() {
     <>
       <AppBar position='static'>
         <Toolbar>
-          {(navbarItems && !loading) ?
+          { !loading ? 
+            <>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
+              >
+                HOME
+              </Typography>
+              { navbarItems &&
+              <>
+                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' } }}>
+                  {
+                    navbarItems.map((item, index) => {
+                      if(item.authType === "permitAll")
+                      return <Button 
+                      key={index}
+                      sx={{ my: 2, color: 'white' }}
+                      >
+                        <Link href={item.link} {...item.event}>{item.title}</Link>
+                      </Button>
+                    })
+                  }
+                </Box>
+                <Box sx={{ flexGrow: 0 }}>
+                  {
+                    navbarItems.map((item, index) => {
+                      if(!sessionState && item.authType === "logout") {
+                        return <Button 
+                        key={index}
+                        sx={{ my: 2, color: 'white' }}
+                        >
+                          <Link href={item.link} {...item.event}>{item.title}</Link>
+                        </Button>
+                      } else if (sessionState && item.authType === "login") {
+                        return <Button 
+                        key={index}
+                        sx={{ my: 2, color: 'white' }}
+                        >
+                          <Link href={item.link} {...item.event}>{item.title}</Link>
+                        </Button>
+                      }
+                    })
+                  }
+                </Box>
+              </>
+              }
+            </>
+          
+            : <Skeleton width="100%" height="100%"/>
+          
+          }
+          {/* {(navbarItems && !loading) ?
 
             navbarItems.map((item, index) => {
 
               if (item.authType == 'login' ) {
                 
                   if (sessionState) {
-                    return <Typography key={index} color="inherit" component="div" padding={1}>
+                    return <Typography key={index}
+                                  variant="h6"
+                                  component="div"
+                                  sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
+                    // color="inherit" component="div" padding={1}
+                    >
                       <Link href={item.link} {...item.event}>{item.title}</Link>
                     </Typography>;
                   }
 
               } else if (item.authType === 'logout') {
                   if (!sessionState) {
-                    return <Typography key={index} color="inherit" component="div" padding={1}>
+                    return <Typography key={index} 
+                                      variant="h6"
+                                      component="div"
+                                      sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
+                    // color="inherit" component="div" padding={1}
+                    >
                       <Link href={item.link} {...item.event}>{item.title}</Link>
                     </Typography>;
                   }
                 
               } else {
 
-                  return <Typography key={index} color="inherit" component="div" padding={1}>
+                  return <Typography key={index} 
+                                variant="h6"
+                                component="div"
+                                sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
+                        // color="inherit" component="div" padding={1}
+                      
+                      >
                     <Link href={item.link} {...item.event}>{item.title}</Link>
                   </Typography>;
 
@@ -97,7 +165,7 @@ export default function Navbar() {
             })
             :
             <Skeleton width="100%" height="100%"/>
-          }
+          } */}
         </Toolbar>
       </AppBar>
     </>
