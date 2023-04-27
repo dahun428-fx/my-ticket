@@ -69,7 +69,7 @@ import { Box, Button, Stack, TextField } from '@mui/material';
             type='password'
           />
         </div>
-        <Box component="div" alignItems="center">
+        <Box component="div" display="flex" justifyContent="center">
           <Button variant='outlined' type='submit'>LOGIN</Button>
         </Box>
       </Box>
