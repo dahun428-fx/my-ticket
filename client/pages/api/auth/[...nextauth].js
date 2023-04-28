@@ -134,8 +134,9 @@ const callbacks = {
 }
 
 const pages = {
-    signIn : PAGE_LOGIN,
-    error:'/signin'
+    signIn : '/',
+    // error:'/signin'
+    signOut:'/'
 }
 
 export const option = {

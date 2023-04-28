@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import Input from '../Component/Form/Input'
 import Btn from '../Component/Common/Button'
 import { userLogin } from '../api/user';
@@ -8,7 +8,7 @@ import WithAuth from '../Hoc/withAuth';
 import getAllowProvider from '../configs/provider/config.oAuth2.provider.controll';
 import { FACEBOOK_PROVIDER, GITHUB_PROVIDER, GOOGLE_PROVIDER, KAKAO_PROVIDER, NAVER_PROVIDER } from '../configs/provider/config.oAuth2.provider.enum';
 import setError from '../middleware/axiosErrorInstance';
-import { Box, Button, Stack, TextField } from '@mui/material';
+import { Box, Button, Grid, Paper, Stack, TextField, Typography } from '@mui/material';
 
  function login() {
   
@@ -20,7 +20,7 @@ import { Box, Button, Stack, TextField } from '@mui/material';
     await signIn('credentials', {
           id:userid, password:userpw,
           redirect: false,
-          callbackUrl:'/test/loginSuccess'
+          callbackUrl:'/'
         }).then((data) => {
           if(data?.error){
             setError({response:{data:{message:data.error}, status:data.status}});
@@ -39,78 +39,227 @@ import { Box, Button, Stack, TextField } from '@mui/material';
         setUserpw(val);
     } 
   }
-  const signinWithProvider = (e) => {
-    let provider = e.target.name;
-    signIn(provider);
+  const signinWithProvider = async (provider) => {
+    if(!provider){
+      return;
+    }
+    await signIn(provider, {
+      callbackUrl:'/'
+    });
   }
-  
-  return (
-    <>
-      <div>login</div>
-      <Stack alignItems="center">
 
+  return (
+    
+    
+    <>
+      <Stack alignItems="center">
+      <Paper
+        variant='outlined'
+        sx={{
+          padding:5,
+          margin:10
+        }}
+      >
+      <Typography
+        variant='h6'
+      >LOGIN</Typography>
       <Box component="form"
          sx={{
-          '& .MuiTextField-root': { m: 1, width: '25ch' },
+          '& .MuiTextField-root': { m: 1, minWidth: '25ch' },
         }}
         autoComplete="off"
+        onSubmit={onSubmitHandler}
       >
         <div>
           <TextField
+            fullWidth
             id="userid"
             label="userid"
             type='text'
+            name='userid'
+            onChange={onChangeInputHandler}
+            value={userid}
           />
         </div>
         <div>
           <TextField
+            fullWidth
             id="userpw"
             label="password"
             type='password'
+            name='userpw'
+            onChange={onChangeInputHandler}
+            value={userpw}
           />
         </div>
         <Box component="div" display="flex" justifyContent="center">
-          <Button variant='outlined' type='submit'>LOGIN</Button>
+          <Button variant='contained' type='submit'
+            fullWidth
+            sx={{
+              marginTop:'8px',
+              marginRight:'-1px',
+              marginLeft:'-1px',
+              position:'relative',
+              left:'7px'
+            }}
+          >LOGIN</Button>
         </Box>
       </Box>
+      <Stack
+        sx={{
+          marginTop:'8px',
+          marginRight:'-1px',
+          marginLeft:'-1px',
+          position:'relative',
+          left:'7px'
+        }}
+      >
+        {
+          getAllowProvider(GOOGLE_PROVIDER) && 
+
+          <Paper variant='outlined'
+            sx={{
+              marginBottom:1
+            }}
+          >
+            <Button
+            style={{
+              backgroundImage:'url("https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png")',
+              backgroundRepeat:'no-repeat',
+              backgroundSize:30,
+              backgroundPosition:2
+            }}
+              fullWidth
+              onClick={(e)=>signinWithProvider(GOOGLE_PROVIDER)}
+              name={GOOGLE_PROVIDER}
+            >
+              <Typography 
+                variant='subtitle2'
+                sx={{marginLeft:1}}
+                name={GOOGLE_PROVIDER}
+                >
+                SignIn With Google
+              </Typography>
+            </Button>
+          </Paper>
+        }
+        {
+          getAllowProvider(GITHUB_PROVIDER) &&
+          <Paper variant='outlined'
+            sx={{
+              marginBottom:1
+            }}
+          >
+            <Button
+            style={{
+              backgroundImage:'url("https://github.githubassets.com/favicons/favicon.png")',
+              backgroundRepeat:'no-repeat',
+              backgroundSize:30,
+              backgroundPosition:2
+            }}
+              fullWidth
+              onClick={(e) => signinWithProvider(GITHUB_PROVIDER)}
+              name={GITHUB_PROVIDER}
+            >
+              
+              <Typography 
+                variant='subtitle2'
+                sx={{marginLeft:1}}
+                name={GITHUB_PROVIDER}
+                >
+                SignIn With Github
+              </Typography>
+            </Button>
+          </Paper>
+        }
+        {
+          getAllowProvider(FACEBOOK_PROVIDER) &&
+          <Paper variant='outlined'
+            sx={{
+              marginBottom:1
+            }}
+          >
+            <Button
+            style={{
+              backgroundImage:'url("https://static.xx.fbcdn.net/rsrc.php/yD/r/d4ZIVX-5C-b.ico")',
+              backgroundRepeat:'no-repeat',
+              backgroundSize:30,
+              backgroundPosition:2
+            }}
+              fullWidth
+              onClick={(e) => signinWithProvider(FACEBOOK_PROVIDER)}
+              name={FACEBOOK_PROVIDER}
+            >
+              <Typography 
+                variant='subtitle2'
+                sx={{marginLeft:1}}
+                name={FACEBOOK_PROVIDER}
+                >
+                SignIn With Facebook
+              </Typography>
+            </Button>
+          </Paper>
+        }
+        {
+          getAllowProvider(KAKAO_PROVIDER) &&
+          <Paper variant='outlined'
+            sx={{
+              marginBottom:1
+            }}
+          >
+            <Button
+            style={{
+              backgroundImage:'url("https://www.kakaocorp.com/page/favicon.ico")',
+              backgroundRepeat:'no-repeat',
+              backgroundSize:30,
+              backgroundPosition:2
+            }}
+              fullWidth
+              onClick={(e) => signinWithProvider(KAKAO_PROVIDER)}
+              name={KAKAO_PROVIDER}
+            >
+              <Typography 
+                variant='subtitle2'
+                sx={{marginLeft:1}}
+                name={KAKAO_PROVIDER}
+                >
+                SignIn With Kakao
+              </Typography>
+            </Button>
+          </Paper>
+        }
+        {
+          getAllowProvider(NAVER_PROVIDER) &&
+          <Paper variant='outlined'
+            sx={{
+              marginBottom:1
+            }}
+          >
+            <Button
+            style={{
+              backgroundImage:'url("https://www.naver.com/favicon.ico?1")',
+              backgroundRepeat:'no-repeat',
+              backgroundSize:30,
+              backgroundPosition:2
+            }}
+              fullWidth
+              onClick={(e) => signinWithProvider(NAVER_PROVIDER)}
+              name={NAVER_PROVIDER}
+            >
+              <Typography 
+                variant='subtitle2'
+                sx={{marginLeft:1}}
+                name={NAVER_PROVIDER}
+                >
+                SignIn With Naver
+              </Typography>
+            </Button>
+          </Paper>
+        }
+      </Stack>
+      </Paper>
       </Stack>
 
-
-      <form onSubmit={onSubmitHandler}>
-          <Input name="userid" type="text" placeholder="" title={`userid`} onChange={onChangeInputHandler} value={userid}/>
-          <Input name="userpw" type="password" placeholder="" title={`userpw`} onChange={onChangeInputHandler} value={userpw}/>
-          <Btn type="submit" title="submit" />
-      </form>
-      {getAllowProvider(GOOGLE_PROVIDER) && 
-        <div>
-        <Btn type="Btn" name={GOOGLE_PROVIDER} title="signin with google" onClick={(e) => signinWithProvider(e)}/>
-        </div>
-      }
-      {
-        getAllowProvider(GITHUB_PROVIDER) &&
-      <div>
-      <Btn type="Btn" name={GITHUB_PROVIDER} title="signin with github" onClick={(e) => signinWithProvider(e)}/>
-      </div>
-      }
-      {
-        getAllowProvider(FACEBOOK_PROVIDER) &&
-      <div>
-      <Btn type="Btn" name={FACEBOOK_PROVIDER} title="signin with FB" onClick={(e) => signinWithProvider(e)}/>
-      </div>
-      }
-      {
-        getAllowProvider(KAKAO_PROVIDER) &&
-      <div>
-      <Btn type="Btn" name={KAKAO_PROVIDER} title="signin with Kakao" onClick={(e) => signinWithProvider(e)}/>
-      </div>
-      }
-      {
-        getAllowProvider(NAVER_PROVIDER) &&
-      <div>
-      <Btn type="Btn" name={NAVER_PROVIDER} title="signin with Naver" onClick={(e) => signinWithProvider(e)}/>
-      </div>
-      }
-      {/* <a href='http://localhost:4001/oauth2/authorization/google'>sign with google</a> */}
     </>
   )
 }

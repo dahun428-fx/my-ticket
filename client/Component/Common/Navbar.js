@@ -2,20 +2,32 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import useAuth from '../../Hoc/useAuth';
 import { signOut, useSession } from 'next-auth/react';
-import { AppBar, Box, Button, Skeleton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, Toolbar, Typography } from '@mui/material';
 import { userSignOut } from '../../api/user';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useRouter } from 'next/router';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import HomeIcon from '@mui/icons-material/Home';
 
 export default function Navbar() {
 
   const [navbarItems, setNavbarItems] = useState([]);
   const [sessionState, setSessionState ] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [drawer, setDrawer] = useState(false);
 
   const isAuthenticated = useAuth(true);
   const { data: session } = useSession();
-  const signOutHandler = (e) => {
-    e.preventDefault();
-    userSignOut();
+
+  const router = useRouter();
+
+  const signOutHandler = async (e) => {
+    // e.preventDefault();
+    await userSignOut();
     signOut({
       callbackUrl:'/'
     });
@@ -38,22 +50,22 @@ export default function Navbar() {
       //   title : "HOME", link : "/", authType:'permitAll'
       // },
       {
-        title : "SignIn", link : "/signin", authType:'logout'
+        title : "SignIn", link : "/signin", authType:'logout', icon:<LoginIcon />
       },
       {
-        title : "Signup", link : "/signup", authType :'logout'
+        title : "Signup", link : "/signup", authType :'logout', icon:<PersonAddIcon/>
       },
       {
-        title : "Movie", link : "/product/movie", authType:"permitAll"
+        title : "Movie", link : "/product/movie", authType:"permitAll", icon: <LocalMoviesIcon />
       },
       {
-        title : "My", link : "/user/mypage", authType:'login', 
+        title : "My", link : "/user/mypage", authType:'login', icon:<AccountCircleIcon />
       },
       // {
       //   title : "get User Test", link : "/test/getuserTest", authType:'login', 
       // },
       {
-        title : "SignOut", link : "/signout", authType:'login', event:{
+        title : "SignOut", authType:'login', link:"#", icon:<LogoutIcon />, event:{
           onClick:(e)=>signOutHandler(e),
         }
       },
@@ -63,6 +75,96 @@ export default function Navbar() {
     return () => { setNavbarItems([]) }
   },[]);
 
+  const toggleDrawer =
+  (open) =>
+  (event) => {
+    if (
+      event.type === 'keydown' &&
+      ((event).key === 'Tab' ||
+        (event).key === 'Shift')
+    ) {
+      return;
+    }
+
+    // setState({ ...state, [anchor]: open });
+    setDrawer(open);
+  };
+
+  const list = (navbarItems) => (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton onClick={()=>router.push('/')}>
+            <ListItemIcon>
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText>
+              HOME
+            </ListItemText>
+          </ListItemButton>
+        </ListItem>
+        {
+          navbarItems &&
+          <>
+          {
+            navbarItems.map((item, index) => {
+              if(item.authType === "permitAll")
+              return (
+              <ListItem key={index} disablePadding>
+                <ListItemButton onClick={()=>router.push(item.link)}
+                {...item.event}
+                >
+                  <ListItemIcon>{item.icon && item.icon}</ListItemIcon>
+                  <ListItemText>{item.title}</ListItemText>
+                </ListItemButton>
+              </ListItem>
+              )
+            })
+          }
+          </>
+        }
+        <Divider/>
+        {
+          navbarItems &&
+          <>
+            {
+              navbarItems.map((item, index) => {
+                if(!sessionState && item.authType === "logout") {
+                  return (
+                    <ListItem key={index} disablePadding>
+                      <ListItemButton onClick={()=>router.push(item.link)}
+                      {...item.event}
+                      >
+                        <ListItemIcon>{item.icon && item.icon}</ListItemIcon>
+                        <ListItemText>{item.title}</ListItemText>
+                      </ListItemButton>
+                    </ListItem>
+                  )
+                } else if (sessionState && item.authType === "login") {
+                  return (
+                    <ListItem key={index} disablePadding>
+                      <ListItemButton onClick={()=>router.push(item.link)}
+                      {...item.event}
+                      >
+                        <ListItemIcon>{item.icon && item.icon}</ListItemIcon>
+                        <ListItemText>{item.title}</ListItemText>
+                      </ListItemButton>
+                    </ListItem>
+                  )
+                }
+              })
+            }
+          </>
+        }
+      </List>
+    </Box>
+  );
+
 
   return (
     <>
@@ -70,44 +172,70 @@ export default function Navbar() {
         <Toolbar>
           { !loading ? 
             <>
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
-              >
+                <Typography
+                  variant="h6"
+                  component="div"
+                  sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' }, cursor:'pointer' }}
+                  onClick={()=>router.push('/')}
+                >
                 HOME
-              </Typography>
+                </Typography>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 2, display: { xs: 'block', sm:'none', md:'none'} }}
+                onClick={toggleDrawer(true)}
+              >
+                <MenuIcon />
+              </IconButton>
               { navbarItems &&
               <>
-                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' } }}>
+                <Box sx={{ flexGrow: 1, display: { xs: 'none', sm:'flex', md: 'flex' } }}>
                   {
                     navbarItems.map((item, index) => {
                       if(item.authType === "permitAll")
                       return <Button 
                       key={index}
                       sx={{ my: 2, color: 'white' }}
+                      {...item.event}
                       >
-                        <Link href={item.link} {...item.event}>{item.title}</Link>
+                        {item.link ?
+                        <Link href={item.link}>{item.title}</Link>
+                        :
+                        <span>{item.title}</span>
+                        }
                       </Button>
                     })
                   }
                 </Box>
-                <Box sx={{ flexGrow: 0 }}>
+                <Box sx={{ flexGrow: 0, display: { xs: 'none', sm:'flex', md: 'flex'} }}>
                   {
                     navbarItems.map((item, index) => {
                       if(!sessionState && item.authType === "logout") {
                         return <Button 
                         key={index}
                         sx={{ my: 2, color: 'white' }}
+                        {...item.event}
                         >
-                          <Link href={item.link} {...item.event}>{item.title}</Link>
+                          {item.link ?
+                          <Link href={item.link}>{item.title}</Link>
+                          :
+                          <span>{item.title}</span>
+                          }
                         </Button>
                       } else if (sessionState && item.authType === "login") {
                         return <Button 
                         key={index}
                         sx={{ my: 2, color: 'white' }}
+                        {...item.event}
                         >
-                          <Link href={item.link} {...item.event}>{item.title}</Link>
+                          {item.link ?
+                          <Link href={item.link}>{item.title}</Link>
+                          :
+                          <span>{item.title}</span>
+                          }
                         </Button>
                       }
                     })
@@ -120,53 +248,14 @@ export default function Navbar() {
             : <Skeleton width="100%" height="100%"/>
           
           }
-          {/* {(navbarItems && !loading) ?
-
-            navbarItems.map((item, index) => {
-
-              if (item.authType == 'login' ) {
-                
-                  if (sessionState) {
-                    return <Typography key={index}
-                                  variant="h6"
-                                  component="div"
-                                  sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
-                    // color="inherit" component="div" padding={1}
-                    >
-                      <Link href={item.link} {...item.event}>{item.title}</Link>
-                    </Typography>;
-                  }
-
-              } else if (item.authType === 'logout') {
-                  if (!sessionState) {
-                    return <Typography key={index} 
-                                      variant="h6"
-                                      component="div"
-                                      sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
-                    // color="inherit" component="div" padding={1}
-                    >
-                      <Link href={item.link} {...item.event}>{item.title}</Link>
-                    </Typography>;
-                  }
-                
-              } else {
-
-                  return <Typography key={index} 
-                                variant="h6"
-                                component="div"
-                                sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
-                        // color="inherit" component="div" padding={1}
-                      
-                      >
-                    <Link href={item.link} {...item.event}>{item.title}</Link>
-                  </Typography>;
-
-              }
-            })
-            :
-            <Skeleton width="100%" height="100%"/>
-          } */}
         </Toolbar>
+        <Drawer
+            anchor={'right'}
+            open={drawer}
+            onClose={toggleDrawer(false)}
+          >
+            {list(navbarItems)}
+          </Drawer>
       </AppBar>
     </>
   )
