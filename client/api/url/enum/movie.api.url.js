@@ -1,4 +1,6 @@
 const GET_MOVIE_POPULAR_LIST=`movie/popular`
+const GET_MOVIE_NOW_PLAYING=`movie/nowplaying`
+
 const GET_MOVIE_DETAIL=`movie/detail`
 const GET_MOVIE_LIKE=`/api/get/movielike`
 const ADD_MOVIE_LIKE=`/api/add/movielike`
@@ -10,5 +12,6 @@ module.exports = {
     GET_MOVIE_LIKE,
     ADD_MOVIE_LIKE,
     GET_MOVIE_LIKE_BY_USER,
-    GET_MOVIE_LIST
+    GET_MOVIE_LIST,
+    GET_MOVIE_NOW_PLAYING,
 }

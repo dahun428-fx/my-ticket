@@ -1,27 +1,23 @@
-import { Box, Grid, Pagination, Stack, Typography } from "@mui/material";
-import Link from "next/link";
-import MovieCard from "../../../Component/Movie/Card";
-import { PAGE_DETAIL } from "../../../api/url/enum/movie.page.url";
-import { getServerSession } from "next-auth";
-import makeAxiosInstance from "../../../middleware/axiosInstance";
-import { GET_MOVIE_POPULAR_LIST } from "../../../api/url/enum/movie.api.url";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import MoviePages from "../../../models/movie/pages";
-import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
-import { getMovieListForGetMovieInfo, movieGetPopularList, movieLikeListForUser } from "../../../api/movie";
+import { getMovieListForGetMovieInfo, movieGetNowPlayingMovieList, movieLikeListForUser } from "../../../api/movie";
+import MovieCard from "../../../Component/Movie/Card";
+import { Grid, Pagination, Stack, Typography } from "@mui/material";
 
-const PopularMovie = (props) => {
+const NowPlayingMovie = (props) => {
+
     const router = useRouter();
     const [movieList, setMovieList] = useState([]);
-    const [nowPage, setNowPage ] = useState(Number.parseInt(router.query.nowPage) || 1);
+    const [nowPage, setNowPage] = useState(router.query.nowPageNo || 1);
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(()=>{
         const moviePages = new MoviePages(props.totalPages, props.totalResults);
         setTotalPages(moviePages.getTotalPages());
         (async () => {
-            await movieListRender(props.popularMovieList);
+            await movieListRender(props.list);
         })();
         return () => {};
     },[])
@@ -82,13 +78,14 @@ const PopularMovie = (props) => {
         }
         return movieList;
     }
+
     const pageChangeHandler = async (event, value) => {
         setNowPage(value);
-        const {data:{results}} = await movieGetPopularList(value);
+        const {data:{results}} = await movieGetNowPlayingMovieList(value);
         await movieListRender(results);
     }
 
-    return (
+    return ( 
         <>
             <Typography variant="h5" component="div" sx={{mb:5}}>
                 POPULAR MOVIE
@@ -124,4 +121,4 @@ const PopularMovie = (props) => {
     )
 }
 
-export default PopularMovie;
+export default NowPlayingMovie;

@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { option } from "../../api/auth/[...nextauth]";
 import makeAxiosInstance from "../../../middleware/axiosInstance";
-import { GET_MOVIE_POPULAR_LIST } from "../../../api/url/enum/movie.api.url";
+import { GET_MOVIE_NOW_PLAYING, GET_MOVIE_POPULAR_LIST } from "../../../api/url/enum/movie.api.url";
 import { useEffect, useState } from "react";
 import MovieCard from "../../../Component/Movie/Card";
 import Link from "next/link";
@@ -16,23 +16,32 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import PopularMovie from "./popularMovie";
+import NowPlayingMovie from "./nowPlayingMovie";
 
 const MovieListPage = (props) => {
-    const [value, setValue] = useState('1');
+    const router = useRouter();
+    const [tabValue, setTabValue] = useState("1");
+
+    useEffect(()=>{
+        console.log(router.query);
+        if(router.query.tabValue) {
+            setTabValue(router.query.tabValue);
+        }
+    },[]);
 
     const handleChange = (event, newValue) => {
-        setValue(newValue);
+        setTabValue(newValue);
     };
 
     return (
         <>
 
         <Box sx={{ width: '100%', typography: 'body1' }}>
-            <TabContext value={value}>
+            <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <TabList onChange={handleChange} aria-label="lab API tabs example">
                     <Tab label="Popular Movie" value="1" />
-                    <Tab label="Item Two" value="2" />
+                    <Tab label="Now Playing Movie" value="2" />
                     <Tab label="Item Three" value="3" />
                 </TabList>
                 </Box>
@@ -41,9 +50,17 @@ const MovieListPage = (props) => {
                         popularMovieList={props.popularMovie.popularMovieList}  
                         totalPages={props.popularMovie.totalPages}
                         totalResults={props.popularMovie.totalResults}
+                        tabValue="1"
                     />
                 </TabPanel>
-                <TabPanel value="2">Item Two</TabPanel>
+                <TabPanel value="2">
+                    <NowPlayingMovie 
+                        list={props.nowPlayingMovie.list}
+                        totalPages={props.nowPlayingMovie.totalPages}
+                        totalResults={props.nowPlayingMovie.totalResults}
+                        tabValue="2"
+                    />
+                </TabPanel>
                 <TabPanel value="3">Item Three</TabPanel>
             </TabContext>
         </Box>
@@ -61,14 +78,29 @@ export async function getServerSideProps(context) {
     const axios = await makeAxiosInstance(session);
 
     const nowPage = context.query.nowPage || 1;
+    const tabValue = context.query.tabValue || 1;
+    console.log(context.query)
+    let popularPageNo = 1;
+    let nowPlayingPageNo = 1;
+    if(Number.parseInt(tabValue) === 1) {
+        popularPageNo = nowPage;
+    } else if (Number.parseInt(tabValue) === 2 ) {
+        nowPlayingPageNo = nowPage;
+    }
+    const popularRes = await axios.get(`${GET_MOVIE_POPULAR_LIST}/${popularPageNo}`);
+    const nowPlayingRes = await axios.get(`${GET_MOVIE_NOW_PLAYING}/${nowPlayingPageNo}`);
 
-    const {data} = await axios.get(`${GET_MOVIE_POPULAR_LIST}/${nowPage}`);
     return {
         props: {
             popularMovie : {
-                popularMovieList : data?.results,
-                totalPages : data?.total_pages,
-                totalResults : data?.total_results,
+                popularMovieList : popularRes.data?.results,
+                totalPages : popularRes.data?.total_pages,
+                totalResults : popularRes.data?.total_results,
+            },
+            nowPlayingMovie : {
+                list : nowPlayingRes.data?.results,
+                totalPages : nowPlayingRes.data?.total_pages,
+                totalResults : nowPlayingRes.data?.total_results,
             }
         },
       }

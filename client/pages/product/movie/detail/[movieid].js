@@ -20,6 +20,8 @@ const MovieDetail = (props) => {
     const [movieDetail, setMovieDetail] = useState(null);
     const [likeStatus, setLikeStatus] = useState(false);
     const [likeTotalCount, setLikeTotalCount] = useState(0);
+    const [nowPage, setNowPage] = useState(props.nowPage || 1);
+    const [tabValue, setTabValue] = useState(props.tabValue || 1);
     const router = useRouter();
 
     useEffect(()=>{
@@ -53,7 +55,8 @@ const MovieDetail = (props) => {
         router.push({
             pathname:`/product/movie`,
             query:{
-                nowPage: router.query.backPage
+                nowPage: router.query.backPage,
+                tabValue : router.query.tabValue,
             },
 
         },'/product/movie')

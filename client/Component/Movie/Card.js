@@ -39,6 +39,7 @@ const MovieCard = (props) => {
     const [likeTotalCount, setLikeTotalCount] = useState(0);
     const [expanded, setExpanded] = useState(false);
     const [nowPage, setNowPage ] = useState(Number.parseInt(router.query.nowPage) || 1);
+    const [tabValue, setTabValue] = useState(props.tabValue || 1);
 
     useEffect(()=>{
       let m = new Movie().createMovieByApiData(props.movie)
@@ -46,6 +47,7 @@ const MovieCard = (props) => {
       setLikeStatus(m.likeStatus);
       setLikeTotalCount(m.likeCount ? m.likeCount : 0);
       setNowPage(props.nowPage);
+      console.log('tab value : ',tabValue);
     },[props.movie]);
 
     const addLikeMovie = async (e) => {
@@ -81,7 +83,8 @@ const MovieCard = (props) => {
         <Link href={{
           pathname : `${PAGE_DETAIL}/${movie.id}`,
           query : {
-            backPage: nowPage
+            backPage: nowPage,
+            tabValue: tabValue,
           }
         }}
           as={`${PAGE_DETAIL}/${movie.id}`}
