@@ -19,6 +19,7 @@ const NaverShare = (props) => {
         overflow:'hidden',
         backgroundSize:45,
         verticalAlign:'middle',
+        minWidth:51,
     }
 
     useEffect(()=>{

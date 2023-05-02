@@ -23,6 +23,7 @@ const KakaoShare = (props) => {
         overflow:'hidden',
         backgroundSize:30,
         verticalAlign:'middle',
+        minWidth:51,
     }
 
     useEffect(() => {

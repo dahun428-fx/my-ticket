@@ -4,6 +4,7 @@ import KakaoShare from "../../../common/sns/kakaoShare";
 import NaverShare from "../../../common/sns/naverShare";
 import FacebookShare from "../../../common/sns/fbShare";
 import ShareIcon from '@mui/icons-material/Share'
+import TwitterShare from "../../../common/sns/twitterShare";
 
 const SnsPopOver = (props) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -55,6 +56,10 @@ const SnsPopOver = (props) => {
                 pageUrl={detailPageUrl}
                 />
                 <FacebookShare
+                pageUrl={detailPageUrl}
+                />
+                <TwitterShare
+                title={movie.title}
                 pageUrl={detailPageUrl}
                 />
             </Popover>

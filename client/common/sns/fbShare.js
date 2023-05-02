@@ -34,7 +34,6 @@ const FacebookShare = (props) => {
         <>
             <IconButton style={fbStyle} color="primary" onClick={(e)=>fbShareBtnEvent(e)}>
                 <FacebookIcon 
-                // style={{fontSize:30}}
                     fontSize="large"
                 />
             </IconButton>

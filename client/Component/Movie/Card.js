@@ -15,7 +15,9 @@ import Badge from '@mui/material/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
 import SnsPopOver from "../Common/sns/popover";
-
+import Link from "next/link";
+import { PAGE_DETAIL } from "../../api/url/enum/movie.page.url";
+import { useRouter } from "next/router";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -30,16 +32,20 @@ const ExpandMore = styled((props) => {
 
 const MovieCard = (props) => {
 
+    const router = useRouter();
+
     const [movie, setMovie] = useState(null);
     const [likeStatus, setLikeStatus] = useState(false);
     const [likeTotalCount, setLikeTotalCount] = useState(0);
     const [expanded, setExpanded] = useState(false);
+    const [nowPage, setNowPage ] = useState(Number.parseInt(router.query.nowPage) || 1);
 
     useEffect(()=>{
       let m = new Movie().createMovieByApiData(props.movie)
       setMovie(m);
       setLikeStatus(m.likeStatus);
       setLikeTotalCount(m.likeCount ? m.likeCount : 0);
+      setNowPage(props.nowPage);
     },[props.movie]);
 
     const addLikeMovie = async (e) => {
@@ -72,6 +78,14 @@ const MovieCard = (props) => {
       { movie &&
       <>
       <Card sx={{ maxWidth: 345 }}>
+        <Link href={{
+          pathname : `${PAGE_DETAIL}/${movie.id}`,
+          query : {
+            backPage: nowPage
+          }
+        }}
+          as={`${PAGE_DETAIL}/${movie.id}`}
+        >
         <CardMedia
           sx={{ height: 200 }}
           image={`${movie.getImageFullPath()}`}
@@ -85,6 +99,7 @@ const MovieCard = (props) => {
             </Typography>
           }
         </CardContent>
+        </Link>
         <CardActions disableSpacing>
           <IconButton onClick={(e)=>addLikeMovie(e)}>
             <Badge 

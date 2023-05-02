@@ -107,16 +107,7 @@ const PopularMovie = (props) => {
                         
                         return (
                         <Grid xs={4} sm={4} md={3} key={index} item>
-                            <Link href={{
-                            pathname : `${PAGE_DETAIL}/${item.id}`,
-                            query : {
-                                backPage:nowPage,
-                            }
-                            }}
-                                as={`${PAGE_DETAIL}/${item.id}`}
-                            >
-                                <MovieCard movie={item}/>
-                            </Link>
+                            <MovieCard movie={item} nowPage={nowPage}/>
                         </Grid>
                         );
                     })
