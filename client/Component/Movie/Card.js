@@ -47,7 +47,6 @@ const MovieCard = (props) => {
       setLikeStatus(m.likeStatus);
       setLikeTotalCount(m.likeCount ? m.likeCount : 0);
       setNowPage(props.nowPage);
-      console.log('tab value : ',tabValue);
     },[props.movie]);
 
     const addLikeMovie = async (e) => {
