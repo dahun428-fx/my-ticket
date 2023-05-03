@@ -1,6 +1,6 @@
 import axiosInstance from '../middleware/axiosInterceptorHook';
 import axios from 'axios';
-import { ADD_MOVIE_LIKE, GET_MOVIE_GENRES, GET_MOVIE_LIKE, GET_MOVIE_LIKE_BY_USER, GET_MOVIE_LIST, GET_MOVIE_NOW_PLAYING, GET_MOVIE_POPULAR_LIST, GET_MOVIE_UPCOMMING } from './url/enum/movie.api.url';
+import { ADD_MOVIE_LIKE, GET_MOVIE_GENRES, GET_MOVIE_LIKE, GET_MOVIE_LIKE_BY_USER, GET_MOVIE_LIST, GET_MOVIE_NOW_PLAYING, GET_MOVIE_POPULAR_LIST, GET_MOVIE_UPCOMMING, SEARCH_MOVIE } from './url/enum/movie.api.url';
 
 export const movieGetPopularList = async (pageNumber) => {
     return await axios.get(`/${GET_MOVIE_POPULAR_LIST}/${pageNumber}`);
@@ -25,4 +25,10 @@ export const movieAddOrCancleLike = async (req) => {
 }
 export const getMovieListForGetMovieInfo = async (req) => {
     return await axios.post(`${GET_MOVIE_LIST}`, req);
+}
+export const searchMovieList = async (req) => {
+    if(!req.keyword) {
+        return {};
+    }
+    return await axios.get(`/${SEARCH_MOVIE}/${req?.keyword}/${req.pageNumber}`);
 }

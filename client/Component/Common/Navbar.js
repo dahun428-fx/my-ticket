@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import useAuth from '../../Hoc/useAuth';
 import { signOut, useSession } from 'next-auth/react';
-import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Divider, Drawer, IconButton, InputBase, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Skeleton, Toolbar, Typography } from '@mui/material';
 import { userSignOut } from '../../api/user';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useRouter } from 'next/router';
@@ -12,18 +12,47 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import HomeIcon from '@mui/icons-material/Home';
+import SearchIcon from '@mui/icons-material/Search';
+import SearchBox from './search/searchBox';
 
 export default function Navbar() {
 
+  
   const [navbarItems, setNavbarItems] = useState([]);
   const [sessionState, setSessionState ] = useState(null);
   const [loading, setLoading] = useState(false);
   const [drawer, setDrawer] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   const isAuthenticated = useAuth(true);
   const { data: session } = useSession();
 
   const router = useRouter();
+
+  const onChangeHandler = (e) => {
+    const {name, value} = e.target;
+    if(searchKeyword.length > 20) {
+      return;
+    }
+    setSearchKeyword(value);
+  }
+
+  const onSearchKewordSubmit = (e) => {
+    e.preventDefault();
+    if(!searchKeyword || searchKeyword.length < 1) {
+      return;
+    }
+    setDrawer(false);
+    router.push({
+      pathname :'/product/search',
+      query : {
+        keyword: encodeURIComponent(searchKeyword)
+      },
+    }
+    // ,`/product/search/keyword/${searchKeyword}`
+    );
+    console.log(searchKeyword);
+  }
 
   const signOutHandler = async (e) => {
     // e.preventDefault();
@@ -78,6 +107,9 @@ export default function Navbar() {
   const toggleDrawer =
   (open) =>
   (event) => {
+    if((event.target.id ==='search-box' || event.target.id === 'search-btn' || event.target.id === 'search-btn-icon')) {
+      return;
+    }
     if (
       event.type === 'keydown' &&
       ((event).key === 'Tab' ||
@@ -86,7 +118,6 @@ export default function Navbar() {
       return;
     }
 
-    // setState({ ...state, [anchor]: open });
     setDrawer(open);
   };
 
@@ -98,6 +129,15 @@ export default function Navbar() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
+        <ListItem>
+          <ListItemText>
+          <SearchBox 
+          onChangeHandler={onChangeHandler}
+          searchKeyword={searchKeyword}
+          onSubmitHandler={onSearchKewordSubmit}
+          sx={{ p: '2px 4px', display: { xs: 'flex', sm:'none', md: 'none'} , alignItems: 'center', width: 200 }}/>
+          </ListItemText>
+        </ListItem>
         <ListItem disablePadding>
           <ListItemButton onClick={()=>router.push('/')}>
             <ListItemIcon>
@@ -190,6 +230,7 @@ export default function Navbar() {
               >
                 <MenuIcon />
               </IconButton>
+              
               { navbarItems &&
               <>
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', sm:'flex', md: 'flex' } }}>
@@ -210,6 +251,11 @@ export default function Navbar() {
                     })
                   }
                 </Box>
+                <SearchBox
+                onChangeHandler={onChangeHandler}
+                searchKeyword={searchKeyword}
+                onSubmitHandler={onSearchKewordSubmit}
+                sx={{mr:1, p: '2px 4px', display: { xs: 'none', sm:'flex', md: 'flex'} , alignItems: 'center', width: 250 }}/>
                 <Box sx={{ flexGrow: 0, display: { xs: 'none', sm:'flex', md: 'flex'} }}>
                   {
                     navbarItems.map((item, index) => {

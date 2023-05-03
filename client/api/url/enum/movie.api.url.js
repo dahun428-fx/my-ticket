@@ -4,6 +4,8 @@ const GET_MOVIE_UPCOMMING=`movie/upcomming`
 
 const GET_MOVIE_GENRES=`movie/genres`
 
+const SEARCH_MOVIE=`movie/search`
+
 const GET_MOVIE_DETAIL=`movie/detail`
 const GET_MOVIE_LIKE=`/api/get/movielike`
 const ADD_MOVIE_LIKE=`/api/add/movielike`
@@ -19,5 +21,6 @@ module.exports = {
     GET_MOVIE_LIST,
     GET_MOVIE_NOW_PLAYING,
     GET_MOVIE_UPCOMMING,
-    GET_MOVIE_GENRES
+    GET_MOVIE_GENRES,
+    SEARCH_MOVIE
 }
