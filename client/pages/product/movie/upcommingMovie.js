@@ -2,12 +2,11 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import MoviePages from "../../../models/movie/pages";
 import { getSession } from "next-auth/react";
-import { getMovieListForGetMovieInfo, movieGetNowPlayingMovieList, movieLikeListForUser } from "../../../api/movie";
-import MovieCard from "../../../Component/Movie/Card";
+import { getMovieListForGetMovieInfo, movieGetUpcommingMovieList, movieLikeListForUser } from "../../../api/movie";
 import { Grid, Pagination, Stack, Typography } from "@mui/material";
+import MovieCard from "../../../Component/Movie/Card";
 
-const NowPlayingMovie = (props) => {
-
+const UpcommingMovie = (props) => {
     const router = useRouter();
     const [movieList, setMovieList] = useState([]);
     const [nowPage, setNowPage] = useState(router.query.nowPageNo || 1);
@@ -81,14 +80,14 @@ const NowPlayingMovie = (props) => {
 
     const pageChangeHandler = async (event, value) => {
         setNowPage(value);
-        const {data:{results}} = await movieGetNowPlayingMovieList(value);
+        const {data:{results}} = await movieGetUpcommingMovieList(value);
         await movieListRender(results);
     }
 
     return ( 
         <>
             <Typography variant="h5" component="div" sx={{mb:5}}>
-                NOW PLAING MOVIE
+                UPCOMMING MOVIE
             </Typography>
                 <Stack alignItems="center" sx={{mb:2}}>
                 <Pagination
@@ -121,4 +120,4 @@ const NowPlayingMovie = (props) => {
     )
 }
 
-export default NowPlayingMovie;
+export default UpcommingMovie;

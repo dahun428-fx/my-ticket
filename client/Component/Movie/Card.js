@@ -7,10 +7,10 @@ import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
-import { movieAddOrCancleLike } from "../../api/movie";
+import { getMovieGenres, movieAddOrCancleLike } from "../../api/movie";
 import setError from '../../middleware/axiosErrorInstance';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Collapse, IconButton, Popover } from "@mui/material";
+import { CardHeader, Chip, Collapse, Grid, IconButton, Popover, Stack } from "@mui/material";
 import Badge from '@mui/material/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
@@ -18,6 +18,9 @@ import SnsPopOver from "../Common/sns/popover";
 import Link from "next/link";
 import { PAGE_DETAIL } from "../../api/url/enum/movie.page.url";
 import { useRouter } from "next/router";
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import TagIcon from '@mui/icons-material/Tag';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -42,7 +45,8 @@ const MovieCard = (props) => {
     const [tabValue, setTabValue] = useState(props.tabValue || 1);
 
     useEffect(()=>{
-      let m = new Movie().createMovieByApiData(props.movie)
+      let m = new Movie().createMovieByApiData(props.movie);
+      // console.log(props.movie, props.genres);
       setMovie(m);
       setLikeStatus(m.likeStatus);
       setLikeTotalCount(m.likeCount ? m.likeCount : 0);
@@ -74,11 +78,32 @@ const MovieCard = (props) => {
       setExpanded(!expanded);
     };
 
+    const movieGenresAttach = (genreList) => {
+      let genres = props.genres.genres;
+ 
+      if(genreList && genres && genreList.length > 0 && genres.length > 0) {
+        let results = genreList.map((item, index) => {
+          return genres.find(genre => genre.id === item); 
+        })
+ 
+        return results;
+      }
+      return [];
+    }
+
     return (
       <>
       { movie &&
       <>
       <Card sx={{ maxWidth: 345 }}>
+        <CardHeader
+          action={
+            <Stack direction="row" spacing={1}>
+              <Chip icon={<CalendarMonthIcon/>} label={movie?.release_date} color="primary" variant="outlined"/>
+              <Chip icon={<SentimentVerySatisfiedIcon/>} label={movie?.vote_average} color="primary" variant="outlined"/>
+            </Stack>
+          }
+        />
         <Link href={{
           pathname : `${PAGE_DETAIL}/${movie.id}`,
           query : {
@@ -133,6 +158,15 @@ const MovieCard = (props) => {
             <Typography variant="body2" color="text.secondary">
               {movie.overview}
             </Typography>
+              <Grid container spacing={1} mt={1}>
+              {
+                movieGenresAttach(movie?.genre_ids)
+                .map((item, index) => {
+                  let genre = item.name
+                  return <Grid key={index} item><Chip icon={<TagIcon/>} label={genre} variant="outlined"/></Grid>
+                })
+              }
+              </Grid>
           </CardContent>
         </Collapse>
       </Card>

@@ -107,7 +107,7 @@ const PopularMovie = (props) => {
                         
                         return (
                         <Grid xs={4} sm={4} md={3} key={index} item>
-                            <MovieCard movie={item} nowPage={nowPage} tabValue={props.tabValue}/>
+                            <MovieCard movie={item} nowPage={nowPage} tabValue={props.tabValue} genres={props.genres}/>
                         </Grid>
                         );
                     })

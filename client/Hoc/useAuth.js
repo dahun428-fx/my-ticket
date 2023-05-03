@@ -17,7 +17,7 @@ export default function useAuth(shouldRedirect) {
             signOut({ callbackUrl: PAGE_LOGIN, redirect: shouldRedirect });
         }
         // console.log('check session , ', session);
-        console.log(router.route)
+        // console.log(router.route)
         if (permitAll.includes(router.route)) {
 
             setIsAuthenticated(true);
