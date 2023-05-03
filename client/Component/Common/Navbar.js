@@ -46,7 +46,8 @@ export default function Navbar() {
     router.push({
       pathname :'/product/search',
       query : {
-        keyword: encodeURIComponent(searchKeyword)
+        // keyword: encodeURIComponent(searchKeyword)
+        keyword: (searchKeyword)
       },
     }
     // ,`/product/search/keyword/${searchKeyword}`

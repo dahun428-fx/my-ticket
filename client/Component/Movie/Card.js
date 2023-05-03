@@ -46,7 +46,6 @@ const MovieCard = (props) => {
 
     useEffect(()=>{
       let m = new Movie().createMovieByApiData(props.movie);
-      // console.log(props.movie, props.genres);
       setMovie(m);
       setLikeStatus(m.likeStatus);
       setLikeTotalCount(m.likeCount ? m.likeCount : 0);
