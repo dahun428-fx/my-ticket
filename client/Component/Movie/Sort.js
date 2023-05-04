@@ -42,7 +42,6 @@ const MovieSort = ({changeMovieListBySortingAndOrderBy, nowPage}) => {
     }
     const movieSearchChangeHandler = (e) => {
         let { value } = e.target;
-        console.log(value);
         if(value.length > 20) {
             return;
         }

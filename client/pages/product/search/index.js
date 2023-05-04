@@ -6,6 +6,8 @@ import { GET_MOVIE_GENRES, SEARCH_MOVIE } from "../../../api/url/enum/movie.api.
 import { option } from "../../api/auth/[...nextauth]";
 import { searchMovieList } from "../../../api/movie";
 import SearchMovie from "../movie/searchMovie";
+import { Box } from "@mui/material";
+import ListTitle from "../../../Component/Movie/ListTitle";
 
 const SearchList = (props) => {
 
@@ -21,7 +23,6 @@ const SearchList = (props) => {
         
         (async () => {
             const {data} = await searchMovieList({keyword: keyword, pageNumber : 1});
-            console.log('data', data, 'keyword',decodeURIComponent(router.query?.keyword));
             if(!data) {
                 setMovieList(null);
                 setTotalPages(1);
@@ -36,13 +37,16 @@ const SearchList = (props) => {
 
     return (
         <>
-            <SearchMovie 
-                list={movieList}
-                totalPages={totalPages}
-                totalResults={totalResults}
-                genres={props.results.movieGenres}
-                keyword={keyword}
-            />
+            <Box sx={{width:'100%', padding:'24px'}} component='div' mt={2}>
+                <ListTitle title={`SEARCH RESULT`} />
+                <SearchMovie 
+                    list={movieList}
+                    totalPages={totalPages}
+                    totalResults={totalResults}
+                    genres={props.results.movieGenres}
+                    keyword={keyword}
+                />
+            </Box>
         </>
     )
 }

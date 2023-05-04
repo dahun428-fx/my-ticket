@@ -117,14 +117,13 @@ const SearchMovie = (props) => {
 
     return (
         <>
-            <Typography variant="h5" component="div" sx={{mb:5, mt:5}}>
-                SEARCH RESULT MOVIE
+            <Typography variant="h6" mt={5}>
+            SEARCH RESULT MOVIE
             </Typography>
-            <Stack alignItems="end" sx={{mb:2}}>
-                <MovieSort
-                nowPage={nowPage}
-                changeMovieListBySortingAndOrderBy={changeMovieListBySortingAndOrderBy} />
-            </Stack>
+            <Divider/>
+            <MovieSort
+            nowPage={nowPage}
+            changeMovieListBySortingAndOrderBy={changeMovieListBySortingAndOrderBy} />
             <StaticPagenation 
                 nowPage={nowPage}
                 pageChangeHandler={pageChangeHandler}

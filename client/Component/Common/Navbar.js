@@ -49,12 +49,9 @@ export default function Navbar() {
       pathname :'/product/search',
       query : {
         keyword: encodeURIComponent(searchKeyword)
-        // keyword: (searchKeyword)
       },
     }
-    // ,`/product/search/keyword/${searchKeyword}`
     );
-    console.log(searchKeyword);
   }
 
   const signOutHandler = async (e) => {
@@ -207,12 +204,6 @@ export default function Navbar() {
       </List>
     </Box>
   );
-
-  const topExcuteHandler = () => {
-    console.log('top')
-    window.scrollTo({ top: 0, behavior: 'smooth'})
-  }
-
 
   return (
     <>
