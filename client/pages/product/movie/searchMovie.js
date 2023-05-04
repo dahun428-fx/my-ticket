@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MoviePages from "../../../models/movie/pages";
 import { getSession } from "next-auth/react";
 import { getMovieListForGetMovieInfo, movieLikeListForUser, searchMovieList } from "../../../api/movie";
-import { Grid, Pagination, Typography } from "@mui/material";
+import { Divider, Grid, Pagination, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import MovieCard from "../../../Component/Movie/Card";
 import { useRouter } from "next/router";
@@ -16,7 +16,6 @@ const SearchMovie = (props) => {
     const [keyword, setKeyword] = useState(props.keyword || "");
 
     useEffect(()=>{
-        console.log(props.keyword);
         const moviePages = new MoviePages(props.totalPages, props.totalResults);
         setTotalPages(moviePages.getTotalPages());
         setKeyword(props.keyword);
@@ -24,7 +23,7 @@ const SearchMovie = (props) => {
             await movieListRender(props.list);
         })();
         return () => {};
-    },[keyword])
+    },[props.list])
 
     const movieListRender = async (movieList) => {
         if(movieList) {
@@ -84,27 +83,16 @@ const SearchMovie = (props) => {
     }
     const pageChangeHandler = async (event, value) => {
         setNowPage(value);
-        console.log('value', value);
-        console.log('keyword', keyword);
         const {data:{results}} = await searchMovieList({keyword: keyword, pageNumber: value});
         await movieListRender(results);
-        // const {data} = await searchMovieList({keyword: keyword, pageNumber: value});
-        // console.log('data::',data)
-        // await movieListRender(data?.results);
     }
 
     return (
         <>
-            <Typography variant="h5" component="div" sx={{mb:5}}>
-                SEARCH MOVIE
+            <Typography variant="h5" component="div" sx={{mb:5, mt:5}}>
+                SEARCH RESULT MOVIE
             </Typography>
-                <Stack alignItems="center" sx={{mb:2}}>
-                <Pagination
-                    count={totalPages}
-                    page={nowPage}
-                    onChange={pageChangeHandler}
-                    />
-                </Stack>
+            <Divider />
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                 {
                     movieList && 
@@ -118,7 +106,7 @@ const SearchMovie = (props) => {
                     })
                 }
             </Grid>
-            <Stack alignItems="cener" sx={{mt:2}}>
+            <Stack alignItems="center" sx={{mt:2}}>
                 <Pagination
                     count={totalPages}
                     page={nowPage}

@@ -18,7 +18,7 @@ const SearchBox = (props) => {
                 placeholder="search"
                 value={props.searchKeyword}
                 onChange={(e)=>props.onChangeHandler(e)}
-                autoComplete="false"
+                autoComplete="off"
             />
             <IconButton type="button" sx={{ p: '10px' }} onClick={(e) => props.onSubmitHandler(e)} id="search-btn" >
                 <SearchIcon id="search-btn-icon" />

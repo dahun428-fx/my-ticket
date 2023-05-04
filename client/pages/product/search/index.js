@@ -19,9 +19,8 @@ const SearchList = (props) => {
     const [keyword, setKeyword] = useState(router.query?.keyword);
     useEffect(()=>{
         setKeyword(decodeURIComponent(router.query?.keyword));
-    },[]);
+    },[router.query?.keyword]);
     useEffect(()=>{
-        
         
         (async () => {
             const {data} = await searchMovieList({keyword: keyword, pageNumber : 1});
