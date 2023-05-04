@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import TagIcon from '@mui/icons-material/Tag';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -95,14 +96,20 @@ const MovieCard = (props) => {
       { movie &&
       <>
       <Card sx={{ maxWidth: 345 }}>
-        <CardHeader
-          action={
-            <Stack direction="row" spacing={1}>
-              <Chip icon={<CalendarMonthIcon/>} label={movie?.release_date} color="primary" variant="outlined"/>
-              <Chip icon={<SentimentVerySatisfiedIcon/>} label={movie?.vote_average} color="primary" variant="outlined"/>
-            </Stack>
-          }
-        />
+        <CardContent
+        >
+            <Grid container spacing={1}>
+              <Grid item>
+                <Chip icon={<CalendarMonthIcon/>} label={movie?.release_date} color="primary" variant="outlined"/>
+              </Grid>
+              <Grid item>
+                <Chip icon={<SentimentVerySatisfiedIcon/>} label={movie?.vote_average} color="primary" variant="outlined"/>
+              </Grid>
+              <Grid item>
+                <Chip icon={<PeopleOutlineIcon/>} label={movie?.getPopularity()} color="primary" variant="outlined"/>
+              </Grid>
+            </Grid>
+          </CardContent>
         <Link href={{
           pathname : `${PAGE_DETAIL}/${movie.id}`,
           query : {
