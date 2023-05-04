@@ -39,7 +39,11 @@ const MovieListPage = (props) => {
         <Box sx={{ width: '100%', typography: 'body1' }}>
             <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <TabList onChange={handleChange} aria-label="lab API tabs example">
+                <TabList 
+                scrollButtons="auto"
+                allowScrollButtonsMobile
+                variant="scrollable"
+                onChange={handleChange} aria-label="lab API tabs example">
                     <Tab label="Popular Movie" value="1" />
                     <Tab label="Now Playing Movie" value="2" />
                     <Tab label="UPCOMMING MOVIE" value="3" />

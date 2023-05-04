@@ -14,6 +14,8 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import SearchBox from './search/searchBox';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Navbar() {
 
@@ -206,9 +208,30 @@ export default function Navbar() {
     </Box>
   );
 
+  const topExcuteHandler = () => {
+    console.log('top')
+    window.scrollTo({ top: 0, behavior: 'smooth'})
+  }
+
 
   return (
     <>
+      <Box>
+      <Paper
+      elevation={3}
+      sx={{position:'fixed', right:'15px', bottom:'60px', backgroundColor:'#1976d2', borderRadius:'30px'}}>
+          <IconButton sx={{color:'white'}} onClick={()=>{return window.scrollTo({top:0, behavior:'smooth'})}}>
+              <ExpandLessIcon />
+          </IconButton>
+      </Paper>
+      <Paper
+      elevation={3}
+      sx={{position:'fixed', right:'15px', bottom:'15px', backgroundColor:'#1976d2', borderRadius:'30px'}}>
+          <IconButton sx={{color:'white'}} onClick={()=>{return window.scrollTo({top:window.document.body.clientHeight, behavior:'smooth'})}}>
+              <ExpandMoreIcon />
+          </IconButton>
+      </Paper>
+      </Box>
       <AppBar position='static'>
         <Toolbar>
           { !loading ? 
