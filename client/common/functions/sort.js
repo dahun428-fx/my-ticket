@@ -35,3 +35,19 @@ export const toMessageOrderBy = (orderType) => {
     }
     return message;
 }
+export const sortingExcute = (list, compareItemName, compareItemType, orderType = null) => {
+    let newList = [...list].sort((a,b) => {
+        if(compareItemType === 'date') {
+            if(orderType === 1) {
+                return new Date(b[compareItemName]) - new Date(a[compareItemName]);
+            }
+            return new Date(a[compareItemName]) - new Date(b[compareItemName]);
+        } else {
+            if(orderType === 1) {
+                return b[compareItemName] - a[compareItemName];
+            }
+            return a[compareItemName] - b[compareItemName];
+        }
+    })
+    return newList;
+}

@@ -96,7 +96,6 @@ const MovieCard = (props) => {
       { movie &&
       <>
       <Card sx={{ maxWidth: 345 }}>
-
         <Link href={{
           pathname : `${PAGE_DETAIL}/${movie.id}`,
           query : {

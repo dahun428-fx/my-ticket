@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import MoviePages from "../../../models/movie/pages";
 import { getSession } from "next-auth/react";
 import { getMovieListForGetMovieInfo, movieGetUpcommingMovieList, movieLikeListForUser } from "../../../api/movie";
-import { Grid, Pagination, Stack, Typography } from "@mui/material";
+import { Grid, Pagination, Stack } from "@mui/material";
 import MovieCard from "../../../Component/Movie/Card";
 import StaticPagenation from "../../../Component/Movie/StaticPagenation";
 import MovieSort from "../../../Component/Movie/Sort";
-import { SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE } from "../../../common/enum/sort";
+import { SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE } from "../../../common/functions/sort";
+import ListTitle from "../../../Component/Movie/ListTitle";
 
 const UpcommingMovie = (props) => {
     const router = useRouter();
@@ -128,9 +129,7 @@ const UpcommingMovie = (props) => {
 
     return ( 
         <>
-            <Typography variant="h5" component="div" sx={{mb:5}}>
-                UPCOMMING MOVIE
-            </Typography>
+            <ListTitle title={`UPCOMMING MOVIE`} />
             <Stack alignItems="end" sx={{mb:2}}>
                 <MovieSort
                 nowPage={nowPage}

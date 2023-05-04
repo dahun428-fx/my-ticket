@@ -1,14 +1,14 @@
-import { Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Stack, Typography } from "@mui/material";
+import { Grid, Pagination, Stack } from "@mui/material";
 import MovieCard from "../../../Component/Movie/Card";
 import { useEffect, useState } from "react";
 import MoviePages from "../../../models/movie/pages";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 import { getMovieListForGetMovieInfo, movieGetPopularList, movieLikeListForUser } from "../../../api/movie";
-import { ORDER_BY_ASC, ORDER_BY_DESC, POPULARITY, RELEASE_DATE, SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE, toMessage, toMessageOrderBy, toMessageSort } from "../../../common/enum/sort";
+import {  SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE } from "../../../common/functions/sort";
 import MovieSort from "../../../Component/Movie/Sort";
 import StaticPagenation from "../../../Component/Movie/StaticPagenation";
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ListTitle from "../../../Component/Movie/ListTitle";
 
 
 const PopularMovie = (props) => {
@@ -131,15 +131,10 @@ const PopularMovie = (props) => {
 
     return (
         <>
-
-            <Typography variant="h5" component="div" sx={{mb:5}}>
-                POPULAR MOVIE
-            </Typography>
-            <Stack alignItems="end" sx={{mb:2}}>
-                <MovieSort
-                nowPage={nowPage}
-                changeMovieListBySortingAndOrderBy={changeMovieListBySortingAndOrderBy} />
-            </Stack>
+            <ListTitle title={`POPULAR MOVIE`} />
+            <MovieSort
+            nowPage={nowPage}
+            changeMovieListBySortingAndOrderBy={changeMovieListBySortingAndOrderBy} />
             <StaticPagenation 
                 nowPage={nowPage}
                 pageChangeHandler={pageChangeHandler}

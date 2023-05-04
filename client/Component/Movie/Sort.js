@@ -1,12 +1,15 @@
-import { Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, SpeedDial, SpeedDialIcon } from "@mui/material";
-import { ORDER_BY_ASC, ORDER_BY_DESC, SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE, toMessageOrderBy, toMessageSort } from "../../common/enum/sort";
+import { Box, FormControl, Grid, IconButton, InputAdornment, InputLabel, MenuItem, Paper, Select, SpeedDial, SpeedDialIcon, TextField } from "@mui/material";
+import { ORDER_BY_ASC, ORDER_BY_DESC, SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE, toMessageOrderBy, toMessageSort } from "../../common/functions/sort";
 import { useEffect, useState } from "react";
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import SearchIcon from '@mui/icons-material/Search';
+import { useRouter } from "next/router";
 
 const MovieSort = ({changeMovieListBySortingAndOrderBy, nowPage}) => {
 
+    const router = useRouter();
     const [sortValue, setSortValue] = useState(SORT_POPULARITY);
     const [orderbyValue, setOrderbyValue] = useState(ORDER_BY_DESC);
+    const [searchKeyword, setSearchKeyword] = useState("");
 
     useEffect(()=>{
         changeMovieListBySortingAndOrderBy(sortValue, orderbyValue);
@@ -24,15 +27,47 @@ const MovieSort = ({changeMovieListBySortingAndOrderBy, nowPage}) => {
         changeMovieListBySortingAndOrderBy(value, orderbyValue);
     }
 
+    const movieSearchSubmitHanlder = (e) => {
+        e.preventDefault();
+        if(!searchKeyword || searchKeyword.length < 1) {
+            return;
+        } 
+        router.push({
+            pathname :'/product/search',
+            query : {
+              keyword: encodeURIComponent(searchKeyword)
+            },
+          }
+        );
+    }
+    const movieSearchChangeHandler = (e) => {
+        let { value } = e.target;
+        console.log(value);
+        if(value.length > 20) {
+            return;
+        }
+        setSearchKeyword(value);
+    }
+
     return (
-        <Box component="div" sx={{alignItems:'end'}}>
-            <Grid container>
+        <Paper variant="outlined" sx={{mt:2, mb:2}}>
+            <Grid container justifyContent='flex-end'>
                 <Grid item>
-                    <FormControl>
-                        <InputLabel>리스트 검색</InputLabel>
-
+                    <Box component="form" onSubmit={movieSearchSubmitHanlder}>
+                    <FormControl sx={{m:1}}>
+                        <TextField size="small" label="MOVIE SEARCH"
+                            onChange={movieSearchChangeHandler}
+                            value={searchKeyword}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
                     </FormControl>
-
+                    </Box>
                 </Grid>
                 <Grid item>
                     <FormControl size="small" sx={{m:1}}>
@@ -66,7 +101,7 @@ const MovieSort = ({changeMovieListBySortingAndOrderBy, nowPage}) => {
                 </Grid>
                
             </Grid>
-        </Box>
+        </Paper>
     )
 }
 

@@ -4,6 +4,10 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 const StaticPagenation = ({nowPage, totalPages, pageChangeHandler}) => {
     
+    if(totalPages < 2) {
+        return (<></>)
+    }
+
     return (
         <>
             <Paper variant="outlined" sx={{position:'fixed', left:'0px', display: {xs:'block', sm:'block', md:'none'}}}>

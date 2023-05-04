@@ -10,9 +10,6 @@ import SearchMovie from "../movie/searchMovie";
 const SearchList = (props) => {
 
     const router = useRouter();
-    // const [movieList, setMovieList] = useState(props.results.movie.list);
-    // const [totalPages, setTotalPages] = useState(props.results.movie.totalPages); 
-    // const [totalResults, setTotalResults] = useState(props.results.movie.totalResults);
     const [movieList, setMovieList] = useState(null);
     const [totalPages, setTotalPages] = useState(1); 
     const [totalResults, setTotalResults] = useState(0);
@@ -39,8 +36,6 @@ const SearchList = (props) => {
 
     return (
         <>
-        {
-            (movieList && movieList.length > 0) ? 
             <SearchMovie 
                 list={movieList}
                 totalPages={totalPages}
@@ -48,9 +43,6 @@ const SearchList = (props) => {
                 genres={props.results.movieGenres}
                 keyword={keyword}
             />
-            
-            : <div>검색 결과가 없습니다.</div>
-        }
         </>
     )
 }
