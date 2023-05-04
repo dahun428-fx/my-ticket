@@ -145,24 +145,19 @@ const PopularMovie = (props) => {
                 pageChangeHandler={pageChangeHandler}
                 totalPages={totalPages}
             />
-            <Box sx={{margin:'0 auto'}}>
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {   
-                        movieList && 
-                        movieList.map((item, index) => {
-                            
-                            return (
-                            <Grid xs={4} sm={4} md={3} key={index} item>
-                                <MovieCard movie={item} nowPage={nowPage} tabValue={props.tabValue} genres={props.genres}/>
-                            </Grid>
-                            );
-                        })
-                    }
-                </Grid>
-            </Box>
-            <Box>
-
-            </Box>
+            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                {   
+                    movieList && 
+                    movieList.map((item, index) => {
+                        
+                        return (
+                        <Grid xs={4} sm={4} md={3} key={index} item>
+                            <MovieCard movie={item} nowPage={nowPage} tabValue={props.tabValue} genres={props.genres}/>
+                        </Grid>
+                        );
+                    })
+                }
+            </Grid>
             <Stack alignItems="center" sx={{mt:2}}>
                 <Pagination
                     count={totalPages}

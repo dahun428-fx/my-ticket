@@ -5,6 +5,9 @@ import { getSession } from "next-auth/react";
 import { getMovieListForGetMovieInfo, movieGetNowPlayingMovieList, movieLikeListForUser } from "../../../api/movie";
 import MovieCard from "../../../Component/Movie/Card";
 import { Grid, Pagination, Stack, Typography } from "@mui/material";
+import MovieSort from "../../../Component/Movie/Sort";
+import StaticPagenation from "../../../Component/Movie/StaticPagenation";
+import { SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE } from "../../../common/enum/sort";
 
 const NowPlayingMovie = (props) => {
 
@@ -78,7 +81,46 @@ const NowPlayingMovie = (props) => {
         }
         return movieList;
     }
+    const changeMovieListBySortingAndOrderBy = (sortVal, orderVal) => {
+        sortVal = Number.parseInt(sortVal);
+        orderVal = Number.parseInt(orderVal);
+        let sortedMovieList = [];
+        switch (sortVal) {
+            case SORT_POPULARITY:
+                sortedMovieList = sortingExcute(movieList, 'popularity', 'object', orderVal);
+                break;
+            case SORT_RELEASE_DATE:
+                sortedMovieList = sortingExcute(movieList, 'release_date', 'date', orderVal);
+                break;
+            case SORT_LIKE:
+                sortedMovieList = sortingExcute(movieList, 'likeCount', 'object', orderVal);
+                break;
+            case SORT_VOTE_AVERAGE:
+                sortedMovieList = sortingExcute(movieList, "vote_average", 'object', orderVal);
+                break;
+            default:
+                sortedMovieList = sortingExcute(movieList, 'popularity', 'object', orderVal);
+                break;
+        }
+        setMovieList(sortedMovieList);
+    }
 
+    const sortingExcute = (list, compareItemName, compareItemType, orderType = null) => {
+        let newList = [...list].sort((a,b) => {
+            if(compareItemType === 'date') {
+                if(orderType === 1) {
+                    return new Date(b[compareItemName]) - new Date(a[compareItemName]);
+                }
+                return new Date(a[compareItemName]) - new Date(b[compareItemName]);
+            } else {
+                if(orderType === 1) {
+                    return b[compareItemName] - a[compareItemName];
+                }
+                return a[compareItemName] - b[compareItemName];
+            }
+        })
+        return newList;
+    }
     const pageChangeHandler = async (event, value) => {
         setNowPage(value);
         const {data:{results}} = await movieGetNowPlayingMovieList(value);
@@ -90,13 +132,16 @@ const NowPlayingMovie = (props) => {
             <Typography variant="h5" component="div" sx={{mb:5}}>
                 NOW PLAING MOVIE
             </Typography>
-                <Stack alignItems="center" sx={{mb:2}}>
-                <Pagination
-                    count={totalPages}
-                    page={nowPage}
-                    onChange={pageChangeHandler}
-                    />
-                </Stack>
+            <Stack alignItems="end" sx={{mb:2}}>
+                <MovieSort
+                nowPage={nowPage}
+                changeMovieListBySortingAndOrderBy={changeMovieListBySortingAndOrderBy} />
+            </Stack>
+            <StaticPagenation 
+                nowPage={nowPage}
+                pageChangeHandler={pageChangeHandler}
+                totalPages={totalPages}
+            />
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                 {
                     movieList && 

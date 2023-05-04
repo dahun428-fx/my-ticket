@@ -96,20 +96,7 @@ const MovieCard = (props) => {
       { movie &&
       <>
       <Card sx={{ maxWidth: 345 }}>
-        <CardContent
-        >
-            <Grid container spacing={1}>
-              <Grid item>
-                <Chip icon={<CalendarMonthIcon/>} label={movie?.release_date} color="primary" variant="outlined"/>
-              </Grid>
-              <Grid item>
-                <Chip icon={<SentimentVerySatisfiedIcon/>} label={movie?.vote_average} color="primary" variant="outlined"/>
-              </Grid>
-              <Grid item>
-                <Chip icon={<PeopleOutlineIcon/>} label={movie?.getPopularity()} color="primary" variant="outlined"/>
-              </Grid>
-            </Grid>
-          </CardContent>
+
         <Link href={{
           pathname : `${PAGE_DETAIL}/${movie.id}`,
           query : {
@@ -127,12 +114,25 @@ const MovieCard = (props) => {
         <CardContent>
           {
             !expanded &&
-            <Typography gutterBottom variant="h5" component="div" noWrap={true}>
+            <Typography variant="h5" component="div" noWrap={true}>
               {movie.title}
             </Typography>
           }
         </CardContent>
         </Link>
+        <CardContent>
+            <Grid container spacing={1}>
+              <Grid item>
+                <Chip icon={<CalendarMonthIcon/>} label={movie?.release_date} color="primary" variant="outlined"/>
+              </Grid>
+              <Grid item>
+                <Chip icon={<SentimentVerySatisfiedIcon/>} label={movie?.vote_average} color="primary" variant="outlined"/>
+              </Grid>
+              <Grid item>
+                <Chip icon={<PeopleOutlineIcon/>} label={movie?.getPopularity()} color="primary" variant="outlined"/>
+              </Grid>
+            </Grid>
+        </CardContent>
         <CardActions disableSpacing>
           <IconButton onClick={(e)=>addLikeMovie(e)}>
             <Badge 
