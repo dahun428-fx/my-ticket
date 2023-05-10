@@ -18,7 +18,7 @@ export const movieLikeListForUser = async () => {
     return await axiosInstance.get(`${GET_MOVIE_LIKE_BY_USER}`);
 }
 export const getMovieLikeByMovieid = async (movieid) => {
-    return await axios.get(`${GET_MOVIE_LIKE}/${movieid}`);
+    return await axiosInstance.get(`${GET_MOVIE_LIKE}/${movieid}`);
 }
 export const movieAddOrCancleLike = async (req) => {
     return await axiosInstance.post(`${ADD_MOVIE_LIKE}/${req.movieid}`, req);

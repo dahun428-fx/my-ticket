@@ -1,3 +1,4 @@
+
 import { Router, useRouter } from "next/router";
 import { AuthError, isInstanceOfApiError } from "../middleware/isInstanceOfApiError";
 import React from 'react';
@@ -84,6 +85,7 @@ export default class ErrorBoundary extends React.Component {
           </>
         )
       } else if(error) {
+        throw new Error(error);
         // window.location.href = '/';
       }
   

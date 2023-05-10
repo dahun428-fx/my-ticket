@@ -38,8 +38,8 @@ public class MovieService {
     }
 
     @Transactional
-    public MovieLikeDTO findMovieLike(Long movieid) {
-        MovieLike foundLike = likeRepository.findByMovie_movieid(movieid);
+    public MovieLikeDTO findMovieLikeOne(Long movieid, String userid) {
+        MovieLike foundLike = likeRepository.findByUser_idAndMovie_movieid(userid, movieid);
         if(foundLike == null) {
             return null;
         }

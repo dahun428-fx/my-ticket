@@ -4,14 +4,11 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
-import { getMovieGenres, movieAddOrCancleLike } from "../../api/movie";
+import { movieAddOrCancleLike } from "../../api/movie";
 import setError from '../../middleware/axiosErrorInstance';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { CardHeader, Chip, Collapse, Grid, IconButton, Popover, Stack } from "@mui/material";
-import Badge from '@mui/material/Badge';
+import { Chip, Collapse, Grid, IconButton } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
 import SnsPopOver from "../Common/sns/popover";
@@ -22,6 +19,7 @@ import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfi
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import TagIcon from '@mui/icons-material/Tag';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import Like from "./Like";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -48,30 +46,8 @@ const MovieCard = (props) => {
     useEffect(()=>{
       let m = new Movie().createMovieByApiData(props.movie);
       setMovie(m);
-      setLikeStatus(m.likeStatus);
-      setLikeTotalCount(m.likeCount ? m.likeCount : 0);
       setNowPage(props.nowPage);
     },[props.movie]);
-
-    const addLikeMovie = async (e) => {
-      
-      e.preventDefault();
-      const session = await getSession();
-      if(!session) {
-        setError({response:{data:{message:"로그인이 필요한 서비스 입니다."}, status:401}});
-      }
-      const likeData = {
-        movieid: movie.id,
-        status : movie.likeStatus,
-      }
-      const {data} = await movieAddOrCancleLike(likeData);
-      setLikeStatus(data.status);
-      if(likeStatus) {
-        setLikeTotalCount(likeTotalCount-1);
-      } else {
-        setLikeTotalCount(likeTotalCount+1);
-      }
-    }
 
     const handleExpandClick = (e) => {
       e.preventDefault();
@@ -133,18 +109,7 @@ const MovieCard = (props) => {
             </Grid>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton onClick={(e)=>addLikeMovie(e)}>
-            <Badge 
-            color="secondary" 
-            badgeContent={likeTotalCount} max={999}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-            >
-              {likeStatus ? <FavoriteIcon /> : <FavoriteBorderIcon /> }
-            </Badge>
-          </IconButton>
+          <Like movie={movie} />
           <SnsPopOver movie={movie}/>
           <ExpandMore
             expand={expanded}

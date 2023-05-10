@@ -48,7 +48,15 @@ public class MovieController {
 
     @GetMapping(value = "/get/like/{movieId}")
     public ResponseEntity<MovieLikeDTO> getMovieLikeOne(@PathVariable("movieId") Long movieId){
-        MovieLikeDTO dto = movieService.findMovieLike(movieId);
+        System.out.println("getMovieLikeOne :: "+SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        logger.info("getMovieLikeOne user : {}", user);
+        if(user == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        String currentUserId = user.getUsername();
+        MovieLikeDTO dto = movieService.findMovieLikeOne(movieId, currentUserId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
