@@ -2,7 +2,7 @@ const {ServerURL} = require('../config.export.module');
 
 let SERVER_BASE_URL = ServerURL();
 
-const { GET_MOVIE_POPULAR_LIST, GET_MOVIE_DETAIL, GET_MOVIE_LIKE, GET_MOVIE_LIKE_BY_USER, ADD_MOVIE_LIKE, GET_MOVIE_LIST, GET_MOVIE_NOW_PLAYING, GET_MOVIE_UPCOMMING, GET_MOVIE_GENRES, SEARCH_MOVIE, GET_MOVIE_KEYWORD } = require("../../api/url/enum/movie.api.url");
+const { GET_MOVIE_POPULAR_LIST, GET_MOVIE_DETAIL, GET_MOVIE_LIKE, GET_MOVIE_LIKE_BY_USER, ADD_MOVIE_LIKE, GET_MOVIE_LIST, GET_MOVIE_NOW_PLAYING, GET_MOVIE_UPCOMMING, GET_MOVIE_GENRES, SEARCH_MOVIE, GET_MOVIE_KEYWORD, GET_MOVIE_SIMILAR } = require("../../api/url/enum/movie.api.url");
 
 const THE_MOVIE_API_URL=process.env.THE_MOVIE_API_URL;
 const THE_MOVIE_API_KEY=process.env.THE_MOVIE_API_KEY;
@@ -64,6 +64,11 @@ const MovieRewrites = [
     {
         source : `/${GET_MOVIE_KEYWORD}/:movieid`,
         destination : getMovieUrl_kor('/3/movie/:movieid/keywords')
+    },
+    //similar
+    {
+        source:`/${GET_MOVIE_SIMILAR}/:movieid`,
+        destination : getMovieUrl_kor('/3/movie/:movieid/similar')
     }
 ]
 

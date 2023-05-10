@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { option } from "../../../api/auth/[...nextauth]";
-import { GET_MOVIE_DETAIL, GET_MOVIE_KEYWORD } from "../../../../api/url/enum/movie.api.url";
+import { GET_MOVIE_DETAIL, GET_MOVIE_KEYWORD, GET_MOVIE_SIMILAR } from "../../../../api/url/enum/movie.api.url";
 import { getServerSession } from "next-auth";
 import makeAxiosInstance from "../../../../middleware/axiosInstance";
 import Movie from "../../../../models/movie";
@@ -28,6 +28,11 @@ const MovieDetail = (props) => {
 
     const [movieDetail, setMovieDetail] = useState(null);
     const [movieKeywords, setMovieKeywords] = useState([]);
+
+    const [similarMovieList, setSimilarMovieList] = useState([]);
+    const [similarMovieTotalPages, setSimilarMovieTotalPages] = useState(0);
+    const [similarMovieTotalResults, setSimliarMovieTotalResults] = useState(0);
+
     const router = useRouter();
 
     useEffect(()=>{
@@ -35,6 +40,7 @@ const MovieDetail = (props) => {
             console.log('movie detail : ', props.movie);
             await movieRender(props.movie);
         })();
+        console.log(props.similarMovie);
         setMovieKeywords(props.movieKeywords);
     },[]);
 
@@ -269,7 +275,6 @@ const MovieDetail = (props) => {
                                                 }
                                                 
                                             </Grid>
-                                        
                                         </Box>
                                     </Box>
                                 </Grid>
@@ -350,11 +355,17 @@ export async function getServerSideProps(context) {
 
     const {data:movieDetail} = await axios.get(`${GET_MOVIE_DETAIL}/${movieid}`);
     const {data:movieKeywords} = await axios.get(`${GET_MOVIE_KEYWORD}/${movieid}`);
+    const movieSimilarRes = await axios.get(`${GET_MOVIE_SIMILAR}/${movieid}`);
 
     return {
         props: {
             movie : movieDetail, 
             movieKeywords : movieKeywords.keywords,
+            similarMovie : {
+                list : movieSimilarRes.data?.results,
+                totalPages: movieSimilarRes.data?.total_pages,
+                totalResults : movieSimilarRes.data?.total_results,
+            }
         },
       }
 }
