@@ -23,8 +23,13 @@ import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfi
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import TagIcon from '@mui/icons-material/Tag';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import MovieCard from '../../../../Component/Movie/Card'
+import Link from "next/link";
+import MovieCardSimilar from "../../../../Component/Movie/CardSimilar";
 
 const MovieDetail = (props) => {
+
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const [movieDetail, setMovieDetail] = useState(null);
     const [movieKeywords, setMovieKeywords] = useState([]);
@@ -36,13 +41,24 @@ const MovieDetail = (props) => {
     const router = useRouter();
 
     useEffect(()=>{
+        refreshData();
         ( async () => {
             console.log('movie detail : ', props.movie);
             await movieRender(props.movie);
         })();
         console.log(props.similarMovie);
         setMovieKeywords(props.movieKeywords);
-    },[]);
+        setSimilarMovieList(props.similarMovie.list);
+    },[router.asPath]);
+
+    useEffect(()=>{
+        setIsRefreshing(false);
+    },[props.movie.id])
+
+    const refreshData = () => {
+        router.replace(router.asPath);
+        setIsRefreshing(true);
+    }
 
     const movieRender = async (movie) => {
         if(movie) {
@@ -89,7 +105,7 @@ const MovieDetail = (props) => {
 
     return (
         <>
-        {movieDetail && 
+        { movieDetail && 
             <Stack>
                 <Box alignItems="center">
                     <Paper variant="outlined" square={true}>
@@ -282,63 +298,48 @@ const MovieDetail = (props) => {
                         </Grid>
                     </Grid>
                 </Box>
-                <Box mt={2} padding={2}>
-                    <Typography variant="h6" sx={{fontWeight:'bold'}} >이 영화와 비슷한 추천 작품</Typography>
-                    <Divider />
-                    <Grid container spacing={1}
-                        sx={{
-                            flexWrap:'nowrap',
-                            overflowX:'auto',
-                            margin: 0,
-                            padding: 2,
-                            listStyle: "none",
-                            height: "100%",
-                            '&::-webkit-scrollbar': {
-                                width: '0.4em'
-                            },
-                            '&::-webkit-scrollbar-track': {
-                                boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-                                webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-                                background: 'rgba(33, 122, 244, .1)'
-                            },
-                            '&::-webkit-scrollbar-thumb': {
-                                height: '30%', /* 스크롤바의 길이 */
-                                background: '#217af4', /* 스크롤바의 색상 */
-                                borderRadius: '10px'
-                            }
-                        }}
-                    >
+                {
+                    similarMovieList.length > 0 && 
 
-                        <Grid item>
-                            <Card
-                                sx={{width:'250px', height:'250px'}}
-                            >
-                                <CardContent>h</CardContent>
-                            </Card>
+                    <Box mt={2} padding={2}>
+                        <Typography variant="h6" sx={{fontWeight:'bold'}} >이 영화와 비슷한 추천 작품</Typography>
+                        <Divider />
+                        <Grid container spacing={{ xs: 2, md: 3, sm:3 }} columns={{ xs: 4, sm: 8, md: 12 }}
+                            sx={{
+                                flexWrap:'nowrap',
+                                overflowX:'auto',
+                                margin: 0,
+                                padding: 2,
+                                listStyle: "none",
+                                height: "100%",
+                                '&::-webkit-scrollbar': {
+                                    width: '0.4em'
+                                },
+                                '&::-webkit-scrollbar-track': {
+                                    boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+                                    webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+                                    background: 'rgba(33, 122, 244, .1)'
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                    height: '30%', /* 스크롤바의 길이 */
+                                    background: '#217af4', /* 스크롤바의 색상 */
+                                    borderRadius: '10px'
+                                }
+                            }}
+                        >
+                            {
+                                similarMovieList.map((movie, index) => {
+                                    return (
+                                        <Grid item xs={4} sm={4} md={3} key={index}>
+                                            <MovieCardSimilar movie={movie} />
+                                        </Grid>
+                                    )
+                                })
+                            }
+                            
                         </Grid>
-                        <Grid item>
-                            <Card
-                                sx={{width:'250px', height:'250px'}}
-                            >
-                                <CardContent>h</CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid item>
-                            <Card
-                                sx={{width:'250px', height:'250px'}}
-                            >
-                                <CardContent>h</CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid item>
-                            <Card
-                                sx={{width:'250px', height:'250px'}}
-                            >
-                                <CardContent>h</CardContent>
-                            </Card>
-                        </Grid>
-                    </Grid>
-                </Box>
+                    </Box>
+                }
             </Stack>
         }
         </>

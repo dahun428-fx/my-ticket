@@ -55,7 +55,7 @@ const MovieCard = (props) => {
     };
 
     const movieGenresAttach = (genreList) => {
-      let genres = props.genres.genres;
+      let genres = props.genres?.genres;
  
       if(genreList && genres && genreList.length > 0 && genres.length > 0) {
         let results = genreList.map((item, index) => {
