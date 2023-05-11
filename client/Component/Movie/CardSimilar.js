@@ -20,16 +20,16 @@ const MovieCardSimilar = ({movie}) => {
         <>
         {
             movieDetail &&
-            <Card sx={{ maxWidth: 345, width:250 }}>
+            <Card sx={{ maxWidth: 250, width:150 }}>
                 <Link href={{
                     pathname : `${PAGE_DETAIL}/${movieDetail.id}`,
                 }}
                     as={`${PAGE_DETAIL}/${movieDetail.id}`}
                 >
                     <CardMedia 
-                        sx={{ height: 200 }}
+                        sx={{ height: 225 }}
                         // sx={{height:'100%'}}
-                        image={`${movieDetail.getImageFullPath()}`}
+                        image={`${movieDetail.getImageCardSize()}`}
                         title={`${movieDetail.title}`}
                     />
                 </Link>

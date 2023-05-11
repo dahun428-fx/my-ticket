@@ -19,8 +19,14 @@ export default class Movie {
         return this.id;
     }
 
+    getImageCardSize(){
+        //https://www.themoviedb.org/t/p/w220_and_h330_face/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg
+        return `https://www.themoviedb.org/t/p/w220_and_h330_face${this.poster_path}`;
+    }
+
     getImageFullPath(){
-        return `https://image.tmdb.org/t/p/w500/${this.poster_path}`;
+        //	https://www.themoviedb.org/t/p/w300_and_h450_bestv2/2LfL0flDTgwJgoEhO9NhDLeDTTK.jpg
+        return `https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.poster_path}`;
     }
 
     getMovieGenres(){

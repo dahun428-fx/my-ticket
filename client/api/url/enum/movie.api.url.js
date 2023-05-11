@@ -6,6 +6,8 @@ const SEARCH_MOVIE=`movie/search`
 const GET_MOVIE_DETAIL=`movie/detail`
 const GET_MOVIE_KEYWORD=`movie/keyword`
 const GET_MOVIE_SIMILAR=`movie/similar`
+//ACTOR AND CREW
+const GET_MOVIE_CREDITS=`movie/credits`
 
 const GET_MOVIE_LIKE=`/api/get/movielike`
 const ADD_MOVIE_LIKE=`/api/add/movielike`
@@ -24,5 +26,6 @@ module.exports = {
     GET_MOVIE_GENRES,
     SEARCH_MOVIE,
     GET_MOVIE_KEYWORD,
-    GET_MOVIE_SIMILAR
+    GET_MOVIE_SIMILAR,
+    GET_MOVIE_CREDITS
 }

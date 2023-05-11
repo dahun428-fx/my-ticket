@@ -56,8 +56,12 @@ export default class Movie_detail {
         const lang = new Intl.DisplayNames(['ko'], {type: 'language'});
         return lang.of(this.original_language);
     }
+    // getImageFullPath(){
+    //     return `https://image.tmdb.org/t/p/w500/${this.poster_path}`;
+    // }
     getImageFullPath(){
-        return `https://image.tmdb.org/t/p/w500/${this.poster_path}`;
+        //	https://www.themoviedb.org/t/p/w300_and_h450_bestv2/2LfL0flDTgwJgoEhO9NhDLeDTTK.jpg
+        return `https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.poster_path}`;
     }
     getPopularity(){
         return Number.parseInt(this.popularity);

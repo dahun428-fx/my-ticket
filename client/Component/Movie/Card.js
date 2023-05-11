@@ -82,7 +82,7 @@ const MovieCard = (props) => {
           as={`${PAGE_DETAIL}/${movie.id}`}
         >
         <CardMedia
-          sx={{ height: 200 }}
+          sx={{ height: 450 }}
           image={`${movie.getImageFullPath()}`}
           title={`${movie.title}`}
         />
