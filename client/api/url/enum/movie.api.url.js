@@ -9,6 +9,10 @@ const GET_MOVIE_SIMILAR=`movie/similar`
 //ACTOR AND CREW
 const GET_MOVIE_CREDITS=`movie/credits`
 
+//search keyword
+const SEARCH_KEYWORD=`movie/keyword`
+const GET_MOVIE_LIST_BY_KEYWORDS=`movie/search-keyword`
+
 const GET_MOVIE_LIKE=`/api/get/movielike`
 const ADD_MOVIE_LIKE=`/api/add/movielike`
 const GET_MOVIE_LIKE_BY_USER=`/api/list/movielike-user`
@@ -27,5 +31,7 @@ module.exports = {
     SEARCH_MOVIE,
     GET_MOVIE_KEYWORD,
     GET_MOVIE_SIMILAR,
-    GET_MOVIE_CREDITS
+    GET_MOVIE_CREDITS,
+    SEARCH_KEYWORD,
+    GET_MOVIE_LIST_BY_KEYWORDS
 }

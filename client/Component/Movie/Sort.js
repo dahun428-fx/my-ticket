@@ -14,6 +14,11 @@ const MovieSort = ({changeMovieListBySortingAndOrderBy, nowPage}) => {
     useEffect(()=>{
         changeMovieListBySortingAndOrderBy(sortValue, orderbyValue);
     },[nowPage]);
+    useEffect(()=>{
+        if(router.query?.keyword) {
+            setSearchKeyword(decodeURIComponent(router.query?.keyword));
+        }
+    },[router.asPath]);
 
     const orderbyChangeHandler = (e) => {
         let {value} = e.target;

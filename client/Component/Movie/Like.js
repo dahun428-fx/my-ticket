@@ -12,7 +12,6 @@ const Like = ({movie,}) => {
     const [likeTotalCount, setLikeTotalCount] = useState(0);
 
     useEffect(()=>{
-        console.log('like', movie);
         setLikeStatus(movie.likeStatus);
         setLikeTotalCount(movie.likeCount ? movie.likeCount : 0);
     },[]);

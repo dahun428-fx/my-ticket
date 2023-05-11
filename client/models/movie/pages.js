@@ -6,6 +6,9 @@ export default class MoviePages {
     getTotalPages(){
         return this.total_pages;
     }
+    getTotalResults(){
+        return this.total_results;
+    }
     createMoviePagesByApiData(data) {
         if(!data || !data.total_pages) {
             return {};

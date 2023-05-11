@@ -13,6 +13,7 @@ export default class Actor {
     }
 
     getProfileImagePath(){
+        ///ysKahAEPP8h6MInuLjr0xuZOTjh.jpg
         //	https://www.themoviedb.org/t/p/w138_and_h175_face/83o3koL82jt30EJ0rz4Bnzrt2dd.jpg
         return `https://www.themoviedb.org/t/p/w138_and_h175_face${this.profile_path}`;
     }

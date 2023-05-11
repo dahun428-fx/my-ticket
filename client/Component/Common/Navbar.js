@@ -52,6 +52,7 @@ export default function Navbar() {
       },
     }
     );
+    setSearchKeyword("");
   }
 
   const signOutHandler = async (e) => {

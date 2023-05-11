@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import MoviePages from "../../../models/movie/pages";
 import { getSession } from "next-auth/react";
-import { getMovieListForGetMovieInfo, movieLikeListForUser, searchMovieList } from "../../../api/movie";
-import { Divider, Grid, Pagination, Typography } from "@mui/material";
+import { getMovieListForGetMovieInfo, movieLikeListForUser, searchMovieList, searchMovieListByKeywordId } from "../../../api/movie";
+import { Box, Button, Chip, Divider, Grid, IconButton, Pagination, Paper, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import MovieCard from "../../../Component/Movie/Card";
 import { useRouter } from "next/router";
 import MovieSort from "../../../Component/Movie/Sort";
 import StaticPagenation from "../../../Component/Movie/StaticPagenation";
 import { SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE, sortingExcute } from "../../../common/functions/sort";
+import SearchMovieByKeyword from "./searchMovieByKeyword";
 
 const SearchMovie = (props) => {
 
@@ -16,12 +17,16 @@ const SearchMovie = (props) => {
     const [movieList, setMovieList] = useState([]);
     const [nowPage, setNowPage ] = useState(Number.parseInt(router.query.nowPage) || 1);
     const [totalPages, setTotalPages] = useState(0);
+    const [totalResults, setTotalResults] = useState(0);
     const [keyword, setKeyword] = useState(props.keyword || "");
+    const [searchKeywords, setSearchKeywords] = useState([]);
 
     useEffect(()=>{
         const moviePages = new MoviePages(props.totalPages, props.totalResults);
         setTotalPages(moviePages.getTotalPages());
         setKeyword(props.keyword);
+        setSearchKeywords(props.searchKeywords);
+        setTotalResults(props.totalResults);
         (async () => {
             await movieListRender(props.list);
         })();
@@ -129,28 +134,36 @@ const SearchMovie = (props) => {
                 pageChangeHandler={pageChangeHandler}
                 totalPages={totalPages}
             />
-            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                {
-                    (movieList && movieList.length > 0) ? 
-                    movieList.map((item, index) => {
-                        
-                        return (
-                        <Grid xs={4} sm={4} md={3} key={index} item>
-                            <MovieCard movie={item} nowPage={nowPage} genres={props.genres}/>
-                        </Grid>
-                        );
-                    })
-                    :
-                    <Grid item>검색 결과가 없습니다.</Grid>
-                }
-            </Grid>
-            <Stack alignItems="center" sx={{mt:2}}>
-                <Pagination
-                    count={totalPages}
-                    page={nowPage}
-                    onChange={pageChangeHandler}
-                    />
-            </Stack>
+            <SearchMovieByKeyword searchKeywordsList={searchKeywords} nowPage={nowPage} genres={props.genres}/>
+            {/* //movieList */}
+            <Box>
+                <Typography variant="overline">"{keyword}" 검색 결과 총 {totalResults} 건</Typography>
+                <Divider />
+                <Box mt={2}>
+                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                        {
+                            (movieList && movieList.length > 0) ? 
+                            movieList.map((item, index) => {
+                                
+                                return (
+                                <Grid xs={4} sm={4} md={3} key={index} item>
+                                    <MovieCard movie={item} nowPage={nowPage} genres={props.genres}/>
+                                </Grid>
+                                );
+                            })
+                            :
+                            <Grid item>검색 결과가 없습니다.</Grid>
+                        }
+                    </Grid>
+                    <Stack alignItems="center" sx={{mt:2}}>
+                        <Pagination
+                            count={totalPages}
+                            page={nowPage}
+                            onChange={pageChangeHandler}
+                            />
+                    </Stack>
+                </Box>
+            </Box>
         </>
     )
 }

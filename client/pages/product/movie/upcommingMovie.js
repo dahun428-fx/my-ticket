@@ -9,6 +9,7 @@ import StaticPagenation from "../../../Component/Movie/StaticPagenation";
 import MovieSort from "../../../Component/Movie/Sort";
 import { SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE } from "../../../common/functions/sort";
 import ListTitle from "../../../Component/Movie/ListTitle";
+import MovieList from "../../../Component/Movie/MovieList";
 
 const UpcommingMovie = (props) => {
     const router = useRouter();
@@ -140,26 +141,15 @@ const UpcommingMovie = (props) => {
                 pageChangeHandler={pageChangeHandler}
                 totalPages={totalPages}
             />
-            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                {
-                    movieList && 
-                    movieList.map((item, index) => {
-                        
-                        return (
-                        <Grid xs={4} sm={4} md={3} key={index} item>
-                            <MovieCard movie={item} nowPage={nowPage} tabValue={props.tabValue} genres={props.genres}/>
-                        </Grid>
-                        );
-                    })
-                }
-            </Grid>
-            <Stack alignItems="center" sx={{mt:2}}>
-                <Pagination
-                    count={totalPages}
-                    page={nowPage}
-                    onChange={pageChangeHandler}
-                    />
-            </Stack>
+            <MovieList
+                totalResults={props.totalResults}
+                movieList={movieList}
+                totalPages={totalPages}
+                nowPage={nowPage}
+                pageChangeHandler={pageChangeHandler}
+                tabValue={props.tabValue}
+                genres={props.genres}
+            />
         </>
     )
 }
