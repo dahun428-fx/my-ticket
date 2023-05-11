@@ -3,15 +3,8 @@ import { option } from "../../api/auth/[...nextauth]";
 import makeAxiosInstance from "../../../middleware/axiosInstance";
 import { GET_MOVIE_GENRES, GET_MOVIE_NOW_PLAYING, GET_MOVIE_POPULAR_LIST, GET_MOVIE_UPCOMMING } from "../../../api/url/enum/movie.api.url";
 import { useEffect, useState } from "react";
-import MovieCard from "../../../Component/Movie/Card";
-import Link from "next/link";
-import { Box, Grid, Pagination, PaginationItem, Tab, Tabs } from "@mui/material";
-import { getMovieListForGetMovieInfo, movieGetPopularList, movieLikeListForUser } from "../../../api/movie";
+import { Box, Tab } from "@mui/material";
 import { useRouter } from "next/router";
-import MoviePages from "../../../models/movie/pages";
-import { getSession, useSession } from "next-auth/react";
-import setError from '../../../middleware/axiosErrorInstance';
-import { PAGE_DETAIL } from "../../../api/url/enum/movie.page.url";
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
@@ -51,7 +44,7 @@ const MovieListPage = (props) => {
                 </Box>
                 <TabPanel value="1">
                     <PopularMovie 
-                        popularMovieList={props.popularMovie.popularMovieList}  
+                        list={props.popularMovie.list}  
                         totalPages={props.popularMovie.totalPages}
                         totalResults={props.popularMovie.totalResults}
                         genres={props.movieGenres}
@@ -112,7 +105,7 @@ export async function getServerSideProps(context) {
     return {
         props: {
             popularMovie : {
-                popularMovieList : popularRes.data?.results,
+                list : popularRes.data?.results,
                 totalPages : popularRes.data?.total_pages,
                 totalResults : popularRes.data?.total_results,
             },

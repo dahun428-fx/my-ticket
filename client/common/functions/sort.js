@@ -51,3 +51,26 @@ export const sortingExcute = (list, compareItemName, compareItemType, orderType 
     })
     return newList;
 }
+export const changeMovieListBySortingAndOrderBy = (movieList, sortVal, orderVal) => {
+    sortVal = Number.parseInt(sortVal);
+    orderVal = Number.parseInt(orderVal);
+    let sortedMovieList = [];
+    switch (sortVal) {
+        case SORT_POPULARITY:
+            sortedMovieList = sortingExcute(movieList, 'popularity', 'object', orderVal);
+            break;
+        case SORT_RELEASE_DATE:
+            sortedMovieList = sortingExcute(movieList, 'release_date', 'date', orderVal);
+            break;
+        case SORT_LIKE:
+            sortedMovieList = sortingExcute(movieList, 'likeCount', 'object', orderVal);
+            break;
+        case SORT_VOTE_AVERAGE:
+            sortedMovieList = sortingExcute(movieList, "vote_average", 'object', orderVal);
+            break;
+        default:
+            sortedMovieList = sortingExcute(movieList, 'popularity', 'object', orderVal);
+            break;
+    }
+    return sortedMovieList;
+}

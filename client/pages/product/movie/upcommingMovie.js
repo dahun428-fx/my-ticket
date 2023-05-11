@@ -7,21 +7,19 @@ import { Grid, Pagination, Stack } from "@mui/material";
 import MovieCard from "../../../Component/Movie/Card";
 import StaticPagenation from "../../../Component/Movie/StaticPagenation";
 import MovieSort from "../../../Component/Movie/Sort";
-import { SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE } from "../../../common/functions/sort";
+import { SORT_LIKE, SORT_POPULARITY, SORT_RELEASE_DATE, SORT_VOTE_AVERAGE, changeMovieListBySortingAndOrderBy } from "../../../common/functions/sort";
 import ListTitle from "../../../Component/Movie/ListTitle";
 import MovieList from "../../../Component/Movie/MovieList";
+import { movieListAttachLikeCount, movieListAttachLikeStatus } from "../../../common/functions/changeList";
 
-const UpcommingMovie = (props) => {
+const UpcommingMovie = ({totalPages, totalResults, list, genres, tabValue}) => {
     const router = useRouter();
     const [movieList, setMovieList] = useState([]);
     const [nowPage, setNowPage] = useState(router.query.nowPageNo || 1);
-    const [totalPages, setTotalPages] = useState(0);
 
     useEffect(()=>{
-        const moviePages = new MoviePages(props.totalPages, props.totalResults);
-        setTotalPages(moviePages.getTotalPages());
         (async () => {
-            await movieListRender(props.list);
+            await movieListRender(list);
         })();
         return () => {};
     },[])
@@ -39,89 +37,11 @@ const UpcommingMovie = (props) => {
         }
     }
 
-    const movieListAttachLikeStatus = async (movieList) => {
-        const {data} = await movieLikeListForUser();
-        if (data) {
-            const dataMap = data.reduce((newObj, obj) => {
-                newObj[obj.movieid] = obj.status;
-                return newObj;
-            }, {});
-            const resultList = movieList.map((item, index) => {
-                return {
-                    ...item,
-                    likeStatus : dataMap[item.id] ? dataMap[item.id] : false,
-                }
-            })
-            return resultList;
-        }
-        return movieList;
+    const excuteSort = (sortVal, orderVal) => {
+        let list = changeMovieListBySortingAndOrderBy(movieList, sortVal, orderVal);
+        setMovieList(list);
     }
 
-    const movieListAttachLikeCount = async (movieList) => {
-        const param = movieList.map((item, index) => {
-            return {
-                movieid:item.id,
-            }
-        })
-        const {data} = await getMovieListForGetMovieInfo(param);
-
-        if(data) {
-
-            const dataMap = data.reduce((newObj, obj) => {
-                newObj[obj.movieid] = obj.likeCount;
-                return newObj;
-            }, {});
-            
-            const resultList = movieList.map((item, index) => {
-                return {
-                    ...item,
-                    likeCount : dataMap[item.id] ? dataMap[item.id] : 0
-                }
-            })
-            return resultList;
-        }
-        return movieList;
-    }
-    const changeMovieListBySortingAndOrderBy = (sortVal, orderVal) => {
-        sortVal = Number.parseInt(sortVal);
-        orderVal = Number.parseInt(orderVal);
-        let sortedMovieList = [];
-        switch (sortVal) {
-            case SORT_POPULARITY:
-                sortedMovieList = sortingExcute(movieList, 'popularity', 'object', orderVal);
-                break;
-            case SORT_RELEASE_DATE:
-                sortedMovieList = sortingExcute(movieList, 'release_date', 'date', orderVal);
-                break;
-            case SORT_LIKE:
-                sortedMovieList = sortingExcute(movieList, 'likeCount', 'object', orderVal);
-                break;
-            case SORT_VOTE_AVERAGE:
-                sortedMovieList = sortingExcute(movieList, "vote_average", 'object', orderVal);
-                break;
-            default:
-                sortedMovieList = sortingExcute(movieList, 'popularity', 'object', orderVal);
-                break;
-        }
-        setMovieList(sortedMovieList);
-    }
-
-    const sortingExcute = (list, compareItemName, compareItemType, orderType = null) => {
-        let newList = [...list].sort((a,b) => {
-            if(compareItemType === 'date') {
-                if(orderType === 1) {
-                    return new Date(b[compareItemName]) - new Date(a[compareItemName]);
-                }
-                return new Date(a[compareItemName]) - new Date(b[compareItemName]);
-            } else {
-                if(orderType === 1) {
-                    return b[compareItemName] - a[compareItemName];
-                }
-                return a[compareItemName] - b[compareItemName];
-            }
-        })
-        return newList;
-    }
     const pageChangeHandler = async (event, value) => {
         setNowPage(value);
         const {data:{results}} = await movieGetUpcommingMovieList(value);
@@ -134,7 +54,7 @@ const UpcommingMovie = (props) => {
             <Stack alignItems="end" sx={{mb:2}}>
                 <MovieSort
                 nowPage={nowPage}
-                changeMovieListBySortingAndOrderBy={changeMovieListBySortingAndOrderBy} />
+                changeMovieListBySortingAndOrderBy={excuteSort} />
             </Stack>
             <StaticPagenation 
                 nowPage={nowPage}
@@ -142,13 +62,13 @@ const UpcommingMovie = (props) => {
                 totalPages={totalPages}
             />
             <MovieList
-                totalResults={props.totalResults}
+                totalResults={totalResults}
                 movieList={movieList}
                 totalPages={totalPages}
                 nowPage={nowPage}
                 pageChangeHandler={pageChangeHandler}
-                tabValue={props.tabValue}
-                genres={props.genres}
+                tabValue={tabValue}
+                genres={genres}
             />
         </>
     )

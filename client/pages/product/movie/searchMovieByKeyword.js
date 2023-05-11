@@ -113,7 +113,7 @@ const SearchMovieByKeyword = ({searchKeywordsList, nowPage, genres}) => {
                         }
                     </Grid>
                 </Stack>
-                <Divider />
+                
             </Box> 
             }
             </>
