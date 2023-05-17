@@ -17,6 +17,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MovieCardSimilar from "../../../../Component/Movie/CardSimilar";
 import MovieCardActor from "../../../../Component/Movie/CardActor";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import KeywordSeachDetail from "../../search/detail/[keywordid]";
 
 const MovieDetail = (props) => {
 
@@ -30,6 +31,7 @@ const MovieDetail = (props) => {
     const [similarMovieTotalResults, setSimliarMovieTotalResults] = useState(0);
 
     const [actors, setActors] = useState([]);
+    const [keywordid, setKeywordid] = useState("");
 
     const router = useRouter();
 
@@ -41,6 +43,7 @@ const MovieDetail = (props) => {
         setMovieKeywords(props.movieKeywords);
         setSimilarMovieList(props.similarMovie.list);
         setActors(props.creditsMovie.cast);
+        setKeywordid("");
     },[router.asPath]);
 
     useEffect(()=>{
@@ -97,6 +100,11 @@ const MovieDetail = (props) => {
             },
 
         },'/product/movie')
+    }
+
+    const keywordClickHandler = (keywordid) => {
+        console.log(keywordid);
+        setKeywordid(keywordid);
     }
 
     return (
@@ -271,7 +279,9 @@ const MovieDetail = (props) => {
                                                     movieKeywords.map((item, index) => {
                                                         return (
                                                         <Grid item key={item.id}>
-                                                            <Chip size="small" label={item.name} color="secondary" variant="outlined"/>
+                                                            <Chip size="small" label={item.name} color="secondary" variant="outlined"
+                                                             onClick={(e)=>keywordClickHandler(item.id)}
+                                                            />
                                                         </Grid>
                                                         )
                                                     })
@@ -284,6 +294,9 @@ const MovieDetail = (props) => {
                             </Grid>
                         </Grid>
                     </Grid>
+                </Box>
+                <Box>
+                    <KeywordSeachDetail keywordid={keywordid} />
                 </Box>
                 {
                     similarMovieList.length > 0 && 

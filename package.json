@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "env-cmd": "^10.1.0"
+    "env-cmd": "^10.1.0",
+    "stylus": "^0.59.0"
   }
 }
