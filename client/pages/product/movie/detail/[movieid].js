@@ -109,11 +109,8 @@ const MovieDetail = (props) => {
     const showAllActorHandler = (movieid, movietitle) => {
         console.log('showAllActorHandler');
         router.push({
-            pathname:`/product/movie/actor`,
-            query : {
-                movieid:movieid,
-            }
-        }, `/product/movie/actor/${movietitle}`)
+            pathname:`/product/movie/actor/${movieid}`,
+        })
     }
 
     return (
