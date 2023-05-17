@@ -103,8 +103,17 @@ const MovieDetail = (props) => {
     }
 
     const keywordClickHandler = (keywordid) => {
-        console.log(keywordid);
         setKeywordid(keywordid);
+    }
+
+    const showAllActorHandler = (movieid, movietitle) => {
+        console.log('showAllActorHandler');
+        router.push({
+            pathname:`/product/movie/actor`,
+            query : {
+                movieid:movieid,
+            }
+        }, `/product/movie/actor/${movietitle}`)
     }
 
     return (
@@ -193,6 +202,11 @@ const MovieDetail = (props) => {
                             <Stack>
                                 <Box>
                                     <Typography variant="h6" mt={2} sx={{fontWeight:'bold'}}>주요 출연진</Typography>
+                                    <Typography variant="overline" 
+                                        sx={{
+                                            cursor:'pointer',
+                                        }}
+                                    onClick={()=>showAllActorHandler(movieDetail.id, movieDetail.title)}>전체보기</Typography>
                                     <Divider />
                                 </Box>
                                 <Grid container spacing={1}
