@@ -30,19 +30,8 @@ const SearchMovieByKeyword = ({searchKeywordsList, nowPage, genres}) => {
 
     const keywordClickHandler = (e, keywordid) => {
         e.preventDefault();
-        console.log('keywordid :', keywordid);
         setKeywordid(keywordid);
     }
-    // const keywordClickHandler = async (e, keywordid) => {
-    //     // console.log(keywordid);
-    //     e.preventDefault();
-    //     const {data} = await searchMovieListByKeywordId(keywordid);
-    //     console.log('keyword searched movie lst ,' , data);
-    //     const {results, total_pages, total_results} = data;
-    //     setMovieList(results);
-    //     setTotalPages(total_pages);
-    //     setTotalResults(total_results);
-    // }
 
     return (
         <>

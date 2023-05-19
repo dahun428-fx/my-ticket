@@ -1,7 +1,9 @@
 import Cookies from "js-cookie";
 import { AuthError, DuplicateError, ExpiredRefreshTokenError, ForbiddenError, NotFoundError } from "./isInstanceOfApiError";
+import { useRouter } from "next/router";
 
 export default function ErroInstance(error){
+
     // console.log('ErroInstance' ,error);
     if(error.response && error.response.status) {
         const status = error.response.status;
@@ -16,6 +18,7 @@ export default function ErroInstance(error){
             throw new ForbiddenError(data);
         }
         if(status == 404) {
+            // window.location.href = '/error/404.js'
             throw new NotFoundError(data);
         }
         //duplicate user

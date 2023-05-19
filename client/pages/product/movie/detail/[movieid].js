@@ -366,25 +366,35 @@ export async function getServerSideProps(context) {
     const axios = await makeAxiosInstance(session);
 
     const {params:{movieid}} = context;
-
-    const {data:movieDetail} = await axios.get(`${GET_MOVIE_DETAIL}/${movieid}`);
-    const {data:movieKeywords} = await axios.get(`${GET_MOVIE_KEYWORD}/${movieid}`);
-    const movieSimilarRes = await axios.get(`${GET_MOVIE_SIMILAR}/${movieid}`);
-    const movieCreditsRes = await axios.get(`${GET_MOVIE_CREDITS}/${movieid}`);
-
-    return {
-        props: {
-            movie : movieDetail, 
-            movieKeywords : movieKeywords.keywords,
-            similarMovie : {
-                list : movieSimilarRes.data?.results,
-                totalPages: movieSimilarRes.data?.total_pages,
-                totalResults : movieSimilarRes.data?.total_results,
+    
+    try { 
+        const movieDetailRes =  await axios.get(`${GET_MOVIE_DETAIL}/${movieid}`)
+        const movieKeywordsRes = await axios.get(`${GET_MOVIE_KEYWORD}/${movieid}`);
+        const movieSimilarRes = await axios.get(`${GET_MOVIE_SIMILAR}/${movieid}`);
+        const movieCreditsRes = await axios.get(`${GET_MOVIE_CREDITS}/${movieid}`);
+        return {
+            props: {
+                movie : movieDetailRes.data, 
+                movieKeywords : movieKeywordsRes.data?.keywords,
+                similarMovie : {
+                    list : movieSimilarRes.data?.results,
+                    totalPages: movieSimilarRes.data?.total_pages,
+                    totalResults : movieSimilarRes.data?.total_results,
+                },
+                creditsMovie : {
+                    cast : movieCreditsRes.data?.cast,
+                    crew : movieCreditsRes.data?.crew,
+                }
             },
-            creditsMovie : {
-                cast : movieCreditsRes.data?.cast,
-                crew : movieCreditsRes.data?.crew,
+          }
+    } catch (err) {
+        const {status} = err.response;
+        if(status === 404) {
+            return {
+                notFound:true,
             }
-        },
-      }
+        }
+        return Promise.reject(err);
+    }
+    
 }

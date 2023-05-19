@@ -62,6 +62,7 @@ export default class ErrorBoundary extends React.Component {
       let hasError = false;
       if(error) hasError = true;
       if (isInstanceOfApiError(error)) {
+        console.log('error boundary ', error);
         return (
           <>
           {error && 
@@ -85,6 +86,7 @@ export default class ErrorBoundary extends React.Component {
           </>
         )
       } else if(error) {
+        console.log('error boundary ', error);
         throw new Error(error);
         // window.location.href = '/';
       }

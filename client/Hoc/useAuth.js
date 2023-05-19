@@ -10,9 +10,12 @@ export default function useAuth(shouldRedirect) {
 
     // const permitAll = ['/user/updateAuth', '/test/getuserTest']
     // const permitAll = [ '/test/getuserTest', '/signup']
-    const permitAll = [ '/', '/signup', '/product/movie', '/product/movie/detail/[movieid]', '/product/search', '/product/movie/actor/[movietitle]']
+    const permitAll = [ '/', '/signup', '/product/movie', '/product/movie/detail/[movieid]', '/product/search', '/product/movie/actor/[movieid]', 
+    '/product/movie/actor/detail/[actorid]',
+    '/_error']
 
     useEffect(() => {
+        console.log('router.route :: ',router.route)
         if (session?.error === "RefreshAccessTokenError") {
             signOut({ callbackUrl: PAGE_LOGIN, redirect: shouldRedirect });
         }

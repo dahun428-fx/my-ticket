@@ -146,6 +146,8 @@
 
 import axios from 'axios';
 import getConfig from '../configs/config.export';
+import setError from './axiosErrorInstance';
+
 const makeAxiosInstance = async (nextSession = null) => {
     const serverConfig = getConfig();
     const axiosClient = axios.create();
