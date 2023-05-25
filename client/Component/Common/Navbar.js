@@ -211,14 +211,14 @@ export default function Navbar() {
       <Box>
       <Paper
       elevation={3}
-      sx={{position:'fixed', right:'15px', bottom:'60px', backgroundColor:'#1976d2', borderRadius:'30px'}}>
+      sx={{position:'fixed', right:'15px', bottom:'60px', backgroundColor:'#1976d2', borderRadius:'30px', zIndex:10000}}>
           <IconButton sx={{color:'white'}} onClick={()=>{return window.scrollTo({top:0, behavior:'smooth'})}}>
               <ExpandLessIcon />
           </IconButton>
       </Paper>
       <Paper
       elevation={3}
-      sx={{position:'fixed', right:'15px', bottom:'15px', backgroundColor:'#1976d2', borderRadius:'30px'}}>
+      sx={{position:'fixed', right:'15px', bottom:'15px', backgroundColor:'#1976d2', borderRadius:'30px', zIndex:10000}}>
           <IconButton sx={{color:'white'}} onClick={()=>{return window.scrollTo({top:window.document.body.clientHeight, behavior:'smooth'})}}>
               <ExpandMoreIcon />
           </IconButton>

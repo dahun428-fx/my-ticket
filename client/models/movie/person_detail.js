@@ -17,6 +17,10 @@ export default class MoviePersonDetail {
         this.popularity = popularity;
         this.profile_path = profile_path;                    
     }
+
+    getFullPathProfileImage(){
+      return `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${this.profile_path}`
+    }
     createPersonDetailByApiData(apiData) {
         const {adult, also_known_as, biography, birthday, deathday, 
             gender, homepage, id, imdb_id, known_for_department, name, place_of_birth, popularity, profile_path} = apiData;

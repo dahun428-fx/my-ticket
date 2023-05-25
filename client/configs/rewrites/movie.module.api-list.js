@@ -2,7 +2,7 @@ const {ServerURL} = require('../config.export.module');
 
 let SERVER_BASE_URL = ServerURL();
 
-const { GET_MOVIE_POPULAR_LIST, GET_MOVIE_DETAIL, GET_MOVIE_LIKE, GET_MOVIE_LIKE_BY_USER, ADD_MOVIE_LIKE, GET_MOVIE_LIST, GET_MOVIE_NOW_PLAYING, GET_MOVIE_UPCOMMING, GET_MOVIE_GENRES, SEARCH_MOVIE, GET_MOVIE_KEYWORD, GET_MOVIE_SIMILAR, GET_MOVIE_CREDITS, SEARCH_KEYWORD, GET_MOVIE_LIST_BY_KEYWORDS, GET_MOVIE_ACTOR_DETAIL, GET_ACTOR_MOVIE_LIST, GET_ACTOR_PERSON_DETAIL } = require("../../api/url/enum/movie.api.url");
+const { GET_MOVIE_POPULAR_LIST, GET_MOVIE_DETAIL, GET_MOVIE_LIKE, GET_MOVIE_LIKE_BY_USER, ADD_MOVIE_LIKE, GET_MOVIE_LIST, GET_MOVIE_NOW_PLAYING, GET_MOVIE_UPCOMMING, GET_MOVIE_GENRES, SEARCH_MOVIE, GET_MOVIE_KEYWORD, GET_MOVIE_SIMILAR, GET_MOVIE_CREDITS, SEARCH_KEYWORD, GET_MOVIE_LIST_BY_KEYWORDS, GET_MOVIE_ACTOR_DETAIL, GET_ACTOR_MOVIE_LIST, GET_ACTOR_PERSON_DETAIL, GET_ACTOR_SNS_IDS } = require("../../api/url/enum/movie.api.url");
 
 const THE_MOVIE_API_URL=process.env.THE_MOVIE_API_URL;
 const THE_MOVIE_API_KEY=process.env.THE_MOVIE_API_KEY;
@@ -12,6 +12,16 @@ const getMovieUrl_kor = (uri, additionalOption = null) => {
     const option={
         'api_key' : THE_MOVIE_API_KEY,
         'language' : 'ko',
+        ...additionalOption,
+    }
+    let urlOption = new URLSearchParams(option);
+    return `${fulldomain}?${urlOption.toString()}`;
+}
+const getMovieUrl_en = (uri, additionalOption = null) => {
+    let fulldomain = `${THE_MOVIE_API_URL}${uri}`;
+    const option={
+        'api_key' : THE_MOVIE_API_KEY,
+        // 'language' : 'ko',
         ...additionalOption,
     }
     let urlOption = new URLSearchParams(option);
@@ -85,7 +95,11 @@ const MovieRewrites = [
     },
     {
         source: `/${GET_ACTOR_PERSON_DETAIL}/:personid`,
-        destination: getMovieUrl_kor(`/3/person/:personid`),
+        destination: getMovieUrl_en(`/3/person/:personid`),
+    },
+    {
+        source: `/${GET_ACTOR_SNS_IDS}/:personid`,
+        destination: getMovieUrl_en('/3/person/:personid/external_ids')
     },
     //search keyword
     {

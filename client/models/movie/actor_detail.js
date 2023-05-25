@@ -1,6 +1,6 @@
 import MoviePerson from "./person";
 
-export default class ActorDetail {
+export default class actor_detail {
     constructor(credit_type, department, id, job, media, media_type, person) {
         this.credit_type = credit_type;
         this.department = department;
@@ -17,7 +17,7 @@ export default class ActorDetail {
 
     createActorDetailByApiData(apiData){
         const {credit_type, department, id, job, media, media_type, person} = apiData;
-        return new ActorDetail(credit_type, department, id, job, media, media_type, person);
+        return new actor_detail(credit_type, department, id, job, media, media_type, person);
     }
 
 }

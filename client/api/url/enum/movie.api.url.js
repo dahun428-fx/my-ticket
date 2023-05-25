@@ -11,6 +11,8 @@ const GET_MOVIE_CREDITS=`movie/credits`
 const GET_MOVIE_ACTOR_DETAIL=`movie/credits/detail`;
 const GET_ACTOR_MOVIE_LIST=`movie/credits/movie-list`;
 const GET_ACTOR_PERSON_DETAIL=`movie/person/detail`;
+const GET_ACTOR_SNS_IDS=`movie/person/ids`;
+
 
 //search keyword
 const SEARCH_KEYWORD=`movie/keyword`
@@ -41,5 +43,6 @@ module.exports = {
     GET_MOVIE_LIST_BY_KEYWORDS,
     GET_MOVIE_ACTOR_DETAIL,
     GET_ACTOR_MOVIE_LIST,
-    GET_ACTOR_PERSON_DETAIL
+    GET_ACTOR_PERSON_DETAIL,
+    GET_ACTOR_SNS_IDS
 }

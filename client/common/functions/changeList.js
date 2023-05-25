@@ -1,4 +1,18 @@
 import { getMovieListForGetMovieInfo, movieLikeListForUser } from "../../api/movie";
+import { CheckValidDate } from "./common";
+
+export const movieListSortDescByDate = (movieList) => {
+
+    return movieList.sort((a,b) => {
+        let aDate = new Date(a.release_date);
+        let bDate = new Date(b.release_date);
+        if(CheckValidDate(a.release_date) && CheckValidDate(b.release_date)) {
+            return bDate-aDate;
+        } else {
+            return -1;
+        }
+    })
+}
 
 export const movieListAttachLikeStatus = async (movieList) => {
     const {data} = await movieLikeListForUser();

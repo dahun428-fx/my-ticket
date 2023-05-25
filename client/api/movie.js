@@ -40,5 +40,6 @@ export const searchMovieListByKeywordId = async(keywordid) => {
 }
 
 export const getMovieActorDetail = async (actorid) => {
+    
     return await axios.get(`/${GET_MOVIE_ACTOR_DETAIL}/${actorid}`);
 }
