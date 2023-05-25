@@ -2,13 +2,13 @@ import { getServerSession } from "next-auth";
 import makeAxiosInstance from "../../../../../middleware/axiosInstance";
 import { option } from "../../../../api/auth/[...nextauth]";
 import { getMovieActorDetail } from "../../../../../api/movie";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GET_ACTOR_MOVIE_LIST, GET_ACTOR_PERSON_DETAIL, GET_ACTOR_SNS_IDS, GET_MOVIE_ACTOR_DETAIL } from "../../../../../api/url/enum/movie.api.url";
 import actor_detail from "../../../../../models/movie/actor_detail";
 import Movie from "../../../../../models/movie";
 import MoviePerson from "../../../../../models/movie/person";
 import PersonSnsIds from "../../../../../models/movie/person_sns_ids";
-import { Box, Collapse, Divider, Grid, IconButton, List, ListItem, ListItemText, Paper, Stack, Typography } from "@mui/material";
+import { Box, Card, CardActions, CardContent, CardMedia, Collapse, Divider, Grid, IconButton, List, ListItem, ListItemText, Paper, Stack, Typography } from "@mui/material";
 import MoviePersonDetail from "../../../../../models/movie/person_detail";
 import styled from "@emotion/styled";
 import { ExpandMore } from "../../../../../Component/Common/Item/ExpandMore";
@@ -16,33 +16,43 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MovieList from "../../../../../Component/Movie/MovieList";
 import MovieCard from "../../../../../Component/Movie/Card";
 import { movieListSortDescByDate } from "../../../../../common/functions/changeList";
-import { CheckValidDate } from "../../../../../common/functions/common";
+import { CheckValidDate, getAgeByDate } from "../../../../../common/functions/common";
+import { useRouter } from "next/router";
+import { PAGE_DETAIL } from "../../../../../api/url/enum/movie.page.url";
 
 
 const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSnsIds}) => {
 
+    const router = useRouter();
+
     const [actor, setActor] = useState(new actor_detail().createActorDetailByApiData(actorDetail));
-    const [movieList, setMovieList] = useState(movieListSortDescByDate(personMovie?.cast));
+    // const [movieList, setMovieList] = useState(movieListSortDescByDate(personMovie?.cast));
+    const [movieList, setMovieList] = useState([]);
     const [person, setPerson] = useState(new MoviePersonDetail().createPersonDetailByApiData(personDetail));
     const [snsIds, setSnsIds] = useState(new PersonSnsIds().createPersonSnsIdsByApiData(personSnsIds))
 
     const [expanded, setExpanded] = useState(false);
     const [expandedList, setExpandedList] = useState(false);
+
+    // console.log('person : ', person);
+    // console.log('actor : ', actor);
+    console.log('personSnsIds : ', personSnsIds);
     useEffect(()=>{
-    //     setActor(new actor_detail().createActorDetailByApiData(actorDetail));
-    //     setMovieList(new Movie().createMovieByApiData(personMovie));
-    //     setPerson(new MoviePersonDetail().createPersonDetailByApiData(personDetail));
-    //     setSnsIds(new PersonSnsIds().createPersonSnsIdsByApiData(personSnsIds));
-        console.log('actorDetail',actorDetail);
-        console.log('person',personMovie);
-        console.log('person_detail',personDetail);
-        console.log('personSnsIds ',personSnsIds);
+        (async () => {
+            setMovieList( await movieListSortDescByDate(personMovie?.cast));
+        })();
     },[])
+
     const handleExpandClick = (e) => {
         setExpanded(!expanded);
     }
     const handleExpandListClick = (e) => {
         setExpandedList(!expandedList);
+    }
+    const personMovieClickHandler = (movieid) => {
+        router.push({
+            pathname:`${PAGE_DETAIL}/${movieid}`
+        })
     }
 
     return (
@@ -51,10 +61,14 @@ const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSns
                 <Box m={2}>
                     <Grid container spacing={1}>
                         <Grid item 
-                        textAlign='center'
                         xs={12} sm={6} md={4} lg={3}>
-                            <Box >
+                            <Box 
+                            textAlign='center'
+                            >
                                 <img src={`${person.getFullPathProfileImage()}`} />
+                            </Box>
+                            <Box mt={1}>
+
                             </Box>
                         </Grid>
                         <Grid item xs={12} sm={6} md={8} lg={9}>
@@ -84,13 +98,15 @@ const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSns
                                         }
                                     }}
                                 >
-                                <Box>
+                                <Box mt={2}>
+                                    <Typography variant="h6">약력</Typography>
+                                    <Divider />
+
                                     <Collapse in={expanded} timeout='auto'>
                                         {person.biography}
                                     </Collapse>
                                 </Box>
                                 <Box>
-                                    <Divider />
                                     <ExpandMore
                                         expand={expanded}
                                         onClick={(e)=>handleExpandClick(e)}
@@ -106,8 +122,78 @@ const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSns
                         </Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                        <Grid item xs={12} sm={6} md={4} lg={3}></Grid>
-                        <Grid item xs={12} sm={6} md={8} lg={9}>
+                        <Grid item xs={12} sm={4} md={4} lg={3}>
+                            <Box mt={3}>
+                                <Typography variant="h6">인물정보</Typography>
+                                <Paper variant="outlined">
+                                    <Box
+                                        sx={{
+                                            padding:2,
+                                        }}
+                                    >
+                                        <Box mt={1}>
+                                            <Typography variant="subtitle1"
+                                                sx={{
+                                                    fontWeight:'bold',
+                                                }}
+                                            >유명분야</Typography>
+                                            <Typography variant="subtitle2">
+                                            {person.known_for_department}
+                                            </Typography>
+                                        </Box>
+                                        <Box mt={1}>
+                                            <Typography variant="subtitle1"
+                                                sx={{
+                                                    fontWeight:'bold',
+                                                }}
+                                            >성별</Typography>
+                                            <Typography variant="subtitle2">
+                                            {person.gender === 2 ? '남성' : '여성'}
+                                            </Typography>
+                                        </Box>
+                                        <Box mt={1}>
+                                            <Typography variant="subtitle1"
+                                                sx={{
+                                                    fontWeight:'bold',
+                                                }}
+                                            >생년월일</Typography>
+                                            <Typography variant="subtitle2">
+                                            {person.birthday}
+                                            {
+                                                person.deathday &&
+                                                `~ ${person.deathday}`
+                                            }
+                                            </Typography>
+                                        </Box>
+                                        {
+                                            !person.deathday &&
+
+                                        <Box mt={1}>
+                                            <Typography variant="subtitle1"
+                                                sx={{
+                                                    fontWeight:'bold',
+                                                }}
+                                            >나이</Typography>
+                                            <Typography variant="subtitle2">
+                                            만 {getAgeByDate(person.birthday)}세
+                                            </Typography>
+                                        </Box>
+                                        }
+                                        <Box mt={1}>
+                                            <Typography variant="subtitle1"
+                                                sx={{
+                                                    fontWeight:'bold',
+                                                }}
+                                            >출생지</Typography>
+                                            <Typography variant="subtitle2">
+                                            {person.place_of_birth}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                </Paper>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={8} md={8} lg={9}>
                             {
                             movieList.length > 0 &&
                             <Box mt={3}>
@@ -122,9 +208,11 @@ const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSns
                                                         <ListItem key={index}
                                                             sx={{
                                                                 marginTop:2,
+                                                                cursor:'pointer',
                                                             }}
                                                             disablePadding
                                                             alignItems="flex-start"
+                                                            onClick={(e)=>personMovieClickHandler(item.id)}
                                                         >
                                                             <ListItemText 
                                                             sx={{
@@ -142,7 +230,7 @@ const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSns
                                                         </ListItem>
                                                     )
                                                 })
-                                             }   
+                                             }
                                             </Collapse>
                                             <Divider />
                                             <ExpandMore
