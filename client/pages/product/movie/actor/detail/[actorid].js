@@ -19,7 +19,9 @@ import { movieListSortDescByDate } from "../../../../../common/functions/changeL
 import { CheckValidDate, getAgeByDate } from "../../../../../common/functions/common";
 import { useRouter } from "next/router";
 import { PAGE_DETAIL } from "../../../../../api/url/enum/movie.page.url";
-
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
 
 const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSnsIds}) => {
 
@@ -53,6 +55,31 @@ const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSns
         router.push({
             pathname:`${PAGE_DETAIL}/${movieid}`
         })
+    }
+    const onClickSnsId = (snsType) => {
+        let snsDomain = '';
+        let snsId = '';
+        switch (snsType) {
+            case 'fb':
+                snsDomain = 'https://facebook.com';
+                snsId= snsIds.facebook_id;
+                break;
+            case 'twitter':
+                snsDomain = 'https://twitter.com';
+                snsId= snsIds.twitter_id;
+                break;
+            case 'instagram':
+                snsDomain = 'https://instagram.com';
+                snsId= snsIds.instagram_id;
+                break;
+        
+            default:
+                break;
+        }
+
+        if(snsDomain !== '' && snsId !== '') {
+            window.open(`${snsDomain}/${snsId}`);
+        }
     }
 
     return (
@@ -98,6 +125,26 @@ const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSns
                                         }
                                     }}
                                 >
+                                <Box mt={2}>
+                                {
+                                    snsIds.facebook_id &&
+                                    <IconButton size="large" onClick={()=>onClickSnsId('fb')}>
+                                        <FacebookIcon fontSize="inherit"/>
+                                    </IconButton>
+                                }
+                                {
+                                    snsIds.twitter_id &&
+                                    <IconButton size="large" onClick={()=>onClickSnsId('twitter')}>
+                                        <TwitterIcon fontSize="inherit"/>
+                                    </IconButton>
+                                }
+                                {
+                                    snsIds.instagram_id &&
+                                    <IconButton size="large" onClick={()=>onClickSnsId('instagram')}>
+                                        <InstagramIcon fontSize="inherit"/>
+                                    </IconButton>
+                                }
+                                </Box>
                                 <Box mt={2}>
                                     <Typography variant="h6">약력</Typography>
                                     <Divider />
