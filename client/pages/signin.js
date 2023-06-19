@@ -1,32 +1,50 @@
 import React, {useEffect, useState} from 'react'
-import Input from '../Component/Form/Input'
-import Btn from '../Component/Common/Button'
-import { userLogin } from '../api/user';
-import Cookies from 'js-cookie';
 import { signIn } from 'next-auth/react';
-import WithAuth from '../Hoc/withAuth';
 import getAllowProvider from '../configs/provider/config.oAuth2.provider.controll';
 import { FACEBOOK_PROVIDER, GITHUB_PROVIDER, GOOGLE_PROVIDER, KAKAO_PROVIDER, NAVER_PROVIDER } from '../configs/provider/config.oAuth2.provider.enum';
 import setError from '../middleware/axiosErrorInstance';
 import { Box, Button, Grid, Paper, Stack, TextField, Typography } from '@mui/material';
+import * as yup from 'yup';
+import {Form, useFormik} from 'formik';
+import { PASSWORD_ENUM, USER_ID_ENUM } from '../common/validation/sign/enum/user_enum';
+
 
  function login() {
   
   const [userid, setUserid] = useState("");
   const [userpw, setUserpw] = useState("");
-    
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    await signIn('credentials', {
-          id:userid, password:userpw,
-          redirect: false,
-          callbackUrl:'/'
-        }).then((data) => {
-          if(data?.error){
-            setError({response:{data:{message:data.error}, status:data.status}});
+  const [noUser, setNoUser] = useState(false);  
+
+  const scheme = yup.object().shape({
+    userid : yup.string().required(USER_ID_ENUM.REQUIRE),
+    password : yup.string().required(PASSWORD_ENUM.REQUIRE),
+  })
+
+  const formik = useFormik({
+    initialValues : {
+      userid : '',
+      password : '',
+    },
+    validationSchema : scheme,
+    onSubmit : async values => {
+      await signIn('credentials', {
+        id:values.userid, password:values.password,
+        redirect: false,
+        callbackUrl:'/'
+      })
+      .then((data) => {
+        if(data?.error){
+          if(data?.status === 401){
+            setNoUser(true);
           }
-        })
-    return () =>{};
+          setError({response:{data:{message:data.error}, status:data.status}});
+        }
+      })
+    },
+  })
+
+  const onFocusHandler = (e) => {
+    setNoUser(false);
   }
 
   const onChangeInputHandler = (e) => {
@@ -57,7 +75,9 @@ import { Box, Button, Grid, Paper, Stack, TextField, Typography } from '@mui/mat
         variant='outlined'
         sx={{
           padding:5,
-          margin:10
+          margin:10,
+          width:'80%', maxWidth:'600px',
+          minWidth:'300px'
         }}
       >
       <Typography
@@ -65,10 +85,10 @@ import { Box, Button, Grid, Paper, Stack, TextField, Typography } from '@mui/mat
       >LOGIN</Typography>
       <Box component="form"
          sx={{
-          '& .MuiTextField-root': { m: 1, minWidth: '25ch' },
+          '& .MuiTextField-root': { m: 1, minWidth: '25ch'},
         }}
         autoComplete="off"
-        onSubmit={onSubmitHandler}
+        onSubmit={formik.handleSubmit}
       >
         <div>
           <TextField
@@ -78,8 +98,13 @@ import { Box, Button, Grid, Paper, Stack, TextField, Typography } from '@mui/mat
             type='text'
             name='userid'
             onChange={onChangeInputHandler}
+            onFocus={onFocusHandler}
             value={userid}
+            {...formik.getFieldProps('userid')}
           />
+          <Typography variant='overline' color={'red'}>
+          {formik.errors.userid}
+          </Typography>
         </div>
         <div>
           <TextField
@@ -89,9 +114,21 @@ import { Box, Button, Grid, Paper, Stack, TextField, Typography } from '@mui/mat
             type='password'
             name='userpw'
             onChange={onChangeInputHandler}
+            onFocus={onFocusHandler}
             value={userpw}
+            {...formik.getFieldProps('password')}
           />
+          <Typography variant='overline' color={'red'}>
+          {formik.errors.password}
+          </Typography>
         </div>
+        {
+          noUser &&
+        <Typography variant='overline' color={`red`}>
+            존재하지 않은 회원입니다. <br></br>
+            아이디, 비밀번호를 확인해주세요.
+        </Typography>
+        }
         <Box component="div" display="flex" justifyContent="center">
           <Button variant='contained' type='submit'
             fullWidth

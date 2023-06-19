@@ -43,6 +43,7 @@ export class ExpiredRefreshTokenError extends ApiError {
 export class DuplicateError extends ApiError {
     constructor(data) {
         super(data);
+        this.status = 409;
         this.title = "DuplicateError";
     }
 }
