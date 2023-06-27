@@ -81,6 +81,28 @@ public class UserService implements UserDetailsService {
         return readUserDto;
     }
 
+    public boolean passwordCheck(CreateUserDto createUserDto) {
+        User findUser = userRepository.findById(createUserDto.getId());
+        if(findUser == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, UserEnumType.USER_NOT_FOUND.getMessage());
+        }
+        return encoder.matches(createUserDto.getPassword(), findUser.getPassword());
+    }
+
+    public boolean passwordChange(CreateUserDto createUserDto) {
+        User findUser = userRepository.findById(createUserDto.getId());
+        if(findUser == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, UserEnumType.USER_NOT_FOUND.getMessage());
+        }
+        // boolean match = encoder.matches(createUserDto.getPassword(), findUser.getPassword());
+        // if(match) {
+            findUser.setPassword(encoder.encode(createUserDto.getPassword()));
+            userRepository.save(findUser);
+            return true;
+        // }
+        // return false;
+    }
+
     /**
      * Spring Security
      */

@@ -4,6 +4,7 @@ import GithubLoginPage from "./github/githubLoginPage";
 import FacebookLoginPage from "./facebook/facebookLoginPage";
 import KakaoLoginPage from "./kakao/kakaoLoginPage";
 import NaverLoginPage from "./naver/naverLoginPage";
+import { Box, Chip, Paper, Stack, Typography } from "@mui/material";
 
 function connectProvider(props) {
 
@@ -51,12 +52,16 @@ function connectProvider(props) {
     }
 
     return (
-        <div>
-            
+        <>
+            <Paper sx={{
+                padding:2,
+                marginTop:2
+            }}>
+            <Stack>
             {
                 provider.length > 0 &&
                 <>
-                    <div>
+                    <Box mt={2} padding={1} display={'flex'}>
                         <GoogleLoginPage 
                             variant="outlined" 
                             title={`Google 로그인 연동`}
@@ -64,10 +69,10 @@ function connectProvider(props) {
                             disabled={googleProvider}
                         />
                         {googleProvider &&
-                            <span>연동 완료</span>
+                            <Chip sx={{'marginLeft':2}} label="연동완료" />
                         }
-                    </div>
-                    <div>
+                    </Box>
+                    <Box mt={2} padding={1} display={'flex'}>
                         <GithubLoginPage 
                             variant="outlined" 
                             title={`Github 로그인 연동`}
@@ -75,11 +80,10 @@ function connectProvider(props) {
                             disabled={githubProvider}
                         />
                         {githubProvider &&
-                            <span>연동 완료</span>
+                            <Chip sx={{'marginLeft':2}} label="연동완료" />
                         }
-                        
-                    </div>
-                    <div>
+                    </Box>
+                    <Box mt={2} padding={1} display={'flex'}>
                         <FacebookLoginPage 
                             variant="outlined"
                             title="Facebook 로그인 연동"
@@ -87,10 +91,10 @@ function connectProvider(props) {
                             setProviderHandler={setProviderHandler}
                         />
                         {fbProvider &&
-                            <span>연동 완료</span>
+                            <Chip sx={{'marginLeft':2}} label="연동완료" />
                         }
-                    </div>
-                    <div>
+                    </Box>
+                    <Box mt={2} padding={1} display={'flex'}>
                         <KakaoLoginPage 
                             variant="outlined"
                             title="Kakao 로그인 연동"
@@ -98,23 +102,26 @@ function connectProvider(props) {
                             setProviderHandler={setProviderHandler}
                         />
                         {kakaoProvider &&
-                            <span>연동 완료</span>
+                            <Chip sx={{'marginLeft':2}} label="연동완료" />
                         }
-                    </div>
-                    <div>
-                        <NaverLoginPage 
+                    </Box>
+                    <Box mt={2} padding={1} display={'flex'}>
+                    <NaverLoginPage 
                             variant="outlined"
                             title="Naver 로그인 연동"
                             disabled={naverProvider}
                             setProviderHandler={setProviderHandler}
                         />
                         {naverProvider &&
-                            <span>연동 완료</span>
+                            <Chip sx={{'marginLeft':2}} label="연동완료" />
                         }
-                    </div>
+                    </Box>
+
                 </>
             }
-        </div>
+            </Stack>
+            </Paper>
+        </>
     )
 }
 export default connectProvider;

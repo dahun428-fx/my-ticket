@@ -28,7 +28,6 @@ export default function Navbar() {
 
   const isAuthenticated = useAuth(true);
   const { data: session } = useSession();
-
   const router = useRouter();
 
   const onChangeHandler = (e) => {

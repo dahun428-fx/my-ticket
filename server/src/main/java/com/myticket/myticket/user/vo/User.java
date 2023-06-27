@@ -14,6 +14,8 @@ import javax.persistence.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.myticket.myticket.auth.Enum.ProviderType;
+import com.myticket.myticket.common.converter.ProviderTypeConverter;
 import com.myticket.myticket.common.converter.UserRoleTypeConverter;
 import com.myticket.myticket.user.Enum.UserRoleType;
 
@@ -48,7 +50,11 @@ public class User implements UserDetails {
 
     @Column(name = "refresh_token")
     private String refreshToken;
-
+    // @Column(name = "provider_type") @Convert(converter = ProviderTypeConverter.class)
+    // private ProviderType providerType;
+    @Column(name = "provider_type")
+    private ProviderType providerType;
+    
     //ouath
     @Transient
     private Map<String, Object> attributes;

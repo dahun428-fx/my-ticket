@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { AuthError, DuplicateError, ExpiredRefreshTokenError, ForbiddenError, NotFoundError } from "./isInstanceOfApiError";
+import { AuthError, BadRequestError, DuplicateError, ExpiredRefreshTokenError, ForbiddenError, NotFoundError } from "./isInstanceOfApiError";
 import { useRouter } from "next/router";
 
 export default function ErroInstance(error){
@@ -8,6 +8,9 @@ export default function ErroInstance(error){
     if(error.response && error.response.status) {
         const status = error.response.status;
         const data = error.response.data;
+        if(status === 400) {
+            throw new BadRequestError(data);
+        }
         if(status == 401) {
             if(data && data.path === "/api/v1/auth/refresh") {
                 throw new ExpiredRefreshTokenError();

@@ -5,3 +5,5 @@ export const USER_LOGIN_OAUTH2= '/api/user/oauth';
 export const USER_SGIN_OUT = '/api/user/signout';
 export const USER_PROVIDER_INFO = '/api/user/providerinfo';
 export const USER_ME = '/api/user/me';
+export const USER_PASSWORD_CHECK = '/api/user/checkPassword';
+export const USER_PASSWORD_CHANGE = '/api/user/changePassword';

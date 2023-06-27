@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.myticket.myticket.user.vo.User;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Entity
+@Table(name ="movie_like")
 @Data
 @RequiredArgsConstructor
 @ToString

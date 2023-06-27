@@ -6,6 +6,8 @@ import { Suspense, useEffect, useMemo, useState } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import Loading from '../Component/Common/Loading';
 import NJProgressBar from 'nextjs-progressbar';
+import useAuth from '../Hoc/useAuth';
+import { ProtectRoute } from '../Hoc/ProtectRoute';
 
 function MyApp({ Component, pageProps }) {
 
@@ -13,6 +15,7 @@ function MyApp({ Component, pageProps }) {
   
   return (
           <SessionProvider session={pageProps.session} refetchInterval={interval}>
+            <ProtectRoute>
                   <Layout>
                       <ErrorBoundary>
                         <Suspense>
@@ -24,6 +27,7 @@ function MyApp({ Component, pageProps }) {
                         </Suspense>
                       </ErrorBoundary>
                   </Layout>
+            </ProtectRoute>
           </SessionProvider>
   );
 }
