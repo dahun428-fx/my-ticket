@@ -94,13 +94,9 @@ public class UserService implements UserDetailsService {
         if(findUser == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, UserEnumType.USER_NOT_FOUND.getMessage());
         }
-        // boolean match = encoder.matches(createUserDto.getPassword(), findUser.getPassword());
-        // if(match) {
-            findUser.setPassword(encoder.encode(createUserDto.getPassword()));
-            userRepository.save(findUser);
-            return true;
-        // }
-        // return false;
+        findUser.setPassword(encoder.encode(createUserDto.getPassword()));
+        userRepository.save(findUser);
+        return true;
     }
 
     /**

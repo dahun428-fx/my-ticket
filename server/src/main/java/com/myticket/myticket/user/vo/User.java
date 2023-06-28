@@ -50,8 +50,6 @@ public class User implements UserDetails {
 
     @Column(name = "refresh_token")
     private String refreshToken;
-    // @Column(name = "provider_type") @Convert(converter = ProviderTypeConverter.class)
-    // private ProviderType providerType;
     @Column(name = "provider_type")
     private ProviderType providerType;
     
