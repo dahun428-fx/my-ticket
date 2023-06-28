@@ -42,6 +42,15 @@ public class AuthService {
     private final UserRepository userRepository;
     private final AuthProviderRepository providerRepository;
 
+    public boolean deleteProvider(String userid, String providerName) {
+        AuthProvider provider = providerRepository.findByUser_idAndName(userid, providerName);
+        if(provider != null) {
+            providerRepository.delete(provider);
+            return true;
+        }
+        return false;
+    }
+
     @Transactional
     public void signOut(String userid) {
         User findUser = userRepository.findById(userid);
@@ -76,6 +85,7 @@ public class AuthService {
                         .name(this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getName()))
                         .password("")
                         .roleType(UserRoleType.ROLE_OAUTH2)
+                        .providerType(oAuth2UserInfo.getProviderType().getName())
                         .build();
                 userRepository.save(signUpUser);
                 checkUser = signUpUser;

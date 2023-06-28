@@ -11,5 +11,5 @@ public class ReadUserDto {
     private String id;
     private String name;
     private UserRoleType roleType;
-    private ProviderType providerType;
+    private String providerType;
 }

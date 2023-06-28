@@ -58,6 +58,7 @@ public class UserService implements UserDetailsService {
                         .name(createUserDto.getName())
                         .password(encoder.encode(createUserDto.getPassword()))
                         .roleType(UserRoleType.ROLE_USER)
+                        .providerType(ProviderType.LOCAL.name())
                         .build();
         userRepository.save(user);
         AuthProvider authProvider = AuthProvider.builder()

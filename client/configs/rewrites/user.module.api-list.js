@@ -45,6 +45,10 @@ const UserRewrites = [
       {
         source: "/api/user/changePassword",
         destination : `${SERVER_BASE_URL}/api/v1/user/passwordChange`,
+      },
+      {
+        source:`/api/auth/delete/provider`,
+        destination : `${SERVER_BASE_URL}/api/v1/auth/delete/provider`,
       }
 ]
 module.exports = {

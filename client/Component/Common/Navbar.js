@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
-import useAuth from '../../Hoc/useAuth';
 import { signOut, useSession } from 'next-auth/react';
 import { AppBar, Box, Button, Divider, Drawer, IconButton, InputBase, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Skeleton, Toolbar, Typography } from '@mui/material';
 import { userSignOut } from '../../api/user';
@@ -26,7 +25,6 @@ export default function Navbar() {
   const [drawer, setDrawer] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
 
-  const isAuthenticated = useAuth(true);
   const { data: session } = useSession();
   const router = useRouter();
 

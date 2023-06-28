@@ -56,12 +56,11 @@ const MyFavorite = ({user, likeData, movieGenres}) => {
 
     return (
         <>
-            {movieList && movieList.length > 0 && 
             <Box sx={{ width: '100%', typography: 'body1' }}>
             <Box m={2}>
                 <ListTitle title={`MY FAVORITE`} />
             </Box>
-            { movieList.length > 0 &&
+            { movieList && movieList.length > 0 &&
                 <Box m={2} sx={{
                 }}>
                     <Box mt={2}>
@@ -88,7 +87,6 @@ const MyFavorite = ({user, likeData, movieGenres}) => {
                 </Box>
             }
             </Box>
-            }
         </>
     )
 }
