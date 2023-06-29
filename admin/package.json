@@ -1,0 +1,32 @@
+{
+  "name": "admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "local": "env-cmd -f .env.local next dev -p 5000",
+    "dev": "next dev",
+    "build": "next build",
+    "build:dev": "env-cmd -f .env.development next build",
+    "start": "next start",
+    "start:dev": "env-cmd -f .env.development next start -p 5000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.13.6",
+    "@types/node": "20.3.2",
+    "@types/react": "18.2.14",
+    "@types/react-dom": "18.2.6",
+    "axios": "^1.4.0",
+    "env-cmd": "^10.1.0",
+    "eslint": "8.43.0",
+    "eslint-config-next": "13.4.7",
+    "formik": "^2.4.2",
+    "next": "13.4.7",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.1.5",
+    "yup": "^1.2.0"
+  }
+}

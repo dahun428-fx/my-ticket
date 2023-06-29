@@ -77,7 +77,6 @@ const MyFavorite = ({user, likeData, movieGenres}) => {
                                         xs={3} sm={3} md={3} 
                                         key={index} item>
                                         <MovieCard cardStyle={cardStyle} movie={item} />
-                                        {/* <MovieSideCard movie={item}/> */}
                                     </Grid>
                                     );
                                 })
