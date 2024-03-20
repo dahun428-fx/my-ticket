@@ -7,3 +7,5 @@ my-ticket : side project
       : React.js, Next.js, Restful api, movie open api 활용으로 기능 구현 
     * 백엔드
       : Spring Framework, Spring Security, Spring boot, JPA, MySql, 
+
+![image](https://github.com/dahun428-fx/my-ticket/assets/70366042/7fc477b5-aa85-4cc3-b2c9-bb8c4d06c4ca)
