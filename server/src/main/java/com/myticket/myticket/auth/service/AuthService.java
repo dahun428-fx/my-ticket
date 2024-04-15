@@ -54,7 +54,7 @@ public class AuthService {
     @Transactional
     public void signOut(String userid) {
         User findUser = userRepository.findById(userid);
-        if(findUser == null) {
+        if (findUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.USER_NOT_FOUND.getMessage());
         }
         findUser.updateRefreshToken("");
@@ -78,7 +78,7 @@ public class AuthService {
             // user id 중에 중복된 email이 존재한다면, provider 만 등록
             User checkUser = userRepository.findById(oAuth2UserInfo.getEmail());
             if (checkUser == null) {
-                //Provider 회원 가입 --> id : email
+                // Provider 회원 가입 --> id : email
                 String makeUserId = this.setUserIdByOAuth2User(oAuth2UserInfo, oAuth2UserInfo.getEmail());
                 User signUpUser = User.builder()
                         .id(makeUserId)
@@ -101,7 +101,7 @@ public class AuthService {
                     .build();
             providerRepository.save(authProvider);
             resultUser = checkUser;
-        // provider 있는 경우
+            // provider 있는 경우
         } else {
             User findUser = userRepository.findById(findProvider.get(0).getUser().getId());
             logger.info("oAuthExcute, 회원 가입이 되어 있는 유저 입니다 , User : {}", findUser);
@@ -121,9 +121,11 @@ public class AuthService {
     public void addOAuthProviderForExistUser(String existUserid, OAuth2UserInfo oAuth2UserInfo) {
         User findUser = userRepository.findById(existUserid);
 
-        // AuthProvider foundAuthProvider = providerRepository.findByUser_idAndType(findUser.getId(),
-        //         oAuth2UserInfo.getProviderType().getType());
-        List<AuthProvider> foundAuthProvider = providerRepository.findByIdAndType(oAuth2UserInfo.getId(), oAuth2UserInfo.getProviderType().getType());
+        // AuthProvider foundAuthProvider =
+        // providerRepository.findByUser_idAndType(findUser.getId(),
+        // oAuth2UserInfo.getProviderType().getType());
+        List<AuthProvider> foundAuthProvider = providerRepository.findByIdAndType(oAuth2UserInfo.getId(),
+                oAuth2UserInfo.getProviderType().getType());
         if (foundAuthProvider.size() < 1) {
             AuthProvider authProvider = AuthProvider.builder()
                     .user(findUser)
@@ -133,8 +135,7 @@ public class AuthService {
                     .providerType(oAuth2UserInfo.getProviderType().getType())
                     .build();
             providerRepository.save(authProvider);
-        } 
-        else {
+        } else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, UserEnumType.USER_OAUTH_ALREADY_EXIST.getMessage());
         }
     }
@@ -143,7 +144,7 @@ public class AuthService {
     public TokenDto login(String id, String password) {
 
         User findUser = userRepository.findById(id);
-        //유저 확인
+        // 유저 확인
         if (findUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL.getMessage());
         }
@@ -153,8 +154,9 @@ public class AuthService {
         if (findProvider == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL_SNS.getMessage());
         }
-        //비밀번호 확인
+        // 비밀번호 확인
         if (!encoder.matches(password, findUser.getPassword())) {
+            logger.info("oAuthExcute, 비밀번호 동일 확인 , User : {}", encoder.matches(password, findUser.getPassword()));
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UserEnumType.LOGIN_FAIL.getMessage());
         }
         Authentication authentication = this.createAuthentication(id, password);
