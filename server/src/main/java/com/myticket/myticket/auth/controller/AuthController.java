@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,17 @@ public class AuthController {
 
     protected final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private AuthService authService;
+
+    @PostMapping(value = "/delete/provider")
+    public ResponseEntity<Boolean> deleteProvider(@RequestBody Map<String, Object> param) {
+        String userid = (String) param.get("userid");
+        String providerName = (String) param.get("providerName");
+        boolean isTrue = false; 
+        if(!userid.isEmpty() && !providerName.isEmpty()){
+            isTrue = authService.deleteProvider(userid, providerName);
+        }
+        return ResponseEntity.status(200).body(isTrue);
+    } 
 
     @GetMapping(value = "/signout")
     public ResponseEntity<String> signOut() {
@@ -90,10 +102,8 @@ public class AuthController {
     @PostMapping(value = "/add/provider")
     public ResponseEntity<String> addProvider(
             @RequestBody Map<String, Object> VO) {
-        System.out.println("VO : " + VO);
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String currentUserId = userDetails.getUsername();
-        System.out.println("user : " + currentUserId);
         ProviderType providerType = ProviderType.valueOf(VO.get("provider").toString().toUpperCase());
         OAuth2UserInfo user = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType,
                 (Map<String, Object>) VO.get("user"));

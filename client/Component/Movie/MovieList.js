@@ -10,13 +10,13 @@ const MovieList = ({totalResults, movieList, totalPages, nowPage, pageChangeHand
                 <Typography variant="overline">총 {totalResults} 건</Typography>
                 <Divider />
                 <Box mt={2}>
-                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                    <Grid container spacing={{ xs: 2, sm:3, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                         {   
                             movieList && 
                             movieList.map((item, index) => {
                                 
                                 return (
-                                <Grid xs={4} sm={4} md={3} key={index} item>
+                                <Grid xs={3} sm={3} md={3} key={index} item>
                                     <MovieCard movie={item} nowPage={nowPage} tabValue={tabValue} genres={genres}/>
                                 </Grid>
                                 );

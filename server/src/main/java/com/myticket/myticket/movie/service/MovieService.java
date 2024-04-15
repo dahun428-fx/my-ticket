@@ -33,7 +33,8 @@ public class MovieService {
 
     @Transactional
     public List<MovieLikeDTO> findMovieLikeList(String userid){
-        List<MovieLike> foundLike = likeRepository.findByUser_id(userid);
+        // List<MovieLike> foundLike = likeRepository.findByUser_id(userid);
+        List<MovieLike> foundLike = likeRepository.findByUser_idAndMovieLike_statusTrue(userid);
         return Utils.mapList(foundLike, MovieLikeDTO.class);
     }
 

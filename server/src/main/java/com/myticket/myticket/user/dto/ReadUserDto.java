@@ -1,5 +1,6 @@
 package com.myticket.myticket.user.dto;
 
+import com.myticket.myticket.auth.Enum.ProviderType;
 import com.myticket.myticket.user.Enum.UserRoleType;
 
 import lombok.Data;
@@ -10,4 +11,5 @@ public class ReadUserDto {
     private String id;
     private String name;
     private UserRoleType roleType;
+    private String providerType;
 }

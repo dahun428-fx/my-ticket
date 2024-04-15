@@ -58,6 +58,7 @@ public class UserService implements UserDetailsService {
                         .name(createUserDto.getName())
                         .password(encoder.encode(createUserDto.getPassword()))
                         .roleType(UserRoleType.ROLE_USER)
+                        .providerType(ProviderType.LOCAL.name())
                         .build();
         userRepository.save(user);
         AuthProvider authProvider = AuthProvider.builder()
@@ -79,6 +80,24 @@ public class UserService implements UserDetailsService {
         }
         BeanUtils.copyProperties(findUser, readUserDto);
         return readUserDto;
+    }
+
+    public boolean passwordCheck(CreateUserDto createUserDto) {
+        User findUser = userRepository.findById(createUserDto.getId());
+        if(findUser == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, UserEnumType.USER_NOT_FOUND.getMessage());
+        }
+        return encoder.matches(createUserDto.getPassword(), findUser.getPassword());
+    }
+
+    public boolean passwordChange(CreateUserDto createUserDto) {
+        User findUser = userRepository.findById(createUserDto.getId());
+        if(findUser == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, UserEnumType.USER_NOT_FOUND.getMessage());
+        }
+        findUser.setPassword(encoder.encode(createUserDto.getPassword()));
+        userRepository.save(findUser);
+        return true;
     }
 
     /**

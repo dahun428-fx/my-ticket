@@ -16,4 +16,6 @@ public interface AuthProviderRepository extends CrudRepository<AuthProvider, Lon
 
     List<AuthProvider> findByUser_id(String userid);
 
+    AuthProvider findByUser_idAndName(String userid, String name);
+
 }

@@ -67,11 +67,16 @@ const MovieCard = (props) => {
       return [];
     }
 
+    const cardStyle = {
+      maxWidth : props.cardStyle ? props.cardStyle.maxWidth : 345,
+      height : props.cardStyle ? props.cardStyle.height : 450,
+    }
+
     return (
       <>
       { movie &&
       <>
-      <Card sx={{ maxWidth: 345 }}>
+      <Card sx={{ maxWidth: cardStyle.maxWidth, width: cardStyle.maxWidth }}>
         <Link href={{
           pathname : `${PAGE_DETAIL}/${movie.id}`,
           query : {
@@ -82,7 +87,7 @@ const MovieCard = (props) => {
           as={`${PAGE_DETAIL}/${movie.id}`}
         >
         <CardMedia
-          sx={{ height: 450 }}
+          sx={{ height: cardStyle.height }}
           image={`${movie.getImageFullPath()}`}
           title={`${movie.title}`}
         />

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.myticket.myticket.user.service.UserService;
@@ -67,4 +68,15 @@ public class UserController {
         return ResponseEntity.ok().body(findUser);
     }
 
+    @PostMapping(value= "/passwordCheck")
+    public ResponseEntity<Boolean> passwordCheck(@RequestBody CreateUserDto createUserDto) {
+        boolean isTrue = userService.passwordCheck(createUserDto);
+        return ResponseEntity.status(200).body(isTrue);
+    }
+
+    @PostMapping(value = "/passwordChange")
+    public ResponseEntity<Boolean> passwordChange(@RequestBody CreateUserDto createUserDto) {
+        boolean isTrue = userService.passwordChange(createUserDto);
+        return ResponseEntity.status(200).body(isTrue);
+    }
 }

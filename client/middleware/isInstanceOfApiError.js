@@ -12,6 +12,14 @@ export class ApiError extends Error {
     }
 }
 
+export class BadRequestError extends ApiError {
+    constructor(data) {
+        super(data);
+        this.status = 400;
+        this.title = "BadRequestError";
+    }
+}
+
 export class NotFoundError extends ApiError {
     constructor(data) {
         super(data);
@@ -34,6 +42,7 @@ export class AuthError extends ApiError {
     
 }
 
+
 export class ExpiredRefreshTokenError extends ApiError {
     constructor(data) {
         super(data);
@@ -43,6 +52,7 @@ export class ExpiredRefreshTokenError extends ApiError {
 export class DuplicateError extends ApiError {
     constructor(data) {
         super(data);
+        this.status = 409;
         this.title = "DuplicateError";
     }
 }
