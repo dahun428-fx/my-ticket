@@ -70,22 +70,27 @@ const SearchMovie = (props) => {
                 movieid:item.id,
             }
         })
-        const {data} = await getMovieListForGetMovieInfo(param);
-
-        if(data) {
-
-            const dataMap = data.reduce((newObj, obj) => {
-                newObj[obj.movieid] = obj.likeCount;
-                return newObj;
-            }, {});
+        try {
+            const {data} = await getMovieListForGetMovieInfo(param);
+    
+            if(data) {
+    
+                const dataMap = data.reduce((newObj, obj) => {
+                    newObj[obj.movieid] = obj.likeCount;
+                    return newObj;
+                }, {});
+                
+                const resultList = movieList.map((item, index) => {
+                    return {
+                        ...item,
+                        likeCount : dataMap[item.id] ? dataMap[item.id] : 0
+                    }
+                })
+                return resultList;
+            }
             
-            const resultList = movieList.map((item, index) => {
-                return {
-                    ...item,
-                    likeCount : dataMap[item.id] ? dataMap[item.id] : 0
-                }
-            })
-            return resultList;
+        } catch (error) {
+            console.log(error)
         }
         return movieList;
     }

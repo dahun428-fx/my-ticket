@@ -79,9 +79,14 @@ const MovieDetail = (props) => {
     const movieAttachLikeCount = async(movie) => {
         const param = [{movieid:movie.id}];
 
-        const {data} = await getMovieListForGetMovieInfo(param);
-        if(data) {
-            movie.likeCount = data[0].likeCount;
+        try {
+            const {data} = await getMovieListForGetMovieInfo(param);
+            if(data) {
+                movie.likeCount = data[0].likeCount;
+            }
+            
+        } catch (error) {
+            console.log(error)
         }
         return movie;
     }
