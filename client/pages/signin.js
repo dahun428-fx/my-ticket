@@ -9,7 +9,7 @@ import {Form, useFormik} from 'formik';
 import { PASSWORD_ENUM, USER_ID_ENUM } from '../common/validation/sign/enum/user_enum';
 
 
- function login() {
+ function Login() {
   
   const [userid, setUserid] = useState("");
   const [userpw, setUserpw] = useState("");
@@ -301,4 +301,4 @@ import { PASSWORD_ENUM, USER_ID_ENUM } from '../common/validation/sign/enum/user
   )
 }
 
-export default login;
+export default Login;

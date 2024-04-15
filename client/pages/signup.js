@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import {Form, useFormik} from 'formik';
 import { PASSWORD_ENUM, USER_ID_ENUM, USER_NAME_ENUM } from '../common/validation/sign/enum/user_enum';
 
-export default function signup() {
+export default function Signup() {
 
     const router = useRouter();
 

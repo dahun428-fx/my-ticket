@@ -22,6 +22,8 @@ import { PAGE_DETAIL } from "../../../../../api/url/enum/movie.page.url";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import Image from 'next/image'
+
 
 const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSnsIds}) => {
 
@@ -41,7 +43,7 @@ const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSns
     console.log('personSnsIds : ', personSnsIds);
     useEffect(()=>{
         (async () => {
-            setMovieList( await movieListSortDescByDate(personMovie?.cast));
+            setMovieList( await movieListSortDescByDate(personMovie?.cast) ?? []);
         })();
     },[])
 
@@ -92,7 +94,7 @@ const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSns
                             <Box 
                             textAlign='center'
                             >
-                                <img src={`${person.getFullPathProfileImage()}`} />
+                                <Image width={150} height={150} src={`${person.getFullPathProfileImage()}`} />
                             </Box>
                             <Box mt={1}>
 

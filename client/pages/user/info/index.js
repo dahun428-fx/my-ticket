@@ -17,7 +17,7 @@ const UserInfoPage = (props) => {
         setProviderList(props.providerList);
 
         return ()=>{setUser(null)}
-    },[])
+    },[props.user, props.providerList])
 
     return (
         <>

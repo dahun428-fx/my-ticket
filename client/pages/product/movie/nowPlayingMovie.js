@@ -21,7 +21,7 @@ const NowPlayingMovie = ({totalPages, totalResults, list, genres, tabValue}) => 
             await movieListRender(list);
         })();
         return () => {};
-    },[])
+    },[list])
 
     const movieListRender = async (movieList) => {
         if(movieList) {

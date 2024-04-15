@@ -17,10 +17,10 @@ const MovieListPage = (props) => {
     const [tabValue, setTabValue] = useState("1");
 
     useEffect(()=>{
-        if(router.query.tabValue) {
+        if(router?.query?.tabValue) {
             setTabValue(router.query.tabValue);
         }
-    },[]);
+    },[router?.query?.tabValue]);
 
     const handleChange = (event, newValue) => {
         setTabValue(newValue);

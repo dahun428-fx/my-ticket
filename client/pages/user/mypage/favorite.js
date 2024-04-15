@@ -33,7 +33,7 @@ const MyFavorite = ({user, likeData, movieGenres}) => {
                 movieListRender(movielist);
             }
         })();
-    },[])
+    },[likeData, GET_MOVIE_DETAIL])
 
     const movieListRender = async (movieList) => {
         if(movieList) {

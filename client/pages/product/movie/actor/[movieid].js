@@ -18,8 +18,8 @@ const MovieActorList = ({creditsMovie, movieid, movie}) => {
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     useEffect(()=>{
-        setCastList(creditsMovie.cast);
-        setCrewList(creditsMovie.crew);
+        setCastList(creditsMovie?.cast ?? []);
+        setCrewList(creditsMovie?.crew ?? []);
     },[router.asPath])
     
     useEffect(()=> {
