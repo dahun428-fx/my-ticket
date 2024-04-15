@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.myticket.myticket.vo.User;
+import com.myticket.myticket.user.vo.User;
 
 import lombok.Builder;
 import lombok.Data;

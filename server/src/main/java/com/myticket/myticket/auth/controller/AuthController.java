@@ -26,7 +26,7 @@ import com.myticket.myticket.auth.dto.OAuth2UserInfo;
 import com.myticket.myticket.auth.service.AuthService;
 import com.myticket.myticket.auth.util.OAuth2UserInfoFactory;
 import com.myticket.myticket.jwt.JwtFilter;
-import com.myticket.myticket.vo.User;
+import com.myticket.myticket.user.vo.User;
 
 import lombok.AllArgsConstructor;
 
