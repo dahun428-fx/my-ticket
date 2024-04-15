@@ -9,7 +9,7 @@ import { FACEBOOK_PROVIDER, GITHUB_PROVIDER, GOOGLE_PROVIDER, KAKAO_PROVIDER, NA
 import { deleteProvider } from "../../../api/auth";
 import { useRouter } from "next/router";
 
-function connectProvider(props) {
+function ConnectProvider(props) {
 
     const [provider, setProvider] = useState([]);
 
@@ -214,4 +214,4 @@ function connectProvider(props) {
         </>
     )
 }
-export default connectProvider;
+export default ConnectProvider;

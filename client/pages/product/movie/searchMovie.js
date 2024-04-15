@@ -142,7 +142,7 @@ const SearchMovie = (props) => {
             <SearchMovieByKeyword searchKeywordsList={searchKeywords} nowPage={nowPage} genres={props.genres}/>
             {/* //movieList */}
             <Box>
-                <Typography variant="overline">"{keyword}" 검색 결과 총 {totalResults} 건</Typography>
+                <Typography variant="overline">{keyword} 검색 결과 총 {totalResults} 건</Typography>
                 <Divider />
                 <Box mt={2}>
                     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
