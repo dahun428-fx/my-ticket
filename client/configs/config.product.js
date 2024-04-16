@@ -1,6 +1,6 @@
 import getConfigs from "./config.common";
 
-const baseUrl = "https://my-ticket-git-dev-1-dahun428-fxs-projects.vercel.app";
+const baseUrl = "https://my-ticket-theta.vercel.app";
 const mode = "local";
 const apiUrl = "http://localhost:4001";
 
