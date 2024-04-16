@@ -1,4 +1,7 @@
 ## my-ticket : side project 
+
+## client version URL : https://my-ticket-theta.vercel.app/ <a href="https://my-ticket-theta.vercel.app/">https://my-ticket-theta.vercel.app/</a>
+
 - - -
 1. 기능 
 + moive 게시판
