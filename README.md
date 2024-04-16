@@ -2,7 +2,7 @@
 
 ## client version URL : https://my-ticket-theta.vercel.app/ 
 
-+ <a href="https://my-ticket-theta.vercel.app/">https://my-ticket-theta.vercel.app/</a>
++ <a target="_blank" href="https://my-ticket-theta.vercel.app/">https://my-ticket-theta.vercel.app/</a>
 
 - - -
 1. 기능 
