@@ -37,7 +37,7 @@ const SearchList = (props) => {
                 setSearchKeywords(props.results.searchKeywords.list);
             }
         })();
-    },[props.keyword, props.results])
+    },[props.keyword])
     useEffect(()=>{
         setIsRefreshing(false);
     },[props.keyword]);
