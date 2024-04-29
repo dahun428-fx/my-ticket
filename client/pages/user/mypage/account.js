@@ -30,7 +30,7 @@ export default AccountPage;
 
 export async function getServerSideProps(context) {
     try {
-        const session = await getServerSession(context.req, context.res, option)
+        const session = null;
         const axios = await makeAxiosInstance(session);
         const {data:providerList} = await axios.get(USER_PROVIDER_INFO);
         const {data:user} = await axios.get(USER_ME);

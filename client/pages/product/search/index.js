@@ -71,7 +71,7 @@ const SearchList = (props) => {
 export default SearchList;
 
 export async function getServerSideProps(context) {
-    const session = await getServerSession(context.req, context.res, option);
+    const session = null;
     const axios = await makeAxiosInstance(session);
 
     const keyword = decodeURIComponent(context.query?.keyword);

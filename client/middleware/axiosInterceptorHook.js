@@ -19,12 +19,12 @@ const AxiosInterceptor = (props) => {
         if(!request.url.includes("/api")) {
             return request;
         }
-        const session = await getSession();
-        if(session) {
-            const { accessToken, refreshToken } = session;
-                request.headers['Authorization'] = `Bearer ${accessToken}`;
-                request.headers['RefreshToken'] = refreshToken;
-        }
+        // const session = await getSession();
+        // if(session) {
+        //     const { accessToken, refreshToken } = session;
+        //         request.headers['Authorization'] = `Bearer ${accessToken}`;
+        //         request.headers['RefreshToken'] = refreshToken;
+        // }
         return request;
     }        
 

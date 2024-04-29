@@ -15,9 +15,8 @@ export default Ticketing;
 export async function getServerSideProps(context) {
 
     try {
-        const session = await getServerSession(context.req, context.res, option);
+        const session = null;
         const axios = await makeAxiosInstance(session);
-    
         return {
             props : {}
         }

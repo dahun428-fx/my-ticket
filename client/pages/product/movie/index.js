@@ -81,7 +81,8 @@ export default MovieListPage;
 
 export async function getServerSideProps(context) {
 
-    const session = await getServerSession(context.req, context.res, option);
+    const session = null;
+    // const session = await getServerSession(context.req, context.res, option);
     const axios = await makeAxiosInstance(session);
 
     const nowPage = context.query.nowPage || 1;

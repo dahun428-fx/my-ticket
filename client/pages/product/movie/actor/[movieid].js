@@ -93,7 +93,8 @@ const MovieActorList = ({creditsMovie, movieid, movie}) => {
 export default MovieActorList;
 
 export async function getServerSideProps(context) {
-    const session = await getServerSession(context.req, context.res, option);
+    // const session = await getServerSession(context.req, context.res, option);
+    const session = null;
     const axios = await makeAxiosInstance(session);
 
     const {params:{movieid}} = context;

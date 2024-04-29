@@ -94,7 +94,7 @@ export default MyFavorite;
 
 export async function getServerSideProps(context) {
     try {
-        const session = await getServerSession(context.req, context.res, option)
+        const session = null;
         const axios = await makeAxiosInstance(session);
         const {data:user} = await axios.get(USER_ME);
         const {data:likeData} = await axios.get(GET_MOVIE_LIKE_BY_USER);

@@ -306,7 +306,7 @@ const ActorDetail = ({actorid, actorDetail, personMovie, personDetail, personSns
 export default ActorDetail;
 
 export async function getServerSideProps(context) {
-    const session = await getServerSession(context.req, context.res, option);
+    const session = null;
     const axios = await makeAxiosInstance(session);
     
     const {params:{actorid}} = context;
