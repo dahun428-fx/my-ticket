@@ -38,18 +38,25 @@
 > 이미지
 
 1. 영화 검색 페이지
-![image](https://github.com/dahun428-fx/my-ticket/assets/70366042/56913fc2-809d-4ab2-8875-b75b036f7933)
 
+<img src="https://github.com/dahun428-fx/my-ticket/assets/70366042/56913fc2-809d-4ab2-8875-b75b036f7933" width="200" height="400"/>
+ 
 2. 영화 리스트 페이지
-![image](https://github.com/dahun428-fx/my-ticket/assets/70366042/bae62f45-3d2f-4ee2-a1f0-d1c328af07ff)
+
+<img src="https://github.com/dahun428-fx/my-ticket/assets/70366042/bae62f45-3d2f-4ee2-a1f0-d1c328af07ff" width="200" height="400"/>
 
 3. 영화 상세 페이지
-![image](https://github.com/dahun428-fx/my-ticket/assets/70366042/f75eabfd-6197-43a9-ba3d-0fe7e336e3ae)
-![image](https://github.com/dahun428-fx/my-ticket/assets/70366042/f41f3c0e-7cb6-42aa-aea3-0e50243f54ed)
+
+<img src="https://github.com/dahun428-fx/my-ticket/assets/70366042/f75eabfd-6197-43a9-ba3d-0fe7e336e3ae" width="200" height="400"/>
+
+<img src="https://github.com/dahun428-fx/my-ticket/assets/70366042/f41f3c0e-7cb6-42aa-aea3-0e50243f54ed" width="200" height="400"/>
+ 
 
 4. 로그인 페이지
-![image](https://github.com/dahun428-fx/my-ticket/assets/70366042/66d537b1-804e-4c72-8792-3c4244365aca)
+
+<img src="https://github.com/dahun428-fx/my-ticket/assets/70366042/66d537b1-804e-4c72-8792-3c4244365aca" width="200" height="400"/>
 
 5. 회원가입 페이지
-![image](https://github.com/dahun428-fx/my-ticket/assets/70366042/2a9e4cfd-c8ab-47bc-8400-bb87a91195f3)
+
+<img src="https://github.com/dahun428-fx/my-ticket/assets/70366042/2a9e4cfd-c8ab-47bc-8400-bb87a91195f3" width="200" height="400"/>
 
