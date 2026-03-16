@@ -1,8 +1,6 @@
 
 # 🎬 영화 검색 웹 어플리케이션
 
-> 🔗 **배포 사이트** : [my-ticket-theta.vercel.app](https://my-ticket-theta.vercel.app/)
-
 ---
 
 ## 📌 1. 프로젝트 소개
